@@ -1,5 +1,7 @@
 using NestedFlowchart.Functions;
+using NestedFlowchart.Models;
 using System.Diagnostics;
+using System.Linq;
 
 namespace NestedFlowchart
 {
@@ -51,17 +53,39 @@ namespace NestedFlowchart
 
         private void btn_Transfrom_Click(object sender, EventArgs e)
         {
-            Transfrom transfrom = new Transfrom();
+            Transfrom transfrom = new();
+
+            //Read XML Flowchart
             var allFlowChartElement = transfrom.Extracttion(this.txt_InputPath);
+            dg_ElementPreview.DataSource = allFlowChartElement;
 
-            transfrom.BindExtractTable(this.dg_ElementPreview, allFlowChartElement);
 
+            //Sorted Flowchart Element
+            //input : allFlowchartElement
+            //output : sortedFlowchart
+            //Iterate until nextElement is null
+            List<XMLCellNode> sortedFlowchart = new List<XMLCellNode>();
+            List<XMLCellNode> tempDecisionElement = new List<XMLCellNode>();
+
+            var startElement = allFlowChartElement.Find(x => x.ValueText.ToLower() == "start");
+            sortedFlowchart.Add(startElement);
+
+            XMLCellNode? nextElement = transfrom.SortedFlowchartElement(allFlowChartElement, sortedFlowchart, tempDecisionElement, startElement);
+            while(nextElement != null)
+            {
+                nextElement = transfrom.SortedFlowchartElement(allFlowChartElement, sortedFlowchart, tempDecisionElement, nextElement);
+            }
+
+
+            //Format XML to route table pattern
             var routerTables = transfrom.BindRouteTable(this.dg_RouteTable, allFlowChartElement);
+            dg_RouteTable.DataSource = routerTables;
 
             //Write Result Path
 
             //Create CPN File
 
         }
+
     }
 }

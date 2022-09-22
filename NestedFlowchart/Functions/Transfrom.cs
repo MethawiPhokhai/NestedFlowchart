@@ -37,38 +37,38 @@ namespace NestedFlowchart.Functions
             }
             catch (Exception ex)
             {
-                throw new Exception(String.Format("Error {0} from {1} method", ex.Message, "Extracttion()"));
+                throw new Exception(string.Format("Error {0} from {1} method", ex.Message, "Extracttion()"));
             }
-        }
-
-        public void BindExtractTable(DataGridView dg_ElementPreview, List<XMLCellNode> allFlowChartElement)
-        {
-            dg_ElementPreview.DataSource = allFlowChartElement;
         }
 
         public List<RouterTable> BindRouteTable(DataGridView dg_RouteTable, List<XMLCellNode> allFlowChartElement)
         {
 
-            List<XMLCellNode> findRouteTable = allFlowChartElement.FindAll(a => a.Style.StartsWith("endArrow=classic") || a.Style.StartsWith("edgeStyle=orthogonalEdgeStyle"));
+            List<XMLCellNode> findRouteTable = allFlowChartElement
+                .FindAll(a => a.Style.StartsWith("endArrow=classic") 
+                || a.Style.StartsWith("edgeStyle=orthogonalEdgeStyle"));
 
             List<RouterTable> routeTables = new List<RouterTable>();
             int RowNumer = 0;
-            //foreach (var item in findRouteTable)
-            //{
-            //    RowNumer = RowNumer + 1;
-            //    routeTables.Add(new RouterTable
-            //    {
-            //        RowNumber = RowNumer,
-            //        ArrowID = item.ID,
-            //        ArrowText = item.ValueText,
-            //        SourceID = item.Source,
-            //        SourceType = CheckFCNodeType(allFlowChartElement.FirstOrDefault(a => a.ID == item.Source)),
-            //        SourceText = allFlowChartElement.FirstOrDefault(a => a.ID == item.Source).ValueText,
-            //        TargetID = item.Target,
-            //        TargetType = CheckFCNodeType(allFlowChartElement.FirstOrDefault(a => a.ID == item.Target)),
-            //        TargetText = allFlowChartElement.FirstOrDefault(a => a.ID == item.Target).ValueText
-            //    });
-            //}
+            foreach (var item in findRouteTable)
+            {
+                var source = allFlowChartElement.FirstOrDefault(a => a.ID == item.Source);
+                var target = allFlowChartElement.FirstOrDefault(a => a.ID == item.Target);
+
+                RowNumer += 1;
+                routeTables.Add(new RouterTable
+                {
+                    RowNumber = RowNumer,
+                    ArrowID = item.ID,
+                    ArrowText = item.ValueText,
+                    SourceID = item.Source,
+                    SourceType = CheckFCNodeType(source),
+                    SourceText = source.ValueText,
+                    TargetID = item.Target,
+                    TargetType = CheckFCNodeType(target),
+                    TargetText = target.ValueText
+                });
+            }
 
             //เกิดปัญหา วนตาม Loop ไปเรื่อย ๆ
             //routeTables = ReorderToEqualRealFlowchart(routeTables);
@@ -165,32 +165,66 @@ namespace NestedFlowchart.Functions
             //    throw;
             //}
 
-
-
-
-
-
-            dg_RouteTable.DataSource = routeTables;
+            
             return routeTables;
 
         }
 
-        private List<RouterTable> ReorderToEqualRealFlowchart(List<RouterTable> routeTables)
+        public XMLCellNode? SortedFlowchartElement(List<XMLCellNode> allFlowChartElement,
+            List<XMLCellNode> sortedFlowchart,
+            List<XMLCellNode> tempDecisionElement,
+            XMLCellNode? target)
         {
-            var count = routeTables.Count;
-            List<RouterTable> ordered = new List<RouterTable>();
-            ordered.Add(routeTables.FirstOrDefault(x => x.SourceText == "Start") ?? new RouterTable());
-            for (int i = 0; i < count; i++)
+            //Find all if decision node
+            if (target.Style.Contains("flowchart.decision") || target.Style.Contains("rhombus"))
             {
-                var items = routeTables.FindAll(x => x.SourceID == ordered[i].TargetID);
-                foreach (var item in items)
-                {
-                    ordered.Add(item);
-                    routeTables.Remove(item);
-                }
-            }
+                var arrows = allFlowChartElement.FindAll(x => x.Source == target?.ID);
+                XMLCellNode? lastElement;
 
-            return ordered;
+                //First direction
+                tempDecisionElement.Add(allFlowChartElement.Find(x => x.ID == arrows.FirstOrDefault().Target));
+
+                //Second direction
+                sortedFlowchart.Add(arrows.LastOrDefault());
+                lastElement = allFlowChartElement.Find(x => x.ID == arrows.LastOrDefault().Target);
+                sortedFlowchart.Add(lastElement);
+
+                return lastElement;
+            }
+            else
+            {
+                //Arrow from source to target
+                var arrow = allFlowChartElement.Find(x => x.Source == target?.ID);
+                if (arrow == null && target.ValueText.ToLower() == "end") //Case End node
+                {
+                    arrow = allFlowChartElement.Find(x => x.Target == target?.ID);
+                }
+
+                if (!sortedFlowchart.Contains(arrow))
+                {
+                    sortedFlowchart.Add(arrow);
+                }
+
+                //Next Element
+                var element = allFlowChartElement.Find(x => x.ID == arrow?.Target);
+
+                if (!sortedFlowchart.Contains(element)) //If exist, not add and sent next temp element
+                {
+                    sortedFlowchart.Add(element);
+                }
+                else
+                {
+                    var lastTemp = tempDecisionElement.LastOrDefault();
+
+                    sortedFlowchart.Add(lastTemp);
+
+                    //If used, remove it
+                    tempDecisionElement.Remove(lastTemp);
+                    return lastTemp;
+                }
+
+                return element;
+            }
         }
 
         private String CheckFCNodeType(XMLCellNode flowChart)
