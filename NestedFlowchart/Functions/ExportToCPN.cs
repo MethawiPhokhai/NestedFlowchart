@@ -41,7 +41,10 @@ namespace NestedFlowchart.Functions
         {
             //Replace place parameter with string.format
             placeTemplate = string.Format(placeTemplate, model.Id1, model.Id2, model.Id3, 
-                model.Name, model.Type, model.InitialMarking);
+                model.Name, model.Type, model.InitialMarking, 
+                model.xPos1, model.yPos1,
+                model.xPos2, model.yPos2,
+                model.xPos3, model.yPos3);
 
             return placeTemplate;
         }
@@ -59,13 +62,25 @@ namespace NestedFlowchart.Functions
         //Rule 1 : Transform start to place start
         private PlaceModel Rule1(string placeTemplate)
         {
-            PlaceModel pl = new PlaceModel();
-            pl.Id1 = "ID1412948772";
-            pl.Id2 = "ID1412948773";
-            pl.Id3 = "ID1412948774";
-            pl.Name = "Start";
-            pl.Type = "UNIT";
-            pl.InitialMarking = string.Empty;
+            PlaceModel pl = new PlaceModel()
+            {
+                Id1 = "ID1412948772",
+                Id2 = "ID1412948773",
+                Id3 = "ID1412948774",
+                Name = "Start",
+                Type = "UNIT",
+                InitialMarking = string.Empty,
+
+                xPos1 = -15.000000,
+                yPos1 = 126.000000,
+
+                xPos2 = 24.000000,
+                yPos2 = 102.000000,
+
+                xPos3 = 41.000000,
+                yPos3 = 149.000000
+
+            };
 
             return pl;
         }
@@ -83,7 +98,16 @@ namespace NestedFlowchart.Functions
                 Id1 = "ID1412948775",
                 Id2 = "ID1412948776",
                 Id3 = "ID1412948777",
-                Name = "P1"
+                Name = "P1",
+
+                xPos1 = rule1.xPos1 - 4,
+                yPos1 = rule1.yPos1 - 168,
+
+                xPos2 = rule1.xPos2 - 4,
+                yPos2 = rule1.yPos2 - 167,
+
+                xPos3 = rule1.xPos3 - 4,
+                yPos3 = rule1.yPos3 - 167
             };
 
             //Define Type INTs

@@ -1,6 +1,6 @@
 ﻿<place id="{0}">
-        <posattr x="-15.000000"
-                 y="126.000000"/>
+        <posattr x="{6}"
+                 y="{7}"/>
         <fillattr colour="White"
                   pattern=""
                   filled="false"/>
@@ -22,8 +22,8 @@
                 anchor.vertical="0"/>
         </marking>
         <type id="{1}">
-          <posattr x="24.000000"
-                   y="102.000000"/>
+          <posattr x="{8}"
+                   y="{9}"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>
@@ -37,8 +37,8 @@
                 version="4.0.1">{4}</text>
         </type>
         <initmark id="{2}">
-          <posattr x="41.000000"
-                   y="149.000000"/>
+          <posattr x="{10}"
+                   y="{11}"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>

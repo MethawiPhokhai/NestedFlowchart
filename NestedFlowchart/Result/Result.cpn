@@ -58,8 +58,8 @@
     <page id="ID6">
       <pageattr name="New Page"/>
 	<place id="ID1412948772">
-        <posattr x="-15.000000"
-                 y="126.000000"/>
+        <posattr x="-15"
+                 y="126"/>
         <fillattr colour="White"
                   pattern=""
                   filled="false"/>
@@ -81,8 +81,8 @@
                 anchor.vertical="0"/>
         </marking>
         <type id="ID1412948773">
-          <posattr x="24.000000"
-                   y="102.000000"/>
+          <posattr x="24"
+                   y="102"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>
@@ -96,8 +96,8 @@
                 version="4.0.1">UNIT</text>
         </type>
         <initmark id="ID1412948774">
-          <posattr x="41.000000"
-                   y="149.000000"/>
+          <posattr x="41"
+                   y="149"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>
@@ -183,8 +183,8 @@
                 version="4.0.1"/>
         </priority>
       </trans><place id="ID1412948775">
-        <posattr x="-15.000000"
-                 y="126.000000"/>
+        <posattr x="-19"
+                 y="-42"/>
         <fillattr colour="White"
                   pattern=""
                   filled="false"/>
@@ -206,8 +206,8 @@
                 anchor.vertical="0"/>
         </marking>
         <type id="ID1412948776">
-          <posattr x="24.000000"
-                   y="102.000000"/>
+          <posattr x="20"
+                   y="-65"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>
@@ -221,8 +221,8 @@
                 version="4.0.1"></text>
         </type>
         <initmark id="ID1412948777">
-          <posattr x="41.000000"
-                   y="149.000000"/>
+          <posattr x="37"
+                   y="-18"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>

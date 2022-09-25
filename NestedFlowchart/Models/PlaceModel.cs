@@ -10,6 +10,15 @@
         public string Type { get; set; }
         public string InitialMarking { get; set; }
 
-        //TODO: Create 6 position
+
+        public double xPos1 { get; set; }
+        public double yPos1 { get; set; }
+
+        public double xPos2 { get; set; }
+        public double yPos2 { get; set; }
+
+        public double xPos3 { get; set; }
+        public double yPos3 { get; set; }
+
     }
 }
