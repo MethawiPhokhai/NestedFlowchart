@@ -11,6 +11,8 @@
 
   <ItemGroup>
     <Folder Include="Images\" />
+    <Folder Include="EmptyCPNTools\" />
+    <Folder Include="Result\" />
   </ItemGroup>
 
   <ItemGroup>

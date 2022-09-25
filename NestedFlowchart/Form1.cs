@@ -53,39 +53,83 @@ namespace NestedFlowchart
 
         private void btn_Transfrom_Click(object sender, EventArgs e)
         {
-            Transfrom transfrom = new();
-
-            //Read XML Flowchart
-            var allFlowChartElement = transfrom.Extracttion(this.txt_InputPath);
-            dg_ElementPreview.DataSource = allFlowChartElement;
-
-
-            //Sorted Flowchart Element
-            //input : allFlowchartElement
-            //output : sortedFlowchart
-            //Iterate until nextElement is null
-            List<XMLCellNode> sortedFlowchart = new List<XMLCellNode>();
-            List<XMLCellNode> tempDecisionElement = new List<XMLCellNode>();
-
-            var startElement = allFlowChartElement.Find(x => x.ValueText.ToLower() == "start");
-            sortedFlowchart.Add(startElement);
-
-            XMLCellNode? nextElement = transfrom.SortedFlowchartElement(allFlowChartElement, sortedFlowchart, tempDecisionElement, startElement);
-            while(nextElement != null)
+            try
             {
-                nextElement = transfrom.SortedFlowchartElement(allFlowChartElement, sortedFlowchart, tempDecisionElement, nextElement);
+                Transfrom transfrom = new();
+
+                //Read XML Flowchart
+                var allFlowChartElements = transfrom.Extracttion(this.txt_InputPath);
+
+                //Sorted Flowchart Element
+                //input : allFlowchartElement
+                //output : sortedFlowchart
+                //Iterate until nextElement is null
+                List<XMLCellNode> sortedFlowcharts = new List<XMLCellNode>();
+                List<XMLCellNode> tempDecisionElements = new List<XMLCellNode>();
+
+                var startElement = allFlowChartElements.Find(x => x.ValueText.ToLower() == "start");
+                sortedFlowcharts.Add(startElement);
+
+                XMLCellNode? nextElement = transfrom.SortedFlowchartElement(allFlowChartElements, sortedFlowcharts, tempDecisionElements, startElement);
+                while (nextElement != null)
+                {
+                    nextElement = transfrom.SortedFlowchartElement(allFlowChartElements, sortedFlowcharts, tempDecisionElements, nextElement);
+                }
+                sortedFlowcharts.Remove(null);
+
+                //Add column NodeType
+                foreach(var s in sortedFlowcharts)
+                {
+                    s.NodeType = transfrom.CheckFCNodeType(s);
+                }
+
+                //Bind to datasource table after formatted
+                dg_ElementPreview.DataSource = sortedFlowcharts;
             }
-
-
-            //Format XML to route table pattern
-            var routerTables = transfrom.BindRouteTable(this.dg_RouteTable, allFlowChartElement);
-            dg_RouteTable.DataSource = routerTables;
-
-            //Write Result Path
-
-            //Create CPN File
+            catch (Exception ex)
+            {
+                MessageBox.Show("2. Transform Error : ", ex.Message);
+            }
 
         }
 
+        private void btn_ExportToCPN_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                //Write Result Path
+                txt_ReultPath.Text = @"D://NestedFlowchartToCPNResult";
+
+                //Create CPN File
+                string emptyCPNTemplate = File.ReadAllText(@"G:\My Drive\CU\MasterProject\Project\Git\NestedFlowchart\EmptyCPNTools\EmptyNet.cpn");
+
+
+
+
+
+                //Insert each CPN Node into empty template
+                //Start
+
+                var startPlace = File.ReadAllText(@"G:\My Drive\CU\MasterProject\Project\Git\NestedFlowchart\Templates\StartPlace.txt");
+
+
+                var spit = emptyCPNTemplate.Split("<pageattr name=\"New Page\"/>");
+                spit[0] = string.Concat(spit[0], "<pageattr name=\"New Page\"/>");
+
+                spit[0] = string.Concat(spit[0], startPlace);
+
+                string firstCPN = spit[0] + spit[1];
+
+                //Write to CPN File
+                File.WriteAllText(@"G:\My Drive\CU\MasterProject\Project\Git\NestedFlowchart\Result\11.cpn", firstCPN);
+
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("3. Export to CPN Error : ", ex.Message);
+            }
+
+        }
     }
 }
