@@ -33,7 +33,6 @@ namespace NestedFlowchart.Functions
                 }
 
                 return xmlCellNode;
-
             }
             catch (Exception ex)
             {

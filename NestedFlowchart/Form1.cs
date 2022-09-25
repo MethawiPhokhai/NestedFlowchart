@@ -2,7 +2,6 @@ using NestedFlowchart.Functions;
 using NestedFlowchart.Models;
 using System.Configuration;
 using System.Diagnostics;
-using System.Linq;
 
 namespace NestedFlowchart
 {
@@ -18,9 +17,8 @@ namespace NestedFlowchart
             Process.Start("http://google.com");
         }
 
-
-
         #region Close Button
+
         private void btn_close_Click(object sender, EventArgs e)
         {
             Application.Exit();
@@ -36,8 +34,7 @@ namespace NestedFlowchart
             btn_close.ForeColor = SystemColors.ControlDarkDark;
         }
 
-        #endregion
-
+        #endregion Close Button
 
         private void btn_ImportXML_Click(object sender, EventArgs e)
         {
@@ -79,7 +76,7 @@ namespace NestedFlowchart
                 sortedFlowcharts.Remove(null);
 
                 //Add column NodeType
-                foreach(var s in sortedFlowcharts)
+                foreach (var s in sortedFlowcharts)
                 {
                     s.NodeType = transfrom.CheckFCNodeType(s);
                 }
@@ -91,7 +88,6 @@ namespace NestedFlowchart
             {
                 MessageBox.Show("2. Transform Error : ", ex.Message);
             }
-
         }
 
         private void btn_ExportToCPN_Click(object sender, EventArgs e)
@@ -104,30 +100,14 @@ namespace NestedFlowchart
                 //Write Result Path
                 txt_ReultPath.Text = ResultPath;
 
-                //Create CPN File
-                string emptyCPNTemplate = File.ReadAllText(TemplatePath + "EmptyNet.txt");
-
-
-
-
-
-                //Insert each CPN Node into empty template
-                //Start
-
-                var startPlace = File.ReadAllText(TemplatePath + "StartPlace.txt");
-
-                string firstCPN = string.Format(emptyCPNTemplate, startPlace);
-
-                //Write to CPN File
-                File.WriteAllText(ResultPath + "Result.cpn", firstCPN);
-
-
+                //Export to CPN Tools file
+                var exportToCPN = new ExportToCPN();
+                exportToCPN.ExportFile(TemplatePath, ResultPath);
             }
             catch (Exception ex)
             {
                 MessageBox.Show("3. Export to CPN Error : ", ex.Message);
             }
-
         }
     }
 }
