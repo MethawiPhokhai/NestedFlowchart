@@ -1,4 +1,4 @@
-﻿<place id="ID1412948772">
+﻿<place id="{0}">
         <posattr x="-15.000000"
                  y="126.000000"/>
         <fillattr colour="White"
@@ -9,7 +9,7 @@
                   type="Solid"/>
         <textattr colour="Black"
                   bold="false"/>
-        <text>Start</text>
+        <text>{3}</text>
         <ellipse w="60.000000"
                  h="40.000000"/>
         <token x="-10.000000"
@@ -21,7 +21,7 @@
                 anchor.horizontal="0"
                 anchor.vertical="0"/>
         </marking>
-        <type id="ID1412948773">
+        <type id="{1}">
           <posattr x="24.000000"
                    y="102.000000"/>
           <fillattr colour="White"
@@ -32,10 +32,11 @@
                     type="Solid"/>
           <textattr colour="Black"
                     bold="false"/>
+          <text>{3}</text>
           <text tool="CPN Tools"
-                version="4.0.1">UNIT</text>
+                version="4.0.1">{4}</text>
         </type>
-        <initmark id="ID1412948774">
+        <initmark id="{2}">
           <posattr x="41.000000"
                    y="149.000000"/>
           <fillattr colour="White"
@@ -47,6 +48,6 @@
           <textattr colour="Black"
                     bold="false"/>
           <text tool="CPN Tools"
-                version="4.0.1"/>
+                version="4.0.1"/>{5}
         </initmark>
       </place>

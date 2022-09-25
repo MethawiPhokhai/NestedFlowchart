@@ -10,7 +10,7 @@
                   type="Solid"/>
         <textattr colour="Black"
                   bold="false"/>
-        <text></text>
+        <text>{0}</text>
         <box w="60.000000"
              h="40.000000"/>
         <binding x="7.200000"
@@ -27,7 +27,7 @@
           <textattr colour="Black"
                     bold="false"/>
           <text tool="CPN Tools"
-                version="4.0.1"/>
+                version="4.0.1"/>{1}
         </cond>
         <time id="ID1412948794">
           <posattr x="29.500000"
