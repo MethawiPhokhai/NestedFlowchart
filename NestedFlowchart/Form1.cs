@@ -1,5 +1,6 @@
 using NestedFlowchart.Functions;
 using NestedFlowchart.Models;
+using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
 
@@ -97,11 +98,14 @@ namespace NestedFlowchart
         {
             try
             {
+                var TemplatePath = ConfigurationManager.AppSettings["TemplatePath"];
+                var ResultPath = ConfigurationManager.AppSettings["ResultPath"];
+
                 //Write Result Path
-                txt_ReultPath.Text = @"D://NestedFlowchartToCPNResult";
+                txt_ReultPath.Text = ResultPath;
 
                 //Create CPN File
-                string emptyCPNTemplate = File.ReadAllText(@"G:\My Drive\CU\MasterProject\Project\Git\NestedFlowchart\EmptyCPNTools\EmptyNet.cpn");
+                string emptyCPNTemplate = File.ReadAllText(TemplatePath + "EmptyNet.txt");
 
 
 
@@ -110,18 +114,12 @@ namespace NestedFlowchart
                 //Insert each CPN Node into empty template
                 //Start
 
-                var startPlace = File.ReadAllText(@"G:\My Drive\CU\MasterProject\Project\Git\NestedFlowchart\Templates\StartPlace.txt");
+                var startPlace = File.ReadAllText(TemplatePath + "StartPlace.txt");
 
-
-                var spit = emptyCPNTemplate.Split("<pageattr name=\"New Page\"/>");
-                spit[0] = string.Concat(spit[0], "<pageattr name=\"New Page\"/>");
-
-                spit[0] = string.Concat(spit[0], startPlace);
-
-                string firstCPN = spit[0] + spit[1];
+                string firstCPN = string.Format(emptyCPNTemplate, startPlace);
 
                 //Write to CPN File
-                File.WriteAllText(@"G:\My Drive\CU\MasterProject\Project\Git\NestedFlowchart\Result\11.cpn", firstCPN);
+                File.WriteAllText(ResultPath + "Result.cpn", firstCPN);
 
 
             }

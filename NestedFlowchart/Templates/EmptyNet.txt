@@ -57,6 +57,7 @@
     </globbox>
     <page id="ID6">
       <pageattr name="New Page"/>
+	{0}
       <constraints/>
     </page>
     <instances>
