@@ -86,7 +86,7 @@ namespace NestedFlowchart
             }
             catch (Exception ex)
             {
-                MessageBox.Show("2. Transform Error : ", ex.Message);
+                MessageBox.Show("2. Transform Error : " + ex.Message, "Error");
             }
         }
 
@@ -106,7 +106,7 @@ namespace NestedFlowchart
             }
             catch (Exception ex)
             {
-                MessageBox.Show("3. Export to CPN Error : ", ex.Message);
+                MessageBox.Show("3. Export to CPN Error : " + ex.Message, "Error");
             }
         }
     }

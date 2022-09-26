@@ -53,11 +53,19 @@
           <id>STRING</id>
           <string/>
         </color>
+        <color id="ID1412421237">
+          <id>INTs</id>
+          <list>
+            <id>INT</id>
+          </list>
+          <layout>colset INTs = list INT;</layout>
+        </color>
+        {0}
       </block>
     </globbox>
     <page id="ID6">
       <pageattr name="New Page"/>
-	{0}
+	{1}
       <constraints/>
     </page>
     <instances>

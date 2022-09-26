@@ -1,7 +1,7 @@
-﻿<trans id="ID1412948792"
+﻿<trans id="{0}"
              explicit="false">
-        <posattr x="-15.000000"
-                 y="42.000000"/>
+        <posattr x="{7}"
+                 y="{8}"/>
         <fillattr colour="White"
                   pattern=""
                   filled="false"/>
@@ -10,14 +10,14 @@
                   type="Solid"/>
         <textattr colour="Black"
                   bold="false"/>
-        <text>{0}</text>
+        <text>{5}</text>
         <box w="60.000000"
              h="40.000000"/>
         <binding x="7.200000"
                  y="-3.000000"/>
-        <cond id="ID1412948793">
-          <posattr x="-54.000000"
-                   y="73.000000"/>
+        <cond id="{1}">
+          <posattr x="{9}"
+                   y="{10}"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>
@@ -27,11 +27,11 @@
           <textattr colour="Black"
                     bold="false"/>
           <text tool="CPN Tools"
-                version="4.0.1"/>{1}
+                version="4.0.1"/>{6}
         </cond>
-        <time id="ID1412948794">
-          <posattr x="29.500000"
-                   y="73.000000"/>
+        <time id="{2}">
+          <posattr x="{11}"
+                   y="{12}"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>
@@ -43,9 +43,9 @@
           <text tool="CPN Tools"
                 version="4.0.1"/>
         </time>
-        <code id="ID1412948795">
-          <posattr x="49.500000"
-                   y="-10.000000"/>
+        <code id="{3}">
+          <posattr x="{13}"
+                   y="{14}"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>
@@ -57,9 +57,9 @@
           <text tool="CPN Tools"
                 version="4.0.1"/>
         </code>
-        <priority id="ID1412948797">
-          <posattr x="-83.000000"
-                   y="11.000000"/>
+        <priority id="{4}">
+          <posattr x="{15}"
+                   y="{16}"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>
