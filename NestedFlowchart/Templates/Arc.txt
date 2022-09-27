@@ -16,8 +16,8 @@
         <transend idref="{2}"/>
         <placeend idref="{3}"/>
         <annot id="{1}">
-          <posattr x="3.000000"
-                   y="84.000000"/>
+          <posattr x="{6}"
+                   y="{7}"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>

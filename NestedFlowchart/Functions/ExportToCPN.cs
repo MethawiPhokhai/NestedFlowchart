@@ -46,11 +46,11 @@ namespace NestedFlowchart.Functions
 
             var rule1 = Rule1();
             var rule2 = Rule2(transitionTemplate, placeTemplate, arcTemplate, rule1);
-            var rule3 = Rule3(transitionTemplate, placeTemplate, rule2.Item1, rule2.Item2);
+            var rule3 = Rule3(transitionTemplate, placeTemplate, arcTemplate, rule2.Item1, rule2.Item2, rule2.Item3);
 
 
             var allVar = var1 + var2; 
-            var allNode = rule2.Item3 + rule3;
+            var allNode = rule2.Item4 + rule3;
             string firstCPN = string.Format(emptyCPNTemplate, allVar, allNode);
 
             //Write to CPN File
@@ -99,7 +99,8 @@ namespace NestedFlowchart.Functions
         {
             string arc = string.Format(arcTemplate,model.Id1, model.Id2, 
                 model.TransEnd, model.PlaceEnd, 
-                model.Orientation, model.Type);
+                model.Orientation, model.Type,
+                model.xPos, model.yPos);
 
             return arc;
         }
@@ -133,7 +134,7 @@ namespace NestedFlowchart.Functions
         }
 
         //Rule 2 : Transform initialize process to transition and place, and assign initial marking
-        private (PlaceModel, TransitionModel, string) Rule2(string transitionTemplate, string placeTemplate,string arcTemplate, PlaceModel placeRule1)
+        private (PlaceModel, TransitionModel, ArcModel, string) Rule2(string transitionTemplate, string placeTemplate,string arcTemplate, PlaceModel placeRule1)
         {
             TransitionModel tr = new TransitionModel()
             {
@@ -175,7 +176,9 @@ namespace NestedFlowchart.Functions
                 yPos2 = placeRule1.yPos2 - 167,
 
                 xPos3 = placeRule1.xPos3 - 4,
-                yPos3 = placeRule1.yPos3 - 167
+                yPos3 = placeRule1.yPos3 - 167,
+
+                Type = "INTs"
             };
 
             ArcModel a1 = new ArcModel()
@@ -185,6 +188,9 @@ namespace NestedFlowchart.Functions
 
                 TransEnd = tr.Id1,
                 PlaceEnd = placeRule1.Id1,
+
+                xPos = 3,
+                yPos = 84,
 
                 Orientation = "PtoT", //Place to Transition
                 Type = "arr"
@@ -198,8 +204,11 @@ namespace NestedFlowchart.Functions
                 TransEnd = tr.Id1,
                 PlaceEnd = pl.Id1,
 
+                xPos = a1.xPos - 4,
+                yPos = a1.yPos - 82,
+
                 Orientation = "TtoP", //Transition to Place
-                Type = string.Empty
+                Type = "arr"
             };
 
 
@@ -215,12 +224,13 @@ namespace NestedFlowchart.Functions
             var place2 = CreatePlace(placeTemplate, pl);
 
             var allNode = place1 + place2 + transition + arc1 + arc2;
-            return (pl, tr, allNode);
+            return (pl, tr, a2, allNode);
 
         }
 
         //Rule 3 : Transform Nested Structure into Hierarchical
-        private string Rule3(string transitionTemplate, string placeTemplate, PlaceModel placeRule2, TransitionModel tranRule2)
+        private string Rule3(string transitionTemplate, string placeTemplate, string arcTemplate, 
+            PlaceModel placeRule2, TransitionModel tranRule2, ArcModel lastestArc)
         {
             //Define i=1 in Code Segment Inscription
             var codeSeg = "input (); \n " +
@@ -275,13 +285,48 @@ namespace NestedFlowchart.Functions
                 yPos2 = placeRule2.yPos2 - 167,
 
                 xPos3 = placeRule2.xPos3 - 4,
-                yPos3 = placeRule2.yPos3 - 167
+                yPos3 = placeRule2.yPos3 - 167,
+
+                Type = "INTs"
+            };
+
+            //Send lastest arc to here to + position
+            ArcModel a1 = new ArcModel()
+            {
+                Id1 = "ID1412948816",
+                Id2 = "ID1412948817",
+
+                TransEnd = tr.Id1,
+                PlaceEnd = placeRule2.Id1,
+
+                xPos = lastestArc.xPos - 4,
+                yPos = lastestArc.yPos - 82,
+
+                Orientation = "PtoT", //Place to Transition
+                Type = "arr"
+            };
+
+            ArcModel a2 = new ArcModel()
+            {
+                Id1 = "ID1412948818",
+                Id2 = "ID1412948819",
+
+                TransEnd = tr.Id1,
+                PlaceEnd = pl.Id1,
+
+                xPos = a1.xPos - 4,
+                yPos = a1.yPos - 82,
+
+                Orientation = "TtoP", //Transition to Place
+                Type = "arr"
             };
 
             var place1 = CreatePlace(placeTemplate, pl);
+            var arc1 = CreateArc(arcTemplate, a1);
             var transition = CreateTransition(transitionTemplate, tr);
+            var arc2 = CreateArc(arcTemplate, a2);
 
-            return place1 + transition;
+            return place1 + transition + arc1 + arc2;
 
         }
     }

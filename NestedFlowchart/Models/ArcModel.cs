@@ -16,5 +16,9 @@ namespace NestedFlowchart.Models
         public string Orientation { get; set; }
         public string Type { get; set; }
 
+
+        public double xPos { get; set; }
+        public double yPos { get; set; }
+
     }
 }
