@@ -65,7 +65,18 @@
             <id>INTs</id>
           </type>
           <id>arr</id>
+
           <layout>var arr: INTs;</layout>
+        </var><var id="ID1412422144">
+          <type>
+            <id>INT</id>
+          </type>
+          <id>i</id>
+<id>i2</id>
+<id>j</id>
+<id>j2</id>
+
+          <layout>var i,i2,j,j2: INT;</layout>
         </var>
       </block>
     </globbox>
@@ -122,6 +133,58 @@
                     bold="false"/>
           <text tool="CPN Tools"
                 version="4.0.1">[7,8,0,3,5]</text>
+        </initmark>
+      </place><place id="ID1412948775">
+        <posattr x="-19"
+                 y="-42"/>
+        <fillattr colour="White"
+                  pattern=""
+                  filled="false"/>
+        <lineattr colour="Black"
+                  thick="1"
+                  type="Solid"/>
+        <textattr colour="Black"
+                  bold="false"/>
+        <text>P1</text>
+        <ellipse w="60.000000"
+                 h="40.000000"/>
+        <token x="-10.000000"
+               y="0.000000"/>
+        <marking x="0.000000"
+                 y="0.000000"
+                 hidden="false">
+          <snap snap_id="0"
+                anchor.horizontal="0"
+                anchor.vertical="0"/>
+        </marking>
+        <type id="ID1412948776">
+          <posattr x="20"
+                   y="-65"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text>P1</text>
+          <text tool="CPN Tools"
+                version="4.0.1"></text>
+        </type>
+        <initmark id="ID1412948777">
+          <posattr x="37"
+                   y="-18"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1"></text>
         </initmark>
       </place><trans id="ID1412948792"
              explicit="false">
@@ -180,7 +243,7 @@
           <textattr colour="Black"
                     bold="false"/>
           <text tool="CPN Tools"
-                version="4.0.1"/>
+                version="4.0.1"></text>
         </code>
         <priority id="ID1412948796">
           <posattr x="-83"
@@ -196,59 +259,7 @@
           <text tool="CPN Tools"
                 version="4.0.1"/>
         </priority>
-      </trans><place id="ID1412948775">
-        <posattr x="-19"
-                 y="-42"/>
-        <fillattr colour="White"
-                  pattern=""
-                  filled="false"/>
-        <lineattr colour="Black"
-                  thick="1"
-                  type="Solid"/>
-        <textattr colour="Black"
-                  bold="false"/>
-        <text>P1</text>
-        <ellipse w="60.000000"
-                 h="40.000000"/>
-        <token x="-10.000000"
-               y="0.000000"/>
-        <marking x="0.000000"
-                 y="0.000000"
-                 hidden="false">
-          <snap snap_id="0"
-                anchor.horizontal="0"
-                anchor.vertical="0"/>
-        </marking>
-        <type id="ID1412948776">
-          <posattr x="20"
-                   y="-65"/>
-          <fillattr colour="White"
-                    pattern="Solid"
-                    filled="false"/>
-          <lineattr colour="Black"
-                    thick="0"
-                    type="Solid"/>
-          <textattr colour="Black"
-                    bold="false"/>
-          <text>P1</text>
-          <text tool="CPN Tools"
-                version="4.0.1"></text>
-        </type>
-        <initmark id="ID1412948777">
-          <posattr x="37"
-                   y="-18"/>
-          <fillattr colour="White"
-                    pattern="Solid"
-                    filled="false"/>
-          <lineattr colour="Black"
-                    thick="0"
-                    type="Solid"/>
-          <textattr colour="Black"
-                    bold="false"/>
-          <text tool="CPN Tools"
-                version="4.0.1"></text>
-        </initmark>
-      </place><arc id="ID1412948812"
+      </trans><arc id="ID1412948812"
            orientation="PtoT"
            order="1">
         <posattr x="0.000000"
@@ -310,7 +321,139 @@
           <text tool="CPN Tools"
                 version="4.0.1"></text>
         </annot>
-      </arc>
+      </arc><place id="ID1412948778">
+        <posattr x="-23"
+                 y="-210"/>
+        <fillattr colour="White"
+                  pattern=""
+                  filled="false"/>
+        <lineattr colour="Black"
+                  thick="1"
+                  type="Solid"/>
+        <textattr colour="Black"
+                  bold="false"/>
+        <text>P2</text>
+        <ellipse w="60.000000"
+                 h="40.000000"/>
+        <token x="-10.000000"
+               y="0.000000"/>
+        <marking x="0.000000"
+                 y="0.000000"
+                 hidden="false">
+          <snap snap_id="0"
+                anchor.horizontal="0"
+                anchor.vertical="0"/>
+        </marking>
+        <type id="ID1412948779">
+          <posattr x="16"
+                   y="-232"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text>P2</text>
+          <text tool="CPN Tools"
+                version="4.0.1"></text>
+        </type>
+        <initmark id="ID1412948780">
+          <posattr x="33"
+                   y="-185"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1"></text>
+        </initmark>
+      </place><trans id="ID1412948797"
+             explicit="false">
+        <posattr x="-24"
+                 y="-126"/>
+        <fillattr colour="White"
+                  pattern=""
+                  filled="false"/>
+        <lineattr colour="Black"
+                  thick="1"
+                  type="Solid"/>
+        <textattr colour="Black"
+                  bold="false"/>
+        <text>T2</text>
+        <box w="60.000000"
+             h="40.000000"/>
+        <binding x="7.200000"
+                 y="-3.000000"/>
+        <cond id="ID1412948798">
+          <posattr x="-63"
+                   y="-95"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1"/>
+        </cond>
+        <time id="ID1412948799">
+          <posattr x="20"
+                   y="-95"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1"/>
+        </time>
+        <code id="ID1412948800">
+          <posattr x="40"
+                   y="-178"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1">input (); 
+ output(i); 
+ action 
+ let 
+val i = 1 
+in 
+(i) 
+end</text>
+        </code>
+        <priority id="ID1412948801">
+          <posattr x="-92"
+                   y="-157"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1"/>
+        </priority>
+      </trans>
       <constraints/>
     </page>
     <instances>

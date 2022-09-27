@@ -1,7 +1,7 @@
-﻿<var id="ID1412422143">
+﻿<var id="{0}">
           <type>
-            <id>INTs</id>
+            <id>{1}</id>
           </type>
-          <id>arr</id>
-          <layout>var arr: INTs;</layout>
+          {2}
+          <layout>{3}</layout>
         </var>

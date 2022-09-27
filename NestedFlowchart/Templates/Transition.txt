@@ -55,7 +55,7 @@
           <textattr colour="Black"
                     bold="false"/>
           <text tool="CPN Tools"
-                version="4.0.1"/>
+                version="4.0.1">{17}</text>
         </code>
         <priority id="{4}">
           <posattr x="{15}"

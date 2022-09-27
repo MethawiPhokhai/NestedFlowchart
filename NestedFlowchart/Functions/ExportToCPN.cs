@@ -25,20 +25,51 @@ namespace NestedFlowchart.Functions
             //TODO: 
             //1. Create funtion for Place, Transition, Arc with Parameter
             //2. Foreach one by one from Flowchart Node to apply rule
+            VarModel var1Model = new VarModel()
+            {
+                Id = "ID1412422143",
+                Type = "INTs",
+                Name = "arr",
+                Layout = "var arr: INTs;"
+            };
 
+            VarModel var2Model = new VarModel()
+            {
+                Id = "ID1412422144",
+                Type = "INT",
+                Name = "i,i2,j,j2",
+                Layout = "var i,i2,j,j2: INT;"
+            };
 
-            var rule1 = Rule1(placeTemplate);
+            var var1 = CreateVar(varTemplate, var1Model);
+            var var2 = CreateVar(varTemplate, var2Model);
+
+            var rule1 = Rule1();
             var rule2 = Rule2(transitionTemplate, placeTemplate, arcTemplate, rule1);
+            var rule3 = Rule3(transitionTemplate, placeTemplate, rule2.Item1, rule2.Item2);
 
 
-
-            string firstCPN = string.Format(emptyCPNTemplate, varTemplate, rule2);
+            var allVar = var1 + var2; 
+            var allNode = rule2.Item3 + rule3;
+            string firstCPN = string.Format(emptyCPNTemplate, allVar, allNode);
 
             //Write to CPN File
             File.WriteAllText(ResultPath + "Result.cpn", firstCPN);
         }
 
         #region Create CPN Element
+
+        private string CreateVar(string varTemplate, VarModel model)
+        {
+            string newName = string.Empty;
+            var name = model.Name.Split(',');
+            foreach(var item in name)
+            {
+                newName += "<id>" + item + "</id>\n";
+            }
+            return string.Format(varTemplate, model.Id, model.Type, newName, model.Layout);
+        }
+
         private string CreatePlace(string placeTemplate, PlaceModel model)
         {
             placeTemplate = string.Format(placeTemplate, model.Id1, model.Id2, model.Id3, 
@@ -58,7 +89,8 @@ namespace NestedFlowchart.Functions
                 model.xPos2, model.yPos2,
                 model.xPos3, model.yPos3,
                 model.xPos4, model.yPos4,
-                model.xPos5, model.yPos5);
+                model.xPos5, model.yPos5,
+                model.CodeSegment);
 
             return transition;
         }
@@ -75,7 +107,7 @@ namespace NestedFlowchart.Functions
         #endregion
 
         //Rule 1 : Transform start to place start
-        private PlaceModel Rule1(string placeTemplate)
+        private PlaceModel Rule1()
         {
             PlaceModel pl = new PlaceModel()
             {
@@ -101,7 +133,7 @@ namespace NestedFlowchart.Functions
         }
 
         //Rule 2 : Transform initialize process to transition and place, and assign initial marking
-        private string Rule2(string transitionTemplate, string placeTemplate,string arcTemplate, PlaceModel rule1)
+        private (PlaceModel, TransitionModel, string) Rule2(string transitionTemplate, string placeTemplate,string arcTemplate, PlaceModel placeRule1)
         {
             TransitionModel tr = new TransitionModel()
             {
@@ -136,14 +168,14 @@ namespace NestedFlowchart.Functions
                 Id3 = "ID1412948777",
                 Name = "P1",
 
-                xPos1 = rule1.xPos1 - 4,
-                yPos1 = rule1.yPos1 - 168,
+                xPos1 = placeRule1.xPos1 - 4,
+                yPos1 = placeRule1.yPos1 - 168,
 
-                xPos2 = rule1.xPos2 - 4,
-                yPos2 = rule1.yPos2 - 167,
+                xPos2 = placeRule1.xPos2 - 4,
+                yPos2 = placeRule1.yPos2 - 167,
 
-                xPos3 = rule1.xPos3 - 4,
-                yPos3 = rule1.yPos3 - 167
+                xPos3 = placeRule1.xPos3 - 4,
+                yPos3 = placeRule1.yPos3 - 167
             };
 
             ArcModel a1 = new ArcModel()
@@ -152,7 +184,7 @@ namespace NestedFlowchart.Functions
                 Id2 = "ID1412948813",
 
                 TransEnd = tr.Id1,
-                PlaceEnd = rule1.Id1,
+                PlaceEnd = placeRule1.Id1,
 
                 Orientation = "PtoT", //Place to Transition
                 Type = "arr"
@@ -172,17 +204,84 @@ namespace NestedFlowchart.Functions
 
 
             //Define type and Initial marking value
-            rule1.Type = "INTs";
-            rule1.InitialMarking = "[7,8,0,3,5]";
+            placeRule1.Type = "INTs";
+            placeRule1.InitialMarking = "[7,8,0,3,5]";
 
 
-            var place1 = CreatePlace(placeTemplate, rule1);
+            var place1 = CreatePlace(placeTemplate, placeRule1);
             var arc1 = CreateArc(arcTemplate, a1);
             var transition = CreateTransition(transitionTemplate, tr);
             var arc2 = CreateArc(arcTemplate, a2);
             var place2 = CreatePlace(placeTemplate, pl);
 
-            return place1 + transition + place2 + arc1 + arc2;
+            var allNode = place1 + place2 + transition + arc1 + arc2;
+            return (pl, tr, allNode);
+
+        }
+
+        //Rule 3 : Transform Nested Structure into Hierarchical
+        private string Rule3(string transitionTemplate, string placeTemplate, PlaceModel placeRule2, TransitionModel tranRule2)
+        {
+            //Define i=1 in Code Segment Inscription
+            var codeSeg = "input (); \n " +
+                "output(i); \n " +
+                "action \n " +
+                "let \n" +
+                "val i = 1 \n" +
+                "in \n" +
+                "(i) \n" +
+                "end";
+
+
+            TransitionModel tr = new TransitionModel()
+            {
+                Id1 = "ID1412948797",
+                Id2 = "ID1412948798",
+                Id3 = "ID1412948799",
+                Id4 = "ID1412948800",
+                Id5 = "ID1412948801",
+
+                Name = "T2",
+
+                xPos1 = tranRule2.xPos1 - 9,
+                yPos1 = tranRule2.yPos1 - 168,
+
+                xPos2 = tranRule2.xPos2 - 9,
+                yPos2 = tranRule2.yPos2 - 168,
+
+                xPos3 = tranRule2.xPos3 - 9,
+                yPos3 = tranRule2.yPos3 - 168,
+
+                xPos4 = tranRule2.xPos4 - 9,
+                yPos4 = tranRule2.yPos4 - 168,
+
+                xPos5 = tranRule2.xPos5 - 9,
+                yPos5 = tranRule2.yPos5 - 168,
+
+                CodeSegment = codeSeg
+            };
+
+            PlaceModel pl = new PlaceModel()
+            {
+                Id1 = "ID1412948778",
+                Id2 = "ID1412948779",
+                Id3 = "ID1412948780",
+                Name = "P2",
+
+                xPos1 = placeRule2.xPos1 - 4,
+                yPos1 = placeRule2.yPos1 - 168,
+
+                xPos2 = placeRule2.xPos2 - 4,
+                yPos2 = placeRule2.yPos2 - 167,
+
+                xPos3 = placeRule2.xPos3 - 4,
+                yPos3 = placeRule2.yPos3 - 167
+            };
+
+            var place1 = CreatePlace(placeTemplate, pl);
+            var transition = CreateTransition(transitionTemplate, tr);
+
+            return place1 + transition;
 
         }
     }
