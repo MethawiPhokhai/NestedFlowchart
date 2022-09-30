@@ -501,5 +501,52 @@ namespace NestedFlowchart.Functions
             return (placeRule4, tr2, a2, transition1 + transition2 + arc1 + arc2);
         }
 
+        //Rule 7 : End
+        public (PlaceModel, string) Rule7(string placeTemplate, string arcTemplate, 
+            PlaceModel lastestPlace, TransitionModel lastestTran, ArcModel lastestArc)
+        {
+            //End Place
+            PlaceModel pl = new PlaceModel()
+            {
+                Id1 = "ID1412948784",
+                Id2 = "ID1412948785",
+                Id3 = "ID1412948786",
+                Name = "End",
+                Type = "INTs",
+                InitialMarking = string.Empty,
+
+                xPos1 = lastestPlace.xPos1 - 4,
+                yPos1 = lastestPlace.yPos1 - 168,
+
+                xPos2 = lastestPlace.xPos2 - 4,
+                yPos2 = lastestPlace.yPos2 - 167,
+
+                xPos3 = lastestPlace.xPos3 - 4,
+                yPos3 = lastestPlace.yPos3 - 167,
+
+            };
+
+            //Arc from GF1 to End
+            ArcModel a1 = new ArcModel()
+            {
+                Id1 = "ID1412949828",
+                Id2 = "ID1412949829",
+
+                TransEnd = "ID1412948807", //TODO: Need to send GF1 id
+                PlaceEnd = pl.Id1,
+
+                //TODO: Need to send position from lastest Transition
+                xPos = lastestArc.xPos - 4,
+                yPos = lastestArc.yPos - 82,
+
+                Orientation = "TtoP", //Transition to Place
+                Type = "arr"
+            };
+
+            var place1 = CreatePlace(placeTemplate, pl);
+            var arc1 = CreateArc(arcTemplate, a1);
+            return (pl, place1 + arc1);
+        }
+
     }
 }
