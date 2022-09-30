@@ -67,12 +67,12 @@ namespace NestedFlowchart.Functions
             var rule1 = approach.Rule1();
             var rule2 = approach.Rule2(transitionTemplate, placeTemplate, arcTemplate, rule1);
             var rule3 = approach.Rule3(transitionTemplate, placeTemplate, arcTemplate, rule2.Item1, rule2.Item2, rule2.Item3);
-            var rule4 = approach.Rule5(transitionTemplate, placeTemplate, arcTemplate, rule3.Item1, rule3.Item2, rule3.Item3);
-            var rule5 = approach.Rule6(transitionTemplate, placeTemplate, arcTemplate, rule4.Item1, rule4.Item2, rule4.Item3);
+            var rule5 = approach.Rule5(transitionTemplate, placeTemplate, arcTemplate, rule3.Item1, rule3.Item2, rule3.Item3);
+            var rule6 = approach.Rule6(transitionTemplate, placeTemplate, arcTemplate, rule5.Item1, rule5.Item2, rule5.Item3);
 
             var allColorSet = col1;
             var allVar = var1 + var2;
-            var allNode = rule2.Item4 + rule3.Item4 + rule4.Item4 + rule5.Item4;
+            var allNode = rule2.Item4 + rule3.Item4 + rule5.Item4 + rule6.Item4;
             string firstCPN = string.Format(emptyCPNTemplate, allColorSet + allVar, allNode);
 
             //Write to CPN File
