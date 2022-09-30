@@ -27,7 +27,7 @@
           <textattr colour="Black"
                     bold="false"/>
           <text tool="CPN Tools"
-                version="4.0.1"/>{6}
+                version="4.0.1">{6}</text>
         </cond>
         <time id="{2}">
           <posattr x="{11}"

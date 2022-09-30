@@ -146,8 +146,8 @@ namespace NestedFlowchart.Functions
 
             ArcModel a1 = new ArcModel()
             {
-                Id1 = "ID1412948812",
-                Id2 = "ID1412948813",
+                Id1 = "ID1412949812",
+                Id2 = "ID1412949813",
 
                 TransEnd = tr.Id1,
                 PlaceEnd = placeRule1.Id1,
@@ -161,8 +161,8 @@ namespace NestedFlowchart.Functions
 
             ArcModel a2 = new ArcModel()
             {
-                Id1 = "ID1412948814",
-                Id2 = "ID1412948815",
+                Id1 = "ID1412949814",
+                Id2 = "ID1412949815",
 
                 TransEnd = tr.Id1,
                 PlaceEnd = pl.Id1,
@@ -259,8 +259,8 @@ namespace NestedFlowchart.Functions
             //Arc from P1 to T2
             ArcModel a1 = new ArcModel()
             {
-                Id1 = "ID1412948816",
-                Id2 = "ID1412948817",
+                Id1 = "ID1412949816",
+                Id2 = "ID1412949817",
 
                 TransEnd = tr.Id1,
                 PlaceEnd = placeRule2.Id1,
@@ -275,8 +275,8 @@ namespace NestedFlowchart.Functions
             //Arc from T2 to P2
             ArcModel a2 = new ArcModel()
             {
-                Id1 = "ID1412948818",
-                Id2 = "ID1412948819",
+                Id1 = "ID1412949818",
+                Id2 = "ID1412949819",
 
                 TransEnd = tr.Id1,
                 PlaceEnd = pl.Id1,
@@ -299,7 +299,7 @@ namespace NestedFlowchart.Functions
 
         //Rule 4 : Connector
         public (PlaceModel, TransitionModel, ArcModel, string) Rule4(string transitionTemplate, string placeTemplate, string arcTemplate,
-            PlaceModel placeRule3, TransitionModel transRule3, ArcModel arcRule3)
+            PlaceModel placeRule3, TransitionModel tranRule3, ArcModel arcRule3)
         {
             //T3 Transition
             TransitionModel tr = new TransitionModel()
@@ -312,20 +312,20 @@ namespace NestedFlowchart.Functions
 
                 Name = "T3",
 
-                xPos1 = transRule3.xPos1 - 9,
-                yPos1 = transRule3.yPos1 - 168,
+                xPos1 = tranRule3.xPos1 - 9,
+                yPos1 = tranRule3.yPos1 - 168,
 
-                xPos2 = transRule3.xPos2 - 9,
-                yPos2 = transRule3.yPos2 - 168,
+                xPos2 = tranRule3.xPos2 - 9,
+                yPos2 = tranRule3.yPos2 - 168,
 
-                xPos3 = transRule3.xPos3 - 9,
-                yPos3 = transRule3.yPos3 - 168,
+                xPos3 = tranRule3.xPos3 - 9,
+                yPos3 = tranRule3.yPos3 - 168,
 
-                xPos4 = transRule3.xPos4 - 9,
-                yPos4 = transRule3.yPos4 - 168,
+                xPos4 = tranRule3.xPos4 - 9,
+                yPos4 = tranRule3.yPos4 - 168,
 
-                xPos5 = transRule3.xPos5 - 9,
-                yPos5 = transRule3.yPos5 - 168,
+                xPos5 = tranRule3.xPos5 - 9,
+                yPos5 = tranRule3.yPos5 - 168,
 
             };
 
@@ -352,8 +352,8 @@ namespace NestedFlowchart.Functions
             //Arc from P2 to T3
             ArcModel a1 = new ArcModel()
             {
-                Id1 = "ID1412948820",
-                Id2 = "ID1412948821",
+                Id1 = "ID1412949820",
+                Id2 = "ID1412949821",
 
                 TransEnd = tr.Id1,
                 PlaceEnd = placeRule3.Id1,
@@ -368,8 +368,8 @@ namespace NestedFlowchart.Functions
             //Arc from T3 to CN1
             ArcModel a2 = new ArcModel()
             {
-                Id1 = "ID1412948822",
-                Id2 = "ID1412948823",
+                Id1 = "ID1412949822",
+                Id2 = "ID1412949823",
 
                 TransEnd = tr.Id1,
                 PlaceEnd = pl.Id1,
@@ -391,9 +391,111 @@ namespace NestedFlowchart.Functions
         }
 
         //Rule5 Decision
-        public (PlaceModel, TransitionModel, ArcModel, string) Rule5()
+        public (PlaceModel, TransitionModel, ArcModel, string) Rule5(string transitionTemplate, string placeTemplate, string arcTemplate,
+            PlaceModel placeRule4, TransitionModel tranRule4, ArcModel arcRule4)
         {
-            return (null, null, null, null);
+
+            //GF1 Transition
+            TransitionModel tr1 = new TransitionModel()
+            {
+                Id1 = "ID1412948807",
+                Id2 = "ID1412948808",
+                Id3 = "ID1412948809",
+                Id4 = "ID1412948810",
+                Id5 = "ID1412948811",
+
+                Name = "GF1",
+
+                xPos1 = tranRule4.xPos1 - 39,
+                yPos1 = tranRule4.yPos1 - 168,
+
+                xPos2 = tranRule4.xPos2 - 59,
+                yPos2 = tranRule4.yPos2 - 168,
+
+                xPos3 = tranRule4.xPos3 - 39,
+                yPos3 = tranRule4.yPos3 - 168,
+
+                xPos4 = tranRule4.xPos4 - 39,
+                yPos4 = tranRule4.yPos4 - 168,
+
+                xPos5 = tranRule4.xPos5 - 39,
+                yPos5 = tranRule4.yPos5 - 168,
+
+                Condition = "[i &gt;= length arr]"
+
+            };
+
+            //GT1 Transition
+            TransitionModel tr2 = new TransitionModel()
+            {
+                Id1 = "ID1412948812",
+                Id2 = "ID1412948813",
+                Id3 = "ID1412948814",
+                Id4 = "ID1412948815",
+                Id5 = "ID1412948816",
+
+                Name = "GT1",
+
+                xPos1 = tranRule4.xPos1 + 39,
+                yPos1 = tranRule4.yPos1 - 168,
+
+                xPos2 = tranRule4.xPos2 + 139,
+                yPos2 = tranRule4.yPos2 - 168,
+
+                xPos3 = tranRule4.xPos3 + 39,
+                yPos3 = tranRule4.yPos3 - 168,
+
+                xPos4 = tranRule4.xPos4 + 39,
+                yPos4 = tranRule4.yPos4 - 168,
+
+                xPos5 = tranRule4.xPos5 + 39,
+                yPos5 = tranRule4.yPos5 - 168,
+
+                Condition = "[i &lt; length arr]"
+
+            };
+
+            //Arc from CN1 to GF1
+            ArcModel a1 = new ArcModel()
+            {
+                Id1 = "ID1412949824",
+                Id2 = "ID1412949825",
+
+                TransEnd = tr1.Id1,
+                PlaceEnd = placeRule4.Id1,
+
+                xPos = arcRule4.xPos - 34,
+                yPos = arcRule4.yPos - 82,
+
+                Orientation = "PtoT", //Place to Transition
+                Type = "(i,arr)"
+            };
+
+            //Arc from CN1 to GT1
+            ArcModel a2 = new ArcModel()
+            {
+                Id1 = "ID1412949826",
+                Id2 = "ID1412949827",
+
+                TransEnd = tr2.Id1,
+                PlaceEnd = placeRule4.Id1,
+
+                xPos = arcRule4.xPos + 34,
+                yPos = arcRule4.yPos - 82,
+
+                Orientation = "PtoT", //Place to Transition
+                Type = "(i,arr)"
+            };
+
+
+            var transition1 = CreateTransition(transitionTemplate, tr1);
+            var transition2 = CreateTransition(transitionTemplate, tr2);
+
+            var arc1 = CreateArc(arcTemplate, a1);
+            var arc2 = CreateArc(arcTemplate, a2);
+
+            //Return transition an arc of GT
+            return (placeRule4, tr2, a2, transition1 + transition2 + arc1 + arc2);
         }
 
     }
