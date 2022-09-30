@@ -193,107 +193,117 @@ namespace NestedFlowchart.Functions
 
         //Rule 3 : Transform Nested Structure into Hierarchical
         public (PlaceModel, TransitionModel, ArcModel, string) Rule3(string transitionTemplate, string placeTemplate, string arcTemplate,
-            PlaceModel placeRule2, TransitionModel tranRule2, ArcModel arcRule2)
+            PlaceModel placeRule2, TransitionModel tranRule2, ArcModel arcRule2, bool isHierarchy)
         {
-
-            //T2 Code Segment Inscription
-            //Define i=1 in Code Segment Inscription
-            var codeSeg = "input (); \n " +
-                "output(i); \n " +
-                "action \n " +
-                "let \n" +
-                "val i = 1 \n" +
-                "in \n" +
-                "(i) \n" +
-                "end";
-
-            //T2 Transition
-            TransitionModel tr = new TransitionModel()
+            if (!isHierarchy)
             {
-                Id1 = "ID1412948797",
-                Id2 = "ID1412948798",
-                Id3 = "ID1412948799",
-                Id4 = "ID1412948800",
-                Id5 = "ID1412948801",
+                //T2 Code Segment Inscription
+                //Define i=1 in Code Segment Inscription
+                var codeSeg = "input (); \n " +
+                    "output(i); \n " +
+                    "action \n " +
+                    "let \n" +
+                    "val i = 1 \n" +
+                    "in \n" +
+                    "(i) \n" +
+                    "end";
 
-                Name = "T2",
+                //T2 Transition
+                TransitionModel tr = new TransitionModel()
+                {
+                    Id1 = "ID1412948797",
+                    Id2 = "ID1412948798",
+                    Id3 = "ID1412948799",
+                    Id4 = "ID1412948800",
+                    Id5 = "ID1412948801",
 
-                xPos1 = tranRule2.xPos1 - 9,
-                yPos1 = tranRule2.yPos1 - 168,
+                    Name = "T2",
 
-                xPos2 = tranRule2.xPos2 - 9,
-                yPos2 = tranRule2.yPos2 - 168,
+                    xPos1 = tranRule2.xPos1 - 9,
+                    yPos1 = tranRule2.yPos1 - 168,
 
-                xPos3 = tranRule2.xPos3 - 9,
-                yPos3 = tranRule2.yPos3 - 168,
+                    xPos2 = tranRule2.xPos2 - 9,
+                    yPos2 = tranRule2.yPos2 - 168,
 
-                xPos4 = tranRule2.xPos4 - 9,
-                yPos4 = tranRule2.yPos4 - 168,
+                    xPos3 = tranRule2.xPos3 - 9,
+                    yPos3 = tranRule2.yPos3 - 168,
 
-                xPos5 = tranRule2.xPos5 - 9,
-                yPos5 = tranRule2.yPos5 - 168,
+                    xPos4 = tranRule2.xPos4 - 9,
+                    yPos4 = tranRule2.yPos4 - 168,
 
-                CodeSegment = codeSeg
-            };
+                    xPos5 = tranRule2.xPos5 - 9,
+                    yPos5 = tranRule2.yPos5 - 168,
 
-            //P2 Place
-            PlaceModel pl = new PlaceModel()
+                    CodeSegment = codeSeg
+                };
+
+                //P2 Place
+                PlaceModel pl = new PlaceModel()
+                {
+                    Id1 = "ID1412948778",
+                    Id2 = "ID1412948779",
+                    Id3 = "ID1412948780",
+                    Name = "P2",
+
+                    xPos1 = placeRule2.xPos1 - 4,
+                    yPos1 = placeRule2.yPos1 - 168,
+
+                    xPos2 = placeRule2.xPos2 - 4,
+                    yPos2 = placeRule2.yPos2 - 167,
+
+                    xPos3 = placeRule2.xPos3 - 4,
+                    yPos3 = placeRule2.yPos3 - 167,
+
+                    Type = "loopi"
+                };
+
+                //Arc from P1 to T2
+                ArcModel a1 = new ArcModel()
+                {
+                    Id1 = "ID1412949816",
+                    Id2 = "ID1412949817",
+
+                    TransEnd = tr.Id1,
+                    PlaceEnd = placeRule2.Id1,
+
+                    xPos = arcRule2.xPos - 4,
+                    yPos = arcRule2.yPos - 82,
+
+                    Orientation = "PtoT", //Place to Transition
+                    Type = "arr"
+                };
+
+                //Arc from T2 to P2
+                ArcModel a2 = new ArcModel()
+                {
+                    Id1 = "ID1412949818",
+                    Id2 = "ID1412949819",
+
+                    TransEnd = tr.Id1,
+                    PlaceEnd = pl.Id1,
+
+                    xPos = a1.xPos - 4,
+                    yPos = a1.yPos - 82,
+
+                    Orientation = "TtoP", //Transition to Place
+                    Type = "(i,arr)"
+                };
+
+                var place1 = CreatePlace(placeTemplate, pl);
+                var arc1 = CreateArc(arcTemplate, a1);
+                var transition = CreateTransition(transitionTemplate, tr);
+                var arc2 = CreateArc(arcTemplate, a2);
+
+                return (pl, tr, a2, (place1 + transition + arc1 + arc2));
+            }
+            else
             {
-                Id1 = "ID1412948778",
-                Id2 = "ID1412948779",
-                Id3 = "ID1412948780",
-                Name = "P2",
+                //TODO: Create New Page
 
-                xPos1 = placeRule2.xPos1 - 4,
-                yPos1 = placeRule2.yPos1 - 168,
 
-                xPos2 = placeRule2.xPos2 - 4,
-                yPos2 = placeRule2.yPos2 - 167,
-
-                xPos3 = placeRule2.xPos3 - 4,
-                yPos3 = placeRule2.yPos3 - 167,
-
-                Type = "loopi"
-            };
-
-            //Arc from P1 to T2
-            ArcModel a1 = new ArcModel()
-            {
-                Id1 = "ID1412949816",
-                Id2 = "ID1412949817",
-
-                TransEnd = tr.Id1,
-                PlaceEnd = placeRule2.Id1,
-
-                xPos = arcRule2.xPos - 4,
-                yPos = arcRule2.yPos - 82,
-
-                Orientation = "PtoT", //Place to Transition
-                Type = "arr"
-            };
-
-            //Arc from T2 to P2
-            ArcModel a2 = new ArcModel()
-            {
-                Id1 = "ID1412949818",
-                Id2 = "ID1412949819",
-
-                TransEnd = tr.Id1,
-                PlaceEnd = pl.Id1,
-
-                xPos = a1.xPos - 4,
-                yPos = a1.yPos - 82,
-
-                Orientation = "TtoP", //Transition to Place
-                Type = "(i,arr)"
-            };
-
-            var place1 = CreatePlace(placeTemplate, pl);
-            var arc1 = CreateArc(arcTemplate, a1);
-            var transition = CreateTransition(transitionTemplate, tr);
-            var arc2 = CreateArc(arcTemplate, a2);
-
-            return (pl, tr, a2, (place1 + transition + arc1 + arc2));
+                return (null, null, null, null);
+            }
+            
 
         }
 

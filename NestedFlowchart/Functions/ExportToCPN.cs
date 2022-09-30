@@ -66,7 +66,7 @@ namespace NestedFlowchart.Functions
 
             var rule1 = approach.Rule1();
             var rule2 = approach.Rule2(transitionTemplate, placeTemplate, arcTemplate, rule1);
-            var rule3 = approach.Rule3(transitionTemplate, placeTemplate, arcTemplate, rule2.Item1, rule2.Item2, rule2.Item3);
+            var rule3 = approach.Rule3(transitionTemplate, placeTemplate, arcTemplate, rule2.Item1, rule2.Item2, rule2.Item3, false);
             var rule5 = approach.Rule5(transitionTemplate, placeTemplate, arcTemplate, rule3.Item1, rule3.Item2, rule3.Item3);
             var rule6 = approach.Rule6(transitionTemplate, placeTemplate, arcTemplate, rule5.Item1, rule5.Item2, rule5.Item3);
             var rule7 = approach.Rule7(placeTemplate, arcTemplate, rule5.Item1, rule5.Item2, rule5.Item3);

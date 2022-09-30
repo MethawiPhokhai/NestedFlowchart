@@ -1,0 +1,16 @@
+﻿        <subst subpage="ID1412399271"
+               portsock="(ID1412399279,ID1412396903)(ID1412399284,ID1412386520)">
+          <subpageinfo id="ID1412399301"
+                       name="New Subpage">
+            <posattr x="-252.000000"
+                     y="-339.000000"/>
+            <fillattr colour="White"
+                      pattern="Solid"
+                      filled="false"/>
+            <lineattr colour="Black"
+                      thick="0"
+                      type="Solid"/>
+            <textattr colour="Black"
+                      bold="false"/>
+          </subpageinfo>
+        </subst>
