@@ -297,8 +297,11 @@ namespace NestedFlowchart.Functions
 
         }
 
-        //Rule 4 : Connector
-        public (PlaceModel, TransitionModel, ArcModel, string) Rule4(string transitionTemplate, string placeTemplate, string arcTemplate,
+        //Rule 4 Simple Process
+
+
+        //Rule 5 : Connector
+        public (PlaceModel, TransitionModel, ArcModel, string) Rule5(string transitionTemplate, string placeTemplate, string arcTemplate,
             PlaceModel placeRule3, TransitionModel tranRule3, ArcModel arcRule3)
         {
             //T3 Transition
@@ -390,8 +393,8 @@ namespace NestedFlowchart.Functions
             return (pl, tr, a2, (place1 + transition + arc1 + arc2));
         }
 
-        //Rule5 Decision
-        public (PlaceModel, TransitionModel, ArcModel, string) Rule5(string transitionTemplate, string placeTemplate, string arcTemplate,
+        //Rule 6 : Decision
+        public (PlaceModel, TransitionModel, ArcModel, string) Rule6(string transitionTemplate, string placeTemplate, string arcTemplate,
             PlaceModel placeRule4, TransitionModel tranRule4, ArcModel arcRule4)
         {
 
