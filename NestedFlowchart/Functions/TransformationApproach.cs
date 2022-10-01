@@ -76,6 +76,20 @@ namespace NestedFlowchart.Functions
 
         #endregion
 
+        private string ConvertDecision(string sign)
+        {
+            return sign switch
+            {
+                "&gt;" => "&lt;=",
+                "&lt;" => "&gt;=",
+                "=" => "!=",
+                "!=" => "=",
+                _ => string.Empty
+            };
+        }
+
+
+
         //Rule 1 : Transform start to place start
         public PlaceModel Rule1()
         {
@@ -488,7 +502,7 @@ namespace NestedFlowchart.Functions
                 xPos5 = tranRule4.xPos5 - 39,
                 yPos5 = tranRule4.yPos5 - 168,
 
-                Condition = "[i &gt;= length arr]"
+                Condition = "[i " + ConvertDecision("&lt;")  + " length arr]"
 
             };
 
