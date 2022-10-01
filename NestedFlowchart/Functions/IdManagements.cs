@@ -11,6 +11,7 @@
         public static int PageId { get; set; } = 50866;
 
         public static int SubStrId { get; set; } = 99300;
+        public static int PortId { get; set; } = 99400;
 
         public static string GetlastestColorSetId()
         {
@@ -58,6 +59,12 @@
         {
             SubStrId++;
             return "ID14123" + SubStrId;
+        }
+
+        public static string GetlastestPortId()
+        {
+            PortId++;
+            return "ID14123" + PortId;
         }
     }
 }

@@ -10,6 +10,8 @@
         public string Type { get; set; }
         public string InitialMarking { get; set; }
 
+        public string Port { get; set; }
+
         public double xPos1 { get; set; }
         public double yPos1 { get; set; }
 

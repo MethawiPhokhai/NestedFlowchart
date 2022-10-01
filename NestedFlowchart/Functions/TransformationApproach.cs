@@ -10,6 +10,11 @@ namespace NestedFlowchart.Functions
     public class TransformationApproach
     {
         #region Create CPN Element
+        public string CreatePage(string pageTemplate, PageModel model)
+        {
+            return string.Format("\n" + pageTemplate, model.Id, model.Name, model.Node);
+        }
+
 
         public string CreateColorSet(string colorTemplate, ColorSetModel model)
         {
@@ -33,13 +38,15 @@ namespace NestedFlowchart.Functions
             return string.Format(varTemplate, model.Id, model.Type, newName, model.Layout);
         }
 
+
         public string CreatePlace(string placeTemplate, PlaceModel model)
         {
             placeTemplate = string.Format("\n" + placeTemplate, model.Id1, model.Id2, model.Id3, 
                 model.Name, model.Type, model.InitialMarking, 
                 model.xPos1, model.yPos1,
                 model.xPos2, model.yPos2,
-                model.xPos3, model.yPos3);
+                model.xPos3, model.yPos3,
+                model.Port);
 
             return placeTemplate;
         }
@@ -69,23 +76,25 @@ namespace NestedFlowchart.Functions
             return arc;
         }
 
-        public string CreateHierarchy_Instance(string instanceTemplate, InstanceModel model)
+
+        public string CreateHierarchyInstance(string instanceTemplate, HierarchyInstanceModel model)
         {
             return string.Format(instanceTemplate, model.Id, model.Text, model.Closer);
         }
 
-        public string CreatePage(string pageTemplate, PageModel model)
+        public string CreateHierarchySubSt(string subStrTemplate, HierarchySubStModel model)
         {
-            return string.Format("\n" + pageTemplate, model.Id, model.Name, model.Node);
-        }
-
-        public string CreateSubStr(string subStrTemplate, SubStrModel model)
-        {
-            return string.Format(subStrTemplate, model.SubPageId,
+            return string.Format("\n" + subStrTemplate, model.SubPageId,
                 model.NewInputPlaceId, model.OldInputPlaceId,
                 model.NewOutputPlaceId, model.OldOutputPlaceId,
                 model.Id, model.Name,
                 model.xPos, model.yPos);
+        }
+
+        public string CreateHierarchyPort(string portTemplate, HierarchyPortModel model)
+        {
+            return string.Format("\n" + portTemplate, model.Id,
+                model.Type, model.xPos, model.yPos);
         }
 
         #endregion
@@ -226,7 +235,7 @@ namespace NestedFlowchart.Functions
         }
 
         //Rule 3 : Transform Nested Structure into Hierarchical
-        public (PlaceModel, TransitionModel, ArcModel, string, string) Rule3(string transitionTemplate, string placeTemplate, string arcTemplate, string subStrTemplate,
+        public (PlaceModel, TransitionModel, ArcModel, string, string) Rule3(string transitionTemplate, string placeTemplate, string arcTemplate, string subStrTemplate, string portTemplate,
             PlaceModel placeRule2, TransitionModel tranRule2, ArcModel arcRule2, bool isHierarchy, string page2Id)
         {
             if (!isHierarchy)
@@ -352,6 +361,14 @@ namespace NestedFlowchart.Functions
                     Type = "loopi"
                 };
 
+                var p3InputPort = new HierarchyPortModel()
+                {
+                    Id = IdManagements.GetlastestPortId(),
+                    Type = "In",
+                    xPos = -4,
+                    yPos = -167
+                };
+
                 //P3 Place (Input port place) new page
                 PlaceModel p3new = new PlaceModel()
                 {
@@ -369,9 +386,9 @@ namespace NestedFlowchart.Functions
                     xPos3 = placeRule2.xPos3 - 4,
                     yPos3 = placeRule2.yPos3 - 167,
 
-                    Type = "loopi"
+                    Type = "loopi",
+                    Port = CreateHierarchyPort(portTemplate, p3InputPort)
                 };
-
 
 
                 //P4 Place (output port place) old page
@@ -394,6 +411,14 @@ namespace NestedFlowchart.Functions
                     Type = "loopi"
                 };
 
+                var p4OutputPort = new HierarchyPortModel()
+                {
+                    Id = IdManagements.GetlastestPortId(),
+                    Type = "Out",
+                    xPos = -4,
+                    yPos = -168
+                };
+
                 //P4 Place (output port place) new page
                 PlaceModel p4new = new PlaceModel()
                 {
@@ -411,7 +436,8 @@ namespace NestedFlowchart.Functions
                     xPos3 = placeRule2.xPos3 - 4,
                     yPos3 = placeRule2.yPos3 - 167,
 
-                    Type = "loopi"
+                    Type = "loopi",
+                    Port = CreateHierarchyPort(portTemplate, p4OutputPort)
                 };
 
                 //Define i=1 in Code Segment Inscription
@@ -455,7 +481,7 @@ namespace NestedFlowchart.Functions
                 };
 
 
-                var substr = new SubStrModel()
+                var subst = new HierarchySubStModel()
                 {
                     SubPageId = page2Id, 
                     NewInputPlaceId = p3new.Id1,
@@ -497,7 +523,7 @@ namespace NestedFlowchart.Functions
                     xPos5 = tranRule2.xPos5 - 9,
                     yPos5 = tranRule2.yPos5 - 168,
 
-                    SubsitutetionTransition = CreateSubStr(subStrTemplate, substr)
+                    SubsitutetionTransition = CreateHierarchySubSt(subStrTemplate, subst)
 
                 };
 
@@ -511,7 +537,7 @@ namespace NestedFlowchart.Functions
                 var place4new = CreatePlace(placeTemplate, p4new);
                 var transition1 = CreateTransition(transitionTemplate, ts1);
 
-                return (null, null, null, place3old + tr_subpage1 + place4old, place3new + place4new + transition1);
+                return (null, tr_subpage, null, place3old + tr_subpage1 + place4old, place3new + place4new + transition1);
             }
             
 

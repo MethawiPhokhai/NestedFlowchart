@@ -1,0 +1,13 @@
+﻿<port id="{0}"
+      type="{1}">
+  <posattr x="{2}"
+           y="{3}"/>
+  <fillattr colour="White"
+            pattern="Solid"
+            filled="false"/>
+  <lineattr colour="Black"
+            thick="0"
+            type="Solid"/>
+  <textattr colour="Black"
+            bold="false"/>
+</port>

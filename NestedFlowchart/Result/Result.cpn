@@ -144,6 +144,7 @@
           <text tool="CPN Tools"
                 version="4.0.1">[7,8,0,3,5]</text>
         </initmark>
+        
       </place>
 <place id="ID1412948775">
         <posattr x="-19"
@@ -197,6 +198,7 @@
           <text tool="CPN Tools"
                 version="4.0.1"></text>
         </initmark>
+        
       </place>
 <trans id="ID1412848772"
              explicit="false">
@@ -389,6 +391,7 @@
           <text tool="CPN Tools"
                 version="4.0.1"></text>
         </initmark>
+        
       </place>
 <trans id="ID1412848777"
              explicit="false">
@@ -588,6 +591,7 @@ end</text>
           <text tool="CPN Tools"
                 version="4.0.1"></text>
         </initmark>
+        
       </place>
 <trans id="ID1412848782"
              explicit="false">
@@ -994,6 +998,7 @@ end</text>
           <text tool="CPN Tools"
                 version="4.0.1"></text>
         </initmark>
+        
       </place>
 <arc id="ID1412949828"
            orientation="TtoP"
@@ -1079,6 +1084,7 @@ end</text>
           <text tool="CPN Tools"
                 version="4.0.1"></text>
         </initmark>
+        
       </place>
 <trans id="ID1412848802"
              explicit="false">
@@ -1095,7 +1101,8 @@ end</text>
         <text>New Subpage</text>
         <box w="60.000000"
              h="40.000000"/>
-                <subst subpage="ID1412950867"
+        
+        <subst subpage="ID1412950867"
                portsock="(ID1412948790,ID1412948787)(ID1412948796,ID1412948793)">
           <subpageinfo id="ID1412399301"
                        name="New Subpage">
@@ -1222,6 +1229,7 @@ end</text>
           <text tool="CPN Tools"
                 version="4.0.1"></text>
         </initmark>
+        
       </place>
       <constraints/>
     </page>
@@ -1280,6 +1288,20 @@ end</text>
           <text tool="CPN Tools"
                 version="4.0.1"></text>
         </initmark>
+        
+<port id="ID1412399401"
+      type="In">
+  <posattr x="-4"
+           y="-167"/>
+  <fillattr colour="White"
+            pattern="Solid"
+            filled="false"/>
+  <lineattr colour="Black"
+            thick="0"
+            type="Solid"/>
+  <textattr colour="Black"
+            bold="false"/>
+</port>
       </place>
 <place id="ID1412948796">
         <posattr x="-23"
@@ -1333,6 +1355,20 @@ end</text>
           <text tool="CPN Tools"
                 version="4.0.1"></text>
         </initmark>
+        
+<port id="ID1412399402"
+      type="Out">
+  <posattr x="-4"
+           y="-168"/>
+  <fillattr colour="White"
+            pattern="Solid"
+            filled="false"/>
+  <lineattr colour="Black"
+            thick="0"
+            type="Solid"/>
+  <textattr colour="Black"
+            bold="false"/>
+</port>
       </place>
 <trans id="ID1412848797"
              explicit="false">
@@ -1421,7 +1457,7 @@ end</text>
     <instances>
           <instance id="ID2149"
                 page="ID6">      <instance id="ID2150"
-                page="ID1412950867"/></instance>
+                trans="ID1412848802"/></instance>
     </instances>
     <options>
       <option name="realtimestamp">

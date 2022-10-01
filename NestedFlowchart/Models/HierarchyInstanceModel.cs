@@ -1,6 +1,6 @@
 ﻿namespace NestedFlowchart.Models
 {
-    public class InstanceModel
+    public class HierarchyInstanceModel
     {
         public string Id { get; set; }
         public string Text { get; set; }

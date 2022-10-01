@@ -1,6 +1,6 @@
 ﻿namespace NestedFlowchart.Models
 {
-    public class SubStrModel
+    public class HierarchySubStModel
     {
         public string SubPageId { get; set; }
         public string NewInputPlaceId { get; set; }
