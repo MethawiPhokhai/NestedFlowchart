@@ -8,6 +8,7 @@
         public static int PlaceId { get; set; } = 48771;
         public static int TransitionId { get; set; } = 48771;
         public static int ArcId { get; set; } = 49811;
+        public static int PageId { get; set; } = 50866;
 
         public static string GetlastestColorSetId()
         {
@@ -43,6 +44,12 @@
         {
             ArcId++;
             return "ID14129" + ArcId;
+        }
+
+        public static string GetlastestPageId()
+        {
+            PageId++;
+            return "ID14129" + PageId;
         }
     }
 }

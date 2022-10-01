@@ -63,14 +63,9 @@
         {0}
       </block>
     </globbox>
-    <page id="ID6">
-      <pageattr name="New Page"/>
-	{1}
-      <constraints/>
-    </page>
-    {2}
+    {1}
     <instances>
-    {3}
+    {2}
     </instances>
     <options>
       <option name="realtimestamp">

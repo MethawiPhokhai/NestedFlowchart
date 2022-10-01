@@ -88,7 +88,7 @@
         </var>
       </block>
     </globbox>
-    <page id="ID6">
+        <page id="ID6">
       <pageattr name="New Page"/>
 	<place id="ID1412948772">
         <posattr x="-15"
@@ -1134,11 +1134,15 @@ end</text>
         </priority>
       </trans>
       <constraints/>
+    </page>    <page id="ID1412950867">
+      <pageattr name="New Subpage"/>
+	
+      <constraints/>
     </page>
-    
     <instances>
           <instance id="ID2149"
-                page="ID6"/>
+                page="ID6">      <instance id="ID2150"
+                page="ID1412950867"/></instance>
     </instances>
     <options>
       <option name="realtimestamp">

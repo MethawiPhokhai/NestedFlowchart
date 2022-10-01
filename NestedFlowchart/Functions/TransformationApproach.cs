@@ -74,6 +74,11 @@ namespace NestedFlowchart.Functions
             return string.Format(instanceTemplate, model.Id, model.Text, model.Closer);
         }
 
+        public string CreatePage(string pageTemplate, PageModel model)
+        {
+            return string.Format(pageTemplate, model.Id, model.Name, model.Node);
+        }
+
         #endregion
 
         private string ConvertDecision(string sign)
@@ -318,7 +323,7 @@ namespace NestedFlowchart.Functions
             }
             else
             {
-                //P3 Place
+                //P3 Place (Input place)
                 PlaceModel p3 = new PlaceModel()
                 {
                     Id1 = IdManagements.GetlastestPlaceId(),
@@ -365,6 +370,8 @@ namespace NestedFlowchart.Functions
                     yPos5 = tranRule2.yPos5 - 168,
 
                 };
+
+
 
                 var place3 = CreatePlace(placeTemplate, p3);
                 var tr_subpage1 = CreateTransition(transitionTemplate, tr_subpage);

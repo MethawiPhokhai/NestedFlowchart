@@ -26,6 +26,9 @@ namespace NestedFlowchart.Functions
             
             //Read instance template
             var instanceTemplate = File.ReadAllText(TemplatePath + "Hierarchy_Instance.txt");
+            
+            //Read page template
+            var pageTemplate = File.ReadAllText(TemplatePath + "Page.txt");
 
 
             TransformationApproach approach = new TransformationApproach();
@@ -79,26 +82,58 @@ namespace NestedFlowchart.Functions
             var rule7 = approach.Rule7(placeTemplate, arcTemplate, rule6.Item1, rule6.Item2, rule6.Item4);
             var definej = approach.Rule3(transitionTemplate, placeTemplate, arcTemplate, rule2.Item1, rule2.Item2, rule2.Item3, true);
 
+            var allNode = rule2.Item4 + rule3.Item4 + rule5.Item4 + rule6.Item5 + rule7.Item2 + definej.Item4;
+
+            //Page1
+            var p1 = new PageModel()
+            {
+                Id = "ID6",
+                Name = "New Page",
+                Node = allNode
+            };
+
+            //New Subpage Page
+            var p2 = new PageModel()
+            {
+                Id = IdManagements.GetlastestPageId(),
+                Name = "New Subpage",
+                Node = String.Empty
+            };
+
+            var page1 = approach.CreatePage(pageTemplate, p1);
+            var page2 = approach.CreatePage(pageTemplate, p2);
+
+            var allPage = page1 + page2;
             #endregion
 
             #region Instance
             InstanceModel inst = new InstanceModel()
             {
                 Id = IdManagements.GetlastestInstanceId(),
-                Text = "page=\"ID6\"",
-                Closer = "/>"
+                Text = "page=\"ID6\">",
+                Closer = "{0}"
+            };
+
+            InstanceModel inst2 = new InstanceModel()
+            {
+                Id = IdManagements.GetlastestInstanceId(),
+                Text = "page=\"" + p2.Id + "\"",
+                Closer = "/></instance>"
             };
 
             var instances = approach.CreateHierarchy_Instance(instanceTemplate, inst);
+            var instances2 = approach.CreateHierarchy_Instance(instanceTemplate, inst2);
 
+            var allInstances = string.Format(instances, instances2);
+            
             #endregion
 
 
             //Combine to put on Empty Color Set
             var allColorSet = col1;
             var allVar = var1 + var2;
-            var allNode = rule2.Item4 + rule3.Item4 + rule5.Item4 + rule6.Item5 + rule7.Item2 + definej.Item4;
-            string firstCPN = string.Format(emptyCPNTemplate, allColorSet + allVar, allNode, string.Empty, instances);
+
+            string firstCPN = string.Format(emptyCPNTemplate, allColorSet + allVar, allPage, allInstances);
 
             //Write to CPN File
             File.WriteAllText(ResultPath + "Result.cpn", firstCPN);
