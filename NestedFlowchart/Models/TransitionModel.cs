@@ -32,5 +32,7 @@ namespace NestedFlowchart.Models
 
         public double xPos5 { get; set; }
         public double yPos5 { get; set; }
+
+        public string SubsitutetionTransition { get; set; }
     }
 }

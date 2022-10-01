@@ -10,7 +10,6 @@
         public string Type { get; set; }
         public string InitialMarking { get; set; }
 
-
         public double xPos1 { get; set; }
         public double yPos1 { get; set; }
 
@@ -19,6 +18,5 @@
 
         public double xPos3 { get; set; }
         public double yPos3 { get; set; }
-
     }
 }

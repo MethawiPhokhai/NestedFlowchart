@@ -1,0 +1,5 @@
+﻿  \n  <page id="{0}">
+      <pageattr name="{1}"/>
+	{2}
+      <constraints/>
+    </page>

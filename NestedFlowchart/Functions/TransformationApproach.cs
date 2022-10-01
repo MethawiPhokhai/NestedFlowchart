@@ -53,7 +53,8 @@ namespace NestedFlowchart.Functions
                 model.xPos3, model.yPos3,
                 model.xPos4, model.yPos4,
                 model.xPos5, model.yPos5,
-                model.CodeSegment);
+                model.CodeSegment,
+                model.SubsitutetionTransition);
 
             return transition;
         }
@@ -68,6 +69,11 @@ namespace NestedFlowchart.Functions
             return arc;
         }
 
+        public string CreateHierarchy_Instance(string instanceTemplate, InstanceModel model)
+        {
+            return string.Format(instanceTemplate, model.Id, model.Text, model.Closer);
+        }
+
         #endregion
 
         //Rule 1 : Transform start to place start
@@ -75,9 +81,9 @@ namespace NestedFlowchart.Functions
         {
             PlaceModel pl = new PlaceModel()
             {
-                Id1 = "ID1412948772",
-                Id2 = "ID1412948773",
-                Id3 = "ID1412948774",
+                Id1 = IdManagements.GetlastestPlaceId(),
+                Id2 = IdManagements.GetlastestPlaceId(),
+                Id3 = IdManagements.GetlastestPlaceId(),
                 Name = "Start",
                 Type = "UNIT",
                 InitialMarking = string.Empty,
@@ -101,11 +107,11 @@ namespace NestedFlowchart.Functions
         {
             TransitionModel tr = new TransitionModel()
             {
-                Id1 = "ID1412948792",
-                Id2 = "ID1412948793",
-                Id3 = "ID1412948794",
-                Id4 = "ID1412948795",
-                Id5 = "ID1412948796",
+                Id1 = IdManagements.GetlastestTransitionId(),
+                Id2 = IdManagements.GetlastestTransitionId(),
+                Id3 = IdManagements.GetlastestTransitionId(),
+                Id4 = IdManagements.GetlastestTransitionId(),
+                Id5 = IdManagements.GetlastestTransitionId(),
 
                 Name = "T1",
 
@@ -127,9 +133,9 @@ namespace NestedFlowchart.Functions
 
             PlaceModel pl = new PlaceModel()
             {
-                Id1 = "ID1412948775",
-                Id2 = "ID1412948776",
-                Id3 = "ID1412948777",
+                Id1 = IdManagements.GetlastestPlaceId(),
+                Id2 = IdManagements.GetlastestPlaceId(),
+                Id3 = IdManagements.GetlastestPlaceId(),
                 Name = "P1",
 
                 xPos1 = placeRule1.xPos1 - 4,
@@ -146,8 +152,8 @@ namespace NestedFlowchart.Functions
 
             ArcModel a1 = new ArcModel()
             {
-                Id1 = "ID1412949812",
-                Id2 = "ID1412949813",
+                Id1 = IdManagements.GetlastestArcId(),
+                Id2 = IdManagements.GetlastestArcId(),
 
                 TransEnd = tr.Id1,
                 PlaceEnd = placeRule1.Id1,
@@ -161,8 +167,8 @@ namespace NestedFlowchart.Functions
 
             ArcModel a2 = new ArcModel()
             {
-                Id1 = "ID1412949814",
-                Id2 = "ID1412949815",
+                Id1 = IdManagements.GetlastestArcId(),
+                Id2 = IdManagements.GetlastestArcId(),
 
                 TransEnd = tr.Id1,
                 PlaceEnd = pl.Id1,
@@ -211,11 +217,11 @@ namespace NestedFlowchart.Functions
                 //T2 Transition
                 TransitionModel tr = new TransitionModel()
                 {
-                    Id1 = "ID1412948797",
-                    Id2 = "ID1412948798",
-                    Id3 = "ID1412948799",
-                    Id4 = "ID1412948800",
-                    Id5 = "ID1412948801",
+                    Id1 = IdManagements.GetlastestTransitionId(),
+                    Id2 = IdManagements.GetlastestTransitionId(),
+                    Id3 = IdManagements.GetlastestTransitionId(),
+                    Id4 = IdManagements.GetlastestTransitionId(),
+                    Id5 = IdManagements.GetlastestTransitionId(),
 
                     Name = "T2",
 
@@ -240,9 +246,9 @@ namespace NestedFlowchart.Functions
                 //P2 Place
                 PlaceModel pl = new PlaceModel()
                 {
-                    Id1 = "ID1412948778",
-                    Id2 = "ID1412948779",
-                    Id3 = "ID1412948780",
+                    Id1 = IdManagements.GetlastestPlaceId(),
+                    Id2 = IdManagements.GetlastestPlaceId(),
+                    Id3 = IdManagements.GetlastestPlaceId(),
                     Name = "P2",
 
                     xPos1 = placeRule2.xPos1 - 4,
@@ -260,8 +266,8 @@ namespace NestedFlowchart.Functions
                 //Arc from P1 to T2
                 ArcModel a1 = new ArcModel()
                 {
-                    Id1 = "ID1412949816",
-                    Id2 = "ID1412949817",
+                    Id1 = IdManagements.GetlastestArcId(),
+                    Id2 = IdManagements.GetlastestArcId(),
 
                     TransEnd = tr.Id1,
                     PlaceEnd = placeRule2.Id1,
@@ -276,8 +282,8 @@ namespace NestedFlowchart.Functions
                 //Arc from T2 to P2
                 ArcModel a2 = new ArcModel()
                 {
-                    Id1 = "ID1412949818",
-                    Id2 = "ID1412949819",
+                    Id1 = IdManagements.GetlastestArcId(),
+                    Id2 = IdManagements.GetlastestArcId(),
 
                     TransEnd = tr.Id1,
                     PlaceEnd = pl.Id1,
@@ -298,10 +304,58 @@ namespace NestedFlowchart.Functions
             }
             else
             {
-                //TODO: Create New Page
+                //P3 Place
+                PlaceModel p3 = new PlaceModel()
+                {
+                    Id1 = IdManagements.GetlastestPlaceId(),
+                    Id2 = IdManagements.GetlastestPlaceId(),
+                    Id3 = IdManagements.GetlastestPlaceId(),
+                    Name = "P3",
 
+                    xPos1 = placeRule2.xPos1 - 4,
+                    yPos1 = placeRule2.yPos1 - 168,
 
-                return (null, null, null, null);
+                    xPos2 = placeRule2.xPos2 - 4,
+                    yPos2 = placeRule2.yPos2 - 167,
+
+                    xPos3 = placeRule2.xPos3 - 4,
+                    yPos3 = placeRule2.yPos3 - 167,
+
+                    Type = "loopi"
+                };
+
+                //New Subpage Transition
+                TransitionModel tr_subpage = new TransitionModel()
+                {
+                    Id1 = IdManagements.GetlastestTransitionId(),
+                    Id2 = IdManagements.GetlastestTransitionId(),
+                    Id3 = IdManagements.GetlastestTransitionId(),
+                    Id4 = IdManagements.GetlastestTransitionId(),
+                    Id5 = IdManagements.GetlastestTransitionId(),
+
+                    Name = "New Subpage",
+
+                    xPos1 = tranRule2.xPos1 - 9,
+                    yPos1 = tranRule2.yPos1 - 168,
+
+                    xPos2 = tranRule2.xPos2 - 9,
+                    yPos2 = tranRule2.yPos2 - 168,
+
+                    xPos3 = tranRule2.xPos3 - 9,
+                    yPos3 = tranRule2.yPos3 - 168,
+
+                    xPos4 = tranRule2.xPos4 - 9,
+                    yPos4 = tranRule2.yPos4 - 168,
+
+                    xPos5 = tranRule2.xPos5 - 9,
+                    yPos5 = tranRule2.yPos5 - 168,
+
+                };
+
+                var place3 = CreatePlace(placeTemplate, p3);
+                var tr_subpage1 = CreateTransition(transitionTemplate, tr_subpage);
+
+                return (null, null, null, place3 + tr_subpage1);
             }
             
 
@@ -317,11 +371,11 @@ namespace NestedFlowchart.Functions
             //T3 Transition
             TransitionModel tr = new TransitionModel()
             {
-                Id1 = "ID1412948802",
-                Id2 = "ID1412948803",
-                Id3 = "ID1412948804",
-                Id4 = "ID1412948805",
-                Id5 = "ID1412948806",
+                Id1 = IdManagements.GetlastestTransitionId(),
+                Id2 = IdManagements.GetlastestTransitionId(),
+                Id3 = IdManagements.GetlastestTransitionId(),
+                Id4 = IdManagements.GetlastestTransitionId(),
+                Id5 = IdManagements.GetlastestTransitionId(),
 
                 Name = "T3",
 
@@ -345,9 +399,9 @@ namespace NestedFlowchart.Functions
             //CN1 Place
             PlaceModel pl = new PlaceModel()
             {
-                Id1 = "ID1412948781",
-                Id2 = "ID1412948782",
-                Id3 = "ID1412948783",
+                Id1 = IdManagements.GetlastestPlaceId(),
+                Id2 = IdManagements.GetlastestPlaceId(),
+                Id3 = IdManagements.GetlastestPlaceId(),
                 Name = "CN1",
 
                 xPos1 = placeRule3.xPos1 - 4,
@@ -365,8 +419,8 @@ namespace NestedFlowchart.Functions
             //Arc from P2 to T3
             ArcModel a1 = new ArcModel()
             {
-                Id1 = "ID1412949820",
-                Id2 = "ID1412949821",
+                Id1 = IdManagements.GetlastestArcId(),
+                Id2 = IdManagements.GetlastestArcId(),
 
                 TransEnd = tr.Id1,
                 PlaceEnd = placeRule3.Id1,
@@ -381,8 +435,8 @@ namespace NestedFlowchart.Functions
             //Arc from T3 to CN1
             ArcModel a2 = new ArcModel()
             {
-                Id1 = "ID1412949822",
-                Id2 = "ID1412949823",
+                Id1 = IdManagements.GetlastestArcId(),
+                Id2 = IdManagements.GetlastestArcId(),
 
                 TransEnd = tr.Id1,
                 PlaceEnd = pl.Id1,
@@ -404,18 +458,18 @@ namespace NestedFlowchart.Functions
         }
 
         //Rule 6 : Decision
-        public (PlaceModel, TransitionModel, ArcModel, string) Rule6(string transitionTemplate, string placeTemplate, string arcTemplate,
+        public (PlaceModel, TransitionModel, TransitionModel, ArcModel, string) Rule6(string transitionTemplate, string placeTemplate, string arcTemplate,
             PlaceModel placeRule4, TransitionModel tranRule4, ArcModel arcRule4)
         {
 
             //GF1 Transition
             TransitionModel tr1 = new TransitionModel()
             {
-                Id1 = "ID1412948807",
-                Id2 = "ID1412948808",
-                Id3 = "ID1412948809",
-                Id4 = "ID1412948810",
-                Id5 = "ID1412948811",
+                Id1 = IdManagements.GetlastestTransitionId(),
+                Id2 = IdManagements.GetlastestTransitionId(),
+                Id3 = IdManagements.GetlastestTransitionId(),
+                Id4 = IdManagements.GetlastestTransitionId(),
+                Id5 = IdManagements.GetlastestTransitionId(),
 
                 Name = "GF1",
 
@@ -441,11 +495,11 @@ namespace NestedFlowchart.Functions
             //GT1 Transition
             TransitionModel tr2 = new TransitionModel()
             {
-                Id1 = "ID1412948812",
-                Id2 = "ID1412948813",
-                Id3 = "ID1412948814",
-                Id4 = "ID1412948815",
-                Id5 = "ID1412948816",
+                Id1 = IdManagements.GetlastestTransitionId(),
+                Id2 = IdManagements.GetlastestTransitionId(),
+                Id3 = IdManagements.GetlastestTransitionId(),
+                Id4 = IdManagements.GetlastestTransitionId(),
+                Id5 = IdManagements.GetlastestTransitionId(),
 
                 Name = "GT1",
 
@@ -471,8 +525,8 @@ namespace NestedFlowchart.Functions
             //Arc from CN1 to GF1
             ArcModel a1 = new ArcModel()
             {
-                Id1 = "ID1412949824",
-                Id2 = "ID1412949825",
+                Id1 = IdManagements.GetlastestArcId(),
+                Id2 = IdManagements.GetlastestArcId(),
 
                 TransEnd = tr1.Id1,
                 PlaceEnd = placeRule4.Id1,
@@ -487,8 +541,8 @@ namespace NestedFlowchart.Functions
             //Arc from CN1 to GT1
             ArcModel a2 = new ArcModel()
             {
-                Id1 = "ID1412949826",
-                Id2 = "ID1412949827",
+                Id1 = IdManagements.GetlastestArcId(),
+                Id2 = IdManagements.GetlastestArcId(),
 
                 TransEnd = tr2.Id1,
                 PlaceEnd = placeRule4.Id1,
@@ -500,7 +554,6 @@ namespace NestedFlowchart.Functions
                 Type = "(i,arr)"
             };
 
-
             var transition1 = CreateTransition(transitionTemplate, tr1);
             var transition2 = CreateTransition(transitionTemplate, tr2);
 
@@ -508,7 +561,7 @@ namespace NestedFlowchart.Functions
             var arc2 = CreateArc(arcTemplate, a2);
 
             //Return transition an arc of GT
-            return (placeRule4, tr2, a2, transition1 + transition2 + arc1 + arc2);
+            return (placeRule4, tr1, tr2, a2, transition1 + transition2 + arc1 + arc2);
         }
 
         //Rule 7 : End
@@ -518,9 +571,9 @@ namespace NestedFlowchart.Functions
             //End Place
             PlaceModel pl = new PlaceModel()
             {
-                Id1 = "ID1412948784",
-                Id2 = "ID1412948785",
-                Id3 = "ID1412948786",
+                Id1 = IdManagements.GetlastestPlaceId(),
+                Id2 = IdManagements.GetlastestPlaceId(),
+                Id3 = IdManagements.GetlastestPlaceId(),
                 Name = "End",
                 Type = "INTs",
                 InitialMarking = string.Empty,
@@ -539,13 +592,12 @@ namespace NestedFlowchart.Functions
             //Arc from GF1 to End
             ArcModel a1 = new ArcModel()
             {
-                Id1 = "ID1412949828",
-                Id2 = "ID1412949829",
+                Id1 = IdManagements.GetlastestArcId(),
+                Id2 = IdManagements.GetlastestArcId(),
 
-                TransEnd = "ID1412948807", //TODO: Need to send GF1 id
+                TransEnd = lastestTran.Id1,
                 PlaceEnd = pl.Id1,
 
-                //TODO: Need to send position from lastest Transition
                 xPos = lastestArc.xPos - 4,
                 yPos = lastestArc.yPos - 82,
 

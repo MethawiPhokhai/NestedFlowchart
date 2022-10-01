@@ -68,9 +68,9 @@
 	{1}
       <constraints/>
     </page>
+    {2}
     <instances>
-      <instance id="ID2149"
-                page="ID6"/>
+    {3}
     </instances>
     <options>
       <option name="realtimestamp">
