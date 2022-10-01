@@ -10,6 +10,8 @@
         public static int ArcId { get; set; } = 49811;
         public static int PageId { get; set; } = 50866;
 
+        public static int SubStrId { get; set; } = 99300;
+
         public static string GetlastestColorSetId()
         {
             ColorSetId++;
@@ -50,6 +52,12 @@
         {
             PageId++;
             return "ID14129" + PageId;
+        }
+
+        public static string GetlastestSubStrId()
+        {
+            SubStrId++;
+            return "ID14123" + SubStrId;
         }
     }
 }

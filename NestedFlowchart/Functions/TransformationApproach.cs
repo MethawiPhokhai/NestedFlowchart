@@ -35,7 +35,7 @@ namespace NestedFlowchart.Functions
 
         public string CreatePlace(string placeTemplate, PlaceModel model)
         {
-            placeTemplate = string.Format(placeTemplate, model.Id1, model.Id2, model.Id3, 
+            placeTemplate = string.Format("\n" + placeTemplate, model.Id1, model.Id2, model.Id3, 
                 model.Name, model.Type, model.InitialMarking, 
                 model.xPos1, model.yPos1,
                 model.xPos2, model.yPos2,
@@ -46,7 +46,7 @@ namespace NestedFlowchart.Functions
 
         public string CreateTransition(string transitionTemplate, TransitionModel model)
         {
-            string transition = string.Format(transitionTemplate,model.Id1, model.Id2, model.Id3, model.Id4, model.Id5,
+            string transition = string.Format("\n" + transitionTemplate,model.Id1, model.Id2, model.Id3, model.Id4, model.Id5,
                 model.Name, model.Condition,
                 model.xPos1, model.yPos1,
                 model.xPos2, model.yPos2,
@@ -61,7 +61,7 @@ namespace NestedFlowchart.Functions
 
         public string CreateArc(string arcTemplate, ArcModel model)
         {
-            string arc = string.Format(arcTemplate,model.Id1, model.Id2, 
+            string arc = string.Format("\n" + arcTemplate,model.Id1, model.Id2, 
                 model.TransEnd, model.PlaceEnd, 
                 model.Orientation, model.Type,
                 model.xPos, model.yPos);
@@ -76,7 +76,16 @@ namespace NestedFlowchart.Functions
 
         public string CreatePage(string pageTemplate, PageModel model)
         {
-            return string.Format(pageTemplate, model.Id, model.Name, model.Node);
+            return string.Format("\n" + pageTemplate, model.Id, model.Name, model.Node);
+        }
+
+        public string CreateSubStr(string subStrTemplate, SubStrModel model)
+        {
+            return string.Format(subStrTemplate, model.SubPageId,
+                model.NewInputPlaceId, model.OldInputPlaceId,
+                model.NewOutputPlaceId, model.OldOutputPlaceId,
+                model.Id, model.Name,
+                model.xPos, model.yPos);
         }
 
         #endregion
@@ -217,8 +226,8 @@ namespace NestedFlowchart.Functions
         }
 
         //Rule 3 : Transform Nested Structure into Hierarchical
-        public (PlaceModel, TransitionModel, ArcModel, string) Rule3(string transitionTemplate, string placeTemplate, string arcTemplate,
-            PlaceModel placeRule2, TransitionModel tranRule2, ArcModel arcRule2, bool isHierarchy)
+        public (PlaceModel, TransitionModel, ArcModel, string, string) Rule3(string transitionTemplate, string placeTemplate, string arcTemplate, string subStrTemplate,
+            PlaceModel placeRule2, TransitionModel tranRule2, ArcModel arcRule2, bool isHierarchy, string page2Id)
         {
             if (!isHierarchy)
             {
@@ -319,12 +328,12 @@ namespace NestedFlowchart.Functions
                 var transition = CreateTransition(transitionTemplate, tr);
                 var arc2 = CreateArc(arcTemplate, a2);
 
-                return (pl, tr, a2, (place1 + transition + arc1 + arc2));
+                return (pl, tr, a2, (place1 + transition + arc1 + arc2), string.Empty);
             }
             else
             {
-                //P3 Place (Input place)
-                PlaceModel p3 = new PlaceModel()
+                //P3 Place (Input port place) old page
+                PlaceModel p3old = new PlaceModel()
                 {
                     Id1 = IdManagements.GetlastestPlaceId(),
                     Id2 = IdManagements.GetlastestPlaceId(),
@@ -341,6 +350,125 @@ namespace NestedFlowchart.Functions
                     yPos3 = placeRule2.yPos3 - 167,
 
                     Type = "loopi"
+                };
+
+                //P3 Place (Input port place) new page
+                PlaceModel p3new = new PlaceModel()
+                {
+                    Id1 = IdManagements.GetlastestPlaceId(),
+                    Id2 = IdManagements.GetlastestPlaceId(),
+                    Id3 = IdManagements.GetlastestPlaceId(),
+                    Name = "P3",
+
+                    xPos1 = placeRule2.xPos1 - 4,
+                    yPos1 = placeRule2.yPos1 - 168,
+
+                    xPos2 = placeRule2.xPos2 - 4,
+                    yPos2 = placeRule2.yPos2 - 167,
+
+                    xPos3 = placeRule2.xPos3 - 4,
+                    yPos3 = placeRule2.yPos3 - 167,
+
+                    Type = "loopi"
+                };
+
+
+
+                //P4 Place (output port place) old page
+                PlaceModel p4old = new PlaceModel()
+                {
+                    Id1 = IdManagements.GetlastestPlaceId(),
+                    Id2 = IdManagements.GetlastestPlaceId(),
+                    Id3 = IdManagements.GetlastestPlaceId(),
+                    Name = "P4",
+
+                    xPos1 = placeRule2.xPos1 - 4,
+                    yPos1 = placeRule2.yPos1 - 168,
+
+                    xPos2 = placeRule2.xPos2 - 4,
+                    yPos2 = placeRule2.yPos2 - 167,
+
+                    xPos3 = placeRule2.xPos3 - 4,
+                    yPos3 = placeRule2.yPos3 - 167,
+
+                    Type = "loopi"
+                };
+
+                //P4 Place (output port place) new page
+                PlaceModel p4new = new PlaceModel()
+                {
+                    Id1 = IdManagements.GetlastestPlaceId(),
+                    Id2 = IdManagements.GetlastestPlaceId(),
+                    Id3 = IdManagements.GetlastestPlaceId(),
+                    Name = "P4",
+
+                    xPos1 = placeRule2.xPos1 - 4,
+                    yPos1 = placeRule2.yPos1 - 168,
+
+                    xPos2 = placeRule2.xPos2 - 4,
+                    yPos2 = placeRule2.yPos2 - 167,
+
+                    xPos3 = placeRule2.xPos3 - 4,
+                    yPos3 = placeRule2.yPos3 - 167,
+
+                    Type = "loopi"
+                };
+
+                //Define i=1 in Code Segment Inscription
+                var codeSeg = "input (); \n " +
+                    "output(j); \n " +
+                    "action \n " +
+                    "let \n" +
+                    "val j = 0 \n" +
+                    "in \n" +
+                    "(j) \n" +
+                    "end";
+
+                //TS1 transition
+                TransitionModel ts1 = new TransitionModel()
+                {
+                    Id1 = IdManagements.GetlastestTransitionId(),
+                    Id2 = IdManagements.GetlastestTransitionId(),
+                    Id3 = IdManagements.GetlastestTransitionId(),
+                    Id4 = IdManagements.GetlastestTransitionId(),
+                    Id5 = IdManagements.GetlastestTransitionId(),
+
+                    Name = "TS1",
+
+                    xPos1 = tranRule2.xPos1 - 9,
+                    yPos1 = tranRule2.yPos1 - 168,
+
+                    xPos2 = tranRule2.xPos2 - 9,
+                    yPos2 = tranRule2.yPos2 - 168,
+
+                    xPos3 = tranRule2.xPos3 - 9,
+                    yPos3 = tranRule2.yPos3 - 168,
+
+                    xPos4 = tranRule2.xPos4 - 9,
+                    yPos4 = tranRule2.yPos4 - 168,
+
+                    xPos5 = tranRule2.xPos5 - 9,
+                    yPos5 = tranRule2.yPos5 - 168,
+
+                    CodeSegment = codeSeg
+
+                };
+
+
+                var substr = new SubStrModel()
+                {
+                    SubPageId = page2Id, 
+                    NewInputPlaceId = p3new.Id1,
+                    OldInputPlaceId = p3old.Id1,
+
+                    NewOutputPlaceId = p4new.Id1,
+                    OldOutputPlaceId = p4old.Id1,
+
+                    Id = IdManagements.GetlastestSubStrId(),
+                    Name = "New Subpage",
+
+                    xPos = -252,
+                    yPos = -339
                 };
 
                 //New Subpage Transition
@@ -369,14 +497,21 @@ namespace NestedFlowchart.Functions
                     xPos5 = tranRule2.xPos5 - 9,
                     yPos5 = tranRule2.yPos5 - 168,
 
+                    SubsitutetionTransition = CreateSubStr(subStrTemplate, substr)
+
                 };
 
-
-
-                var place3 = CreatePlace(placeTemplate, p3);
+                //Main Page
+                var place3old = CreatePlace(placeTemplate, p3old);
                 var tr_subpage1 = CreateTransition(transitionTemplate, tr_subpage);
+                var place4old = CreatePlace(placeTemplate, p4old);
+                
+                //Sub Page
+                var place3new = CreatePlace(placeTemplate, p3new);
+                var place4new = CreatePlace(placeTemplate, p4new);
+                var transition1 = CreateTransition(transitionTemplate, ts1);
 
-                return (null, null, null, place3 + tr_subpage1);
+                return (null, null, null, place3old + tr_subpage1 + place4old, place3new + place4new + transition1);
             }
             
 
