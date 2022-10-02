@@ -218,7 +218,7 @@ namespace NestedFlowchart.Functions
 
         //Rule 3 : Transform Nested Structure into Hierarchical
         public (PlaceModel, TransitionModel, ArcModel, string, string) Rule3(string transitionTemplate, string placeTemplate, string arcTemplate, string subStrTemplate, string portTemplate,
-            PlaceModel placeRule2, TransitionModel tranRule2, ArcModel arcRule2, bool isHierarchy, string page2Id)
+            PlaceModel placeRule2, TransitionModel tranRule2, ArcModel arcRule2, bool isHierarchy, string page2Id, string CodeSegmentValue)
         {
             if (!isHierarchy)
             {
@@ -228,7 +228,7 @@ namespace NestedFlowchart.Functions
                     "output(i); \n " +
                     "action \n " +
                     "let \n" +
-                    "val i = 1 \n" +
+                    "val " + CodeSegmentValue + " \n" +
                     "in \n" +
                     "(i) \n" +
                     "end";
@@ -420,7 +420,7 @@ namespace NestedFlowchart.Functions
                     "output(j); \n " +
                     "action \n " +
                     "let \n" +
-                    "val j = 0 \n" +
+                    "val " + CodeSegmentValue + " \n" +
                     "in \n" +
                     "(j) \n" +
                     "end";

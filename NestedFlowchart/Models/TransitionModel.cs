@@ -17,6 +17,7 @@ namespace NestedFlowchart.Models
         public string Name { get; set; }
         public string Condition { get; set; }
         public string CodeSegment { get; set; }
+        public string CodeSegmentValue { get; set; }
 
         public double xPos1 { get; set; }
         public double yPos1 { get; set; }

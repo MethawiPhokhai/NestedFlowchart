@@ -141,16 +141,37 @@ namespace NestedFlowchart.Functions
                 //Rule3 : I=0, J=1
                 else if(sortedFlowcharts[i].NodeType.ToLower() == "process")
                 {
-                    if (sortedFlowcharts[i].ValueText.ToLower() == "i = 1")
+                    //TODO: Check in case define more than i
+                    //Case Not Nested => Define i
+                    if (sortedFlowcharts[i].ValueText.ToLower().Trim().Contains("i ="))
                     {
-                        var rule3 = approach.Rule3(transitionTemplate, placeTemplate, arcTemplate, string.Empty, string.Empty, rule2place, rule2transition, rule2ArcModel, false, page2Id);
+                        //TODO: Find solution to declare var
+                        //In case declare more than 1 line
+                        sortedFlowcharts[i].ValueText = sortedFlowcharts[i].ValueText.Replace("<br>", "\n");
+                        sortedFlowcharts[i].ValueText = sortedFlowcharts[i].ValueText.ToLower().Replace("int", "");
+                        sortedFlowcharts[i].ValueText = sortedFlowcharts[i].ValueText.Replace(";", "");
+
+                        //VarModel var3Model = new VarModel()
+                        //{
+                        //    Id = IdManagements.GetlastestVarId(),
+                        //    Type = "INT",
+                        //    Name = "i,i2,j,j2",
+                        //    Layout = "var i,i2,j,j2: INT;"
+                        //};
+
+                        //var var2 = approach.CreateVar(varTemplate, var2Model);
+
+                        var rule3 = approach.Rule3(transitionTemplate, placeTemplate, arcTemplate, string.Empty, string.Empty
+                            , rule2place, rule2transition, rule2ArcModel, false, page2Id, sortedFlowcharts[i].ValueText);
+
                         rule3place = rule3.Item1;
                         allNode += rule3.Item4;
                     }
-                    //TODO: more case after j
-                    else if(sortedFlowcharts[i].ValueText.ToLower() == "j = 0")
+                    //Case Nested => Create Hierachy Tool
+                    else if(sortedFlowcharts[i].ValueText.ToLower().Trim().Contains("j =") || sortedFlowcharts[i].ValueText.ToLower().Trim().Contains("k =")
+                        || sortedFlowcharts[i].ValueText.ToLower().Trim().Contains("l =") || sortedFlowcharts[i].ValueText.ToLower().Trim().Contains("m ="))
                     {
-                        var definej = approach.Rule3(transitionTemplate, placeTemplate, arcTemplate, subStrTemplate, portTemplate, rule2place, rule2transition, rule2ArcModel, true, page2Id);
+                        var definej = approach.Rule3(transitionTemplate, placeTemplate, arcTemplate, subStrTemplate, portTemplate, rule2place, rule2transition, rule2ArcModel, true, page2Id, sortedFlowcharts[i].ValueText);
                         definejTransition = definej.Item2;
                         definejOldPage = definej.Item4;
                         defindjNewPage = definej.Item5;
