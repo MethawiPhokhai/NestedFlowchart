@@ -116,12 +116,14 @@ namespace NestedFlowchart.Functions
                 else if(sortedFlowcharts[i].NodeType.ToLower() == "process" 
                     && sortedFlowcharts[i-2].NodeType.ToLower() == "start")
                 {
-                    //TODO: substring and assign Initial Marking
-                    //rule1place.InitialMarking = sortedFlowcharts[i].ValueText
-
-                    //Define type and Initial marking value
-                    rule1place.Type = "INTs";
-                    rule1place.InitialMarking = "[7,8,0,3,5]";
+                    //Initial Marking
+                    if(sortedFlowcharts[i].ValueText.Contains('[') || sortedFlowcharts[i].ValueText.ToLower().Contains("arr"))
+                    {
+                        var arrayValue = sortedFlowcharts[i].ValueText.Substring(sortedFlowcharts[i].ValueText.IndexOf('=') + 1).Trim();
+                            
+                        rule1place.Type = "INTs";
+                        rule1place.InitialMarking = arrayValue;
+                    }
 
                     var rule2 = approach.Rule2(transitionTemplate, placeTemplate, arcTemplate, rule1place);
                     rule2place = rule2.Item1;

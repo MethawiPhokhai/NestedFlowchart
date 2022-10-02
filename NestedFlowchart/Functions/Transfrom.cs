@@ -103,7 +103,7 @@ namespace NestedFlowchart.Functions
             {
                 return "Start";
             }
-            else if (flowChart.Style.Contains("rounded=1"))
+            else if (flowChart.Style.Contains("rounded=1") || flowChart.Style.Contains("rounded=0;whiteSpace=wrap;html=1;"))
             {
                 return "Process";
             }
@@ -111,7 +111,7 @@ namespace NestedFlowchart.Functions
             {
                 return "Connector";
             }
-            else if (flowChart.Style.Contains("flowchart.decision"))
+            else if (flowChart.Style.Contains("flowchart.decision") || flowChart.Style.Contains("rhombus"))
             {
                 return "Condition";
             }
