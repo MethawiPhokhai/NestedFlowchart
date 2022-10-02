@@ -84,8 +84,7 @@ namespace NestedFlowchart.Functions
             //Declaration
             string rule1string = string.Empty;
             string rule2string = string.Empty;
-            string rule3string = string.Empty;
-            string rule5string = string.Empty;
+            string allNode = string.Empty;
 
             PlaceModel rule1place = new PlaceModel();
 
@@ -94,14 +93,15 @@ namespace NestedFlowchart.Functions
             ArcModel rule2ArcModel = new ArcModel();
 
             PlaceModel rule3place = new PlaceModel();
-            TransitionModel rule3transition = new TransitionModel();
-            ArcModel rule3ArcModel = new ArcModel();
 
             PlaceModel rule5place = new PlaceModel();
             TransitionModel rule5transition = new TransitionModel();
             ArcModel rule5ArcModel = new ArcModel();
 
 
+            TransitionModel definejTransition = new TransitionModel();
+            string definejOldPage = string.Empty;
+            string defindjNewPage = string.Empty;
 
             for (int i = 0; i < sortedFlowcharts.Count; i++)
             {
@@ -133,37 +133,56 @@ namespace NestedFlowchart.Functions
                     {
                         rule1string = string.Empty;
                     }
+
+                    allNode += rule1string + rule2string;
                 }
-                //Rule3 : I= 0
-                else if(sortedFlowcharts[i].NodeType.ToLower() == "process" 
-                    && sortedFlowcharts[i-2].NodeType.ToLower() == "process"
-                    && sortedFlowcharts[i-4].NodeType.ToLower() == "start")
+                //Rule3 : I=0, J=1
+                else if(sortedFlowcharts[i].NodeType.ToLower() == "process")
                 {
-                    var rule3 = approach.Rule3(transitionTemplate, placeTemplate, arcTemplate, string.Empty, string.Empty, rule2place, rule2transition, rule2ArcModel, false, page2Id);
-                    rule3place = rule3.Item1;
-                    rule3transition = rule3.Item2;
-                    rule3ArcModel = rule3.Item3;
-                    rule3string = rule3.Item4;
+                    if (sortedFlowcharts[i].ValueText.ToLower() == "i = 1")
+                    {
+                        var rule3 = approach.Rule3(transitionTemplate, placeTemplate, arcTemplate, string.Empty, string.Empty, rule2place, rule2transition, rule2ArcModel, false, page2Id);
+                        rule3place = rule3.Item1;
+                        allNode += rule3.Item4;
+                    }
+                    //TODO: more case after j
+                    else if(sortedFlowcharts[i].ValueText.ToLower() == "j = 0")
+                    {
+                        var definej = approach.Rule3(transitionTemplate, placeTemplate, arcTemplate, subStrTemplate, portTemplate, rule2place, rule2transition, rule2ArcModel, true, page2Id);
+                        definejTransition = definej.Item2;
+                        definejOldPage = definej.Item4;
+                        defindjNewPage = definej.Item5;
+
+                        allNode += definejOldPage;
+                    }
+                    else
+                    {
+                        //TODO: Create Rule4
+                        //Rule 4 here
+                    }
+
                 }
-                //Rule 5 : Connector
                 else if (sortedFlowcharts[i].NodeType.ToLower() == "connector")
                 {
-                    var rule5 = approach.Rule5(transitionTemplate, placeTemplate, arcTemplate, rule3place, rule3transition, rule3ArcModel);
+                    //TODO: connecter เข้า condition 2 รอบ เพราะมี 2 อัน
+                    //Rule3 place ส่งมาแบบนี้ไม่ได้ ต้องเอามาจาก node ก่อนหน้า
+                    //ต้อง debug ข้าม connector ที่ 2
+                    var rule5 = approach.Rule5(transitionTemplate, placeTemplate, arcTemplate, rule3place);
                     rule5place = rule5.Item1;
                     rule5transition = rule5.Item2;
                     rule5ArcModel = rule5.Item3;
-                    rule5string = rule5.Item4;
+                    allNode += rule5.Item4;
                 }
+
             }
-            
-            
-            
-            
+
+
+
             var rule6 = approach.Rule6(transitionTemplate, placeTemplate, arcTemplate, rule5place, rule5transition, rule5ArcModel);
             var rule7 = approach.Rule7(placeTemplate, arcTemplate, rule6.Item1, rule6.Item2, rule6.Item4);
-            var definej = approach.Rule3(transitionTemplate, placeTemplate, arcTemplate, subStrTemplate, portTemplate, rule2place, rule2transition, rule2ArcModel, true, page2Id);
 
-            var allNode = $"{rule1string}{rule2string}{rule3string}{rule5string}{rule6.Item5}{rule7.Item2}{definej.Item4}";
+            allNode += $"{rule6.Item5}{rule7.Item2}";
+            //var allNode = $"{rule1string}{rule2string}{rule3string}{rule5string}{rule6.Item5}{rule7.Item2}{definej.Item4}";
 
             //Page1
             var p1 = new PageModel()
@@ -178,7 +197,7 @@ namespace NestedFlowchart.Functions
             {
                 Id = page2Id,
                 Name = "New Subpage",
-                Node = definej.Item5
+                Node = defindjNewPage
             };
 
             var page1 = approach.CreatePage(pageTemplate, p1);
@@ -198,7 +217,7 @@ namespace NestedFlowchart.Functions
             HierarchyInstanceModel inst2 = new HierarchyInstanceModel()
             {
                 Id = IdManagements.GetlastestInstanceId(),
-                Text = "trans=\"" + definej.Item2.Id1 + "\"",
+                Text = "trans=\"" + definejTransition.Id1 + "\"",
                 Closer = "/></instance>"
             };
 

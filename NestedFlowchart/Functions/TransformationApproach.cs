@@ -113,6 +113,7 @@ namespace NestedFlowchart.Functions
 
 
 
+        //TODO: Rule 3-6 can specify to subpage
         //Rule 1 : Transform start to place start
         public (PlaceModel,string) Rule1(string placeTemplate)
         {
@@ -150,7 +151,7 @@ namespace NestedFlowchart.Functions
                 Id4 = IdManagements.GetlastestTransitionId(),
                 Id5 = IdManagements.GetlastestTransitionId(),
 
-                Name = "T1",
+                Name = IdManagements.GetlastestTransitionName(),
 
                 xPos1 = PositionManagements.xPos1,
                 yPos1 = PositionManagements.GetLastestyPos1(),
@@ -162,7 +163,8 @@ namespace NestedFlowchart.Functions
                 Id1 = IdManagements.GetlastestPlaceId(),
                 Id2 = IdManagements.GetlastestPlaceId(),
                 Id3 = IdManagements.GetlastestPlaceId(),
-                Name = "P1",
+
+                Name = IdManagements.GetlastestPlaceName(),
 
                 xPos1 = PositionManagements.xPos1,
                 yPos1 = PositionManagements.GetLastestyPos1(),
@@ -240,7 +242,7 @@ namespace NestedFlowchart.Functions
                     Id4 = IdManagements.GetlastestTransitionId(),
                     Id5 = IdManagements.GetlastestTransitionId(),
 
-                    Name = "T2",
+                    Name = IdManagements.GetlastestTransitionName(),
 
                     xPos1 = PositionManagements.xPos1,
                     yPos1 = PositionManagements.GetLastestyPos1(),
@@ -257,7 +259,8 @@ namespace NestedFlowchart.Functions
                     Id1 = IdManagements.GetlastestPlaceId(),
                     Id2 = IdManagements.GetlastestPlaceId(),
                     Id3 = IdManagements.GetlastestPlaceId(),
-                    Name = "P2",
+
+                    Name = IdManagements.GetlastestPlaceName(),
 
                     xPos1 = PositionManagements.xPos1,
                     yPos1 = PositionManagements.GetLastestyPos1(),
@@ -309,13 +312,17 @@ namespace NestedFlowchart.Functions
             }
             else
             {
+                var inputPortPlaceName = IdManagements.GetlastestPlaceName();
+                var outoutPortPlaceName = IdManagements.GetlastestPlaceName();
+
                 //P3 Place (Input port place) old page
                 PlaceModel p3old = new PlaceModel()
                 {
                     Id1 = IdManagements.GetlastestPlaceId(),
                     Id2 = IdManagements.GetlastestPlaceId(),
                     Id3 = IdManagements.GetlastestPlaceId(),
-                    Name = "P3",
+
+                    Name = inputPortPlaceName,
 
                     xPos1 = placeRule2.xPos1 - 4,
                     yPos1 = placeRule2.yPos1 - 168,
@@ -343,7 +350,7 @@ namespace NestedFlowchart.Functions
                     Id1 = IdManagements.GetlastestPlaceId(),
                     Id2 = IdManagements.GetlastestPlaceId(),
                     Id3 = IdManagements.GetlastestPlaceId(),
-                    Name = "P3",
+                    Name = inputPortPlaceName,
 
                     xPos1 = placeRule2.xPos1 - 4,
                     yPos1 = placeRule2.yPos1 - 168,
@@ -365,7 +372,7 @@ namespace NestedFlowchart.Functions
                     Id1 = IdManagements.GetlastestPlaceId(),
                     Id2 = IdManagements.GetlastestPlaceId(),
                     Id3 = IdManagements.GetlastestPlaceId(),
-                    Name = "P4",
+                    Name = outoutPortPlaceName,
 
                     xPos1 = placeRule2.xPos1 - 4,
                     yPos1 = placeRule2.yPos1 - 168,
@@ -393,7 +400,7 @@ namespace NestedFlowchart.Functions
                     Id1 = IdManagements.GetlastestPlaceId(),
                     Id2 = IdManagements.GetlastestPlaceId(),
                     Id3 = IdManagements.GetlastestPlaceId(),
-                    Name = "P4",
+                    Name = outoutPortPlaceName,
 
                     xPos1 = placeRule2.xPos1 - 4,
                     yPos1 = placeRule2.yPos1 - 168,
@@ -427,7 +434,7 @@ namespace NestedFlowchart.Functions
                     Id4 = IdManagements.GetlastestTransitionId(),
                     Id5 = IdManagements.GetlastestTransitionId(),
 
-                    Name = "TS1",
+                    Name = IdManagements.GetlastestSubPageTransitionName(),
 
                     xPos1 = tranRule2.xPos1 - 9,
                     yPos1 = tranRule2.yPos1 - 168,
@@ -507,8 +514,6 @@ namespace NestedFlowchart.Functions
 
                 return (null, tr_subpage, null, place3old + tr_subpage1 + place4old, place3new + place4new + transition1);
             }
-            
-
         }
 
         //Rule 4 Simple Process
@@ -516,7 +521,7 @@ namespace NestedFlowchart.Functions
 
         //Rule 5 : Connector
         public (PlaceModel, TransitionModel, ArcModel, string) Rule5(string transitionTemplate, string placeTemplate, string arcTemplate,
-            PlaceModel placeRule3, TransitionModel tranRule3, ArcModel arcRule3)
+            PlaceModel previousPlace)
         {
             //T3 Transition
             TransitionModel tr = new TransitionModel()
@@ -527,7 +532,7 @@ namespace NestedFlowchart.Functions
                 Id4 = IdManagements.GetlastestTransitionId(),
                 Id5 = IdManagements.GetlastestTransitionId(),
 
-                Name = "T3",
+                Name = IdManagements.GetlastestTransitionName(),
 
                 xPos1 = PositionManagements.xPos1,
                 yPos1 = PositionManagements.GetLastestyPos1(),
@@ -542,7 +547,8 @@ namespace NestedFlowchart.Functions
                 Id1 = IdManagements.GetlastestPlaceId(),
                 Id2 = IdManagements.GetlastestPlaceId(),
                 Id3 = IdManagements.GetlastestPlaceId(),
-                Name = "CN1",
+
+                Name = IdManagements.GetlastestPlaceConnectorName(),
 
                 xPos1 = PositionManagements.xPos1,
                 yPos1 = PositionManagements.GetLastestyPos1(),
@@ -560,7 +566,7 @@ namespace NestedFlowchart.Functions
                 Id2 = IdManagements.GetlastestArcId(),
 
                 TransEnd = tr.Id1,
-                PlaceEnd = placeRule3.Id1,
+                PlaceEnd = previousPlace.Id1,
 
                 xPos = PositionManagements.GetLastestxArcPos(),
                 yPos = PositionManagements.GetLastestyArcPos(),
@@ -596,7 +602,7 @@ namespace NestedFlowchart.Functions
 
         //Rule 6 : Decision
         public (PlaceModel, TransitionModel, TransitionModel, ArcModel, string) Rule6(string transitionTemplate, string placeTemplate, string arcTemplate,
-            PlaceModel placeRule4, TransitionModel tranRule4, ArcModel arcRule4)
+            PlaceModel placeRule5, TransitionModel tranRule5, ArcModel arcRule5)
         {
 
             var xPos1 = PositionManagements.xPos1;
@@ -614,7 +620,7 @@ namespace NestedFlowchart.Functions
                 Id4 = IdManagements.GetlastestTransitionId(),
                 Id5 = IdManagements.GetlastestTransitionId(),
 
-                Name = "GF1",
+                Name = IdManagements.GetlastestFalseGuardTransitionName(),
 
                 xPos1 = xPos1 - 39,
                 yPos1 = yPos1,
@@ -635,7 +641,7 @@ namespace NestedFlowchart.Functions
                 Id4 = IdManagements.GetlastestTransitionId(),
                 Id5 = IdManagements.GetlastestTransitionId(),
 
-                Name = "GT1",
+                Name = IdManagements.GetlastestTrueGuardTransitionName(),
 
                 xPos1 = xPos1 + 39,
                 yPos1 = yPos1,
@@ -654,7 +660,7 @@ namespace NestedFlowchart.Functions
                 Id2 = IdManagements.GetlastestArcId(),
 
                 TransEnd = tr1.Id1,
-                PlaceEnd = placeRule4.Id1,
+                PlaceEnd = placeRule5.Id1,
 
                 xPos = xPosArc - 84,
                 yPos = yPosArc,
@@ -670,7 +676,7 @@ namespace NestedFlowchart.Functions
                 Id2 = IdManagements.GetlastestArcId(),
 
                 TransEnd = tr2.Id1,
-                PlaceEnd = placeRule4.Id1,
+                PlaceEnd = placeRule5.Id1,
 
                 xPos = xPosArc + 34,
                 yPos = yPosArc,
@@ -686,7 +692,7 @@ namespace NestedFlowchart.Functions
             var arc2 = CreateArc(arcTemplate, a2);
 
             //Return transition an arc of GT
-            return (placeRule4, tr1, tr2, a2, transition1 + transition2 + arc1 + arc2);
+            return (placeRule5, tr1, tr2, a2, transition1 + transition2 + arc1 + arc2);
         }
 
         //Rule 7 : End
