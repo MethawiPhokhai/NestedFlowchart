@@ -15,8 +15,7 @@ namespace NestedFlowchart
 
         private void lnk_CPNTools_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            //TODO: Cannot open CPN Tools link
-            Process.Start("http://google.com");
+            Process.Start(new ProcessStartInfo { FileName = @"https://cpntools.org/", UseShellExecute = true });
         }
 
         #region Close Button
