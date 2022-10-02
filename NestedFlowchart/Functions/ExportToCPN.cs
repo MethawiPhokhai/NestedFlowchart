@@ -84,24 +84,35 @@ namespace NestedFlowchart.Functions
             //Declaration
             string rule1string = string.Empty;
             string rule2string = string.Empty;
+            string rule3string = string.Empty;
+            string rule5string = string.Empty;
+
             PlaceModel rule1place = new PlaceModel();
 
             PlaceModel rule2place = new PlaceModel();
             TransitionModel rule2transition = new TransitionModel();
             ArcModel rule2ArcModel = new ArcModel();
 
+            PlaceModel rule3place = new PlaceModel();
+            TransitionModel rule3transition = new TransitionModel();
+            ArcModel rule3ArcModel = new ArcModel();
+
+            PlaceModel rule5place = new PlaceModel();
+            TransitionModel rule5transition = new TransitionModel();
+            ArcModel rule5ArcModel = new ArcModel();
+
 
 
             for (int i = 0; i < sortedFlowcharts.Count; i++)
             {
-                //Start
+                //Rule1 : Start
                 if (sortedFlowcharts[i].NodeType.ToLower() == "start")
                 {
                     var rule1 = approach.Rule1(placeTemplate);
                     rule1place = rule1.Item1;
                     rule1string = rule1.Item2.ToString();
                 }
-                //Initialize Process
+                //Rule2 : Initialize Process
                 else if(sortedFlowcharts[i].NodeType.ToLower() == "process" 
                     && sortedFlowcharts[i-2].NodeType.ToLower() == "start")
                 {
@@ -123,16 +134,36 @@ namespace NestedFlowchart.Functions
                         rule1string = string.Empty;
                     }
                 }
+                //Rule3 : I= 0
+                else if(sortedFlowcharts[i].NodeType.ToLower() == "process" 
+                    && sortedFlowcharts[i-2].NodeType.ToLower() == "process"
+                    && sortedFlowcharts[i-4].NodeType.ToLower() == "start")
+                {
+                    var rule3 = approach.Rule3(transitionTemplate, placeTemplate, arcTemplate, string.Empty, string.Empty, rule2place, rule2transition, rule2ArcModel, false, page2Id);
+                    rule3place = rule3.Item1;
+                    rule3transition = rule3.Item2;
+                    rule3ArcModel = rule3.Item3;
+                    rule3string = rule3.Item4;
+                }
+                //Rule 5 : Connector
+                else if (sortedFlowcharts[i].NodeType.ToLower() == "connector")
+                {
+                    var rule5 = approach.Rule5(transitionTemplate, placeTemplate, arcTemplate, rule3place, rule3transition, rule3ArcModel);
+                    rule5place = rule5.Item1;
+                    rule5transition = rule5.Item2;
+                    rule5ArcModel = rule5.Item3;
+                    rule5string = rule5.Item4;
+                }
             }
             
             
-            var rule3 = approach.Rule3(transitionTemplate, placeTemplate, arcTemplate, string.Empty, string.Empty, rule2place, rule2transition, rule2ArcModel, false, page2Id);
-            var rule5 = approach.Rule5(transitionTemplate, placeTemplate, arcTemplate, rule3.Item1, rule3.Item2, rule3.Item3);
-            var rule6 = approach.Rule6(transitionTemplate, placeTemplate, arcTemplate, rule5.Item1, rule5.Item2, rule5.Item3);
+            
+            
+            var rule6 = approach.Rule6(transitionTemplate, placeTemplate, arcTemplate, rule5place, rule5transition, rule5ArcModel);
             var rule7 = approach.Rule7(placeTemplate, arcTemplate, rule6.Item1, rule6.Item2, rule6.Item4);
             var definej = approach.Rule3(transitionTemplate, placeTemplate, arcTemplate, subStrTemplate, portTemplate, rule2place, rule2transition, rule2ArcModel, true, page2Id);
 
-            var allNode = $"{rule1string}{rule2string}{rule3.Item4}{rule5.Item4}{rule6.Item5}{rule7.Item2}{definej.Item4}";
+            var allNode = $"{rule1string}{rule2string}{rule3string}{rule5string}{rule6.Item5}{rule7.Item2}{definej.Item4}";
 
             //Page1
             var p1 = new PageModel()
