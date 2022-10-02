@@ -114,7 +114,7 @@ namespace NestedFlowchart.Functions
 
 
         //Rule 1 : Transform start to place start
-        public PlaceModel Rule1()
+        public (PlaceModel,string) Rule1(string placeTemplate)
         {
             PlaceModel pl = new PlaceModel()
             {
@@ -134,7 +134,9 @@ namespace NestedFlowchart.Functions
                 yPos3 = PositionManagements.yPos3
             };
 
-            return pl;
+            var place1 = CreatePlace(placeTemplate, pl);
+
+            return (pl, place1);
         }
 
         //Rule 2 : Transform initialize process to transition and place, and assign initial marking
@@ -200,12 +202,6 @@ namespace NestedFlowchart.Functions
                 Orientation = "TtoP", //Transition to Place
                 Type = "arr"
             };
-
-
-            //Define type and Initial marking value
-            placeRule1.Type = "INTs";
-            placeRule1.InitialMarking = "[7,8,0,3,5]";
-
 
             var place1 = CreatePlace(placeTemplate, placeRule1);
             var arc1 = CreateArc(arcTemplate, a1);

@@ -4,7 +4,7 @@ namespace NestedFlowchart.Functions
 {
     public class ExportToCPN
     {
-        public void ExportFile(string? TemplatePath, string? ResultPath)
+        public void ExportFile(string? TemplatePath, string? ResultPath, List<XMLCellNode> sortedFlowcharts)
         {
             //Create CPN File
             string emptyCPNTemplate = File.ReadAllText(TemplatePath + "EmptyNet.txt");
@@ -35,7 +35,6 @@ namespace NestedFlowchart.Functions
 
             //Read port template
             var portTemplate = File.ReadAllText(TemplatePath + "Hierarchy_Port.txt");
-
 
             TransformationApproach approach = new TransformationApproach();
 
@@ -82,16 +81,58 @@ namespace NestedFlowchart.Functions
 
             var page2Id = IdManagements.GetlastestPageId();
 
+            //Declaration
+            string rule1string = string.Empty;
+            string rule2string = string.Empty;
+            PlaceModel rule1place = new PlaceModel();
 
-            var rule1 = approach.Rule1();
-            var rule2 = approach.Rule2(transitionTemplate, placeTemplate, arcTemplate, rule1);
-            var rule3 = approach.Rule3(transitionTemplate, placeTemplate, arcTemplate, string.Empty, string.Empty, rule2.Item1, rule2.Item2, rule2.Item3, false, page2Id);
+            PlaceModel rule2place = new PlaceModel();
+            TransitionModel rule2transition = new TransitionModel();
+            ArcModel rule2ArcModel = new ArcModel();
+
+
+
+            for (int i = 0; i < sortedFlowcharts.Count; i++)
+            {
+                //Start
+                if (sortedFlowcharts[i].NodeType.ToLower() == "start")
+                {
+                    var rule1 = approach.Rule1(placeTemplate);
+                    rule1place = rule1.Item1;
+                    rule1string = rule1.Item2.ToString();
+                }
+                //Initialize Process
+                else if(sortedFlowcharts[i].NodeType.ToLower() == "process" 
+                    && sortedFlowcharts[i-2].NodeType.ToLower() == "start")
+                {
+                    //TODO: substring and assign Initial Marking
+                    //rule1place.InitialMarking = sortedFlowcharts[i].ValueText
+
+                    //Define type and Initial marking value
+                    rule1place.Type = "INTs";
+                    rule1place.InitialMarking = "[7,8,0,3,5]";
+
+                    var rule2 = approach.Rule2(transitionTemplate, placeTemplate, arcTemplate, rule1place);
+                    rule2place = rule2.Item1;
+                    rule2transition = rule2.Item2;
+                    rule2ArcModel = rule2.Item3;
+                    rule2string = rule2.Item4;
+
+                    if (rule2string.Contains("Start"))
+                    {
+                        rule1string = string.Empty;
+                    }
+                }
+            }
+            
+            
+            var rule3 = approach.Rule3(transitionTemplate, placeTemplate, arcTemplate, string.Empty, string.Empty, rule2place, rule2transition, rule2ArcModel, false, page2Id);
             var rule5 = approach.Rule5(transitionTemplate, placeTemplate, arcTemplate, rule3.Item1, rule3.Item2, rule3.Item3);
             var rule6 = approach.Rule6(transitionTemplate, placeTemplate, arcTemplate, rule5.Item1, rule5.Item2, rule5.Item3);
             var rule7 = approach.Rule7(placeTemplate, arcTemplate, rule6.Item1, rule6.Item2, rule6.Item4);
-            var definej = approach.Rule3(transitionTemplate, placeTemplate, arcTemplate, subStrTemplate, portTemplate, rule2.Item1, rule2.Item2, rule2.Item3, true, page2Id);
+            var definej = approach.Rule3(transitionTemplate, placeTemplate, arcTemplate, subStrTemplate, portTemplate, rule2place, rule2transition, rule2ArcModel, true, page2Id);
 
-            var allNode = rule2.Item4 + rule3.Item4 + rule5.Item4 + rule6.Item5 + rule7.Item2 + definej.Item4;
+            var allNode = $"{rule1string}{rule2string}{rule3.Item4}{rule5.Item4}{rule6.Item5}{rule7.Item2}{definej.Item4}";
 
             //Page1
             var p1 = new PageModel()

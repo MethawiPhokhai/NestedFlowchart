@@ -7,6 +7,7 @@ namespace NestedFlowchart
 {
     public partial class Form1 : Form
     {
+        List<XMLCellNode> sortedFlowcharts = new List<XMLCellNode>();
         public Form1()
         {
             InitializeComponent();
@@ -62,7 +63,7 @@ namespace NestedFlowchart
                 //input : allFlowchartElement
                 //output : sortedFlowchart
                 //Iterate until nextElement is null
-                List<XMLCellNode> sortedFlowcharts = new List<XMLCellNode>();
+
                 List<XMLCellNode> tempDecisionElements = new List<XMLCellNode>();
 
                 var startElement = allFlowChartElements.Find(x => x.ValueText.ToLower() == "start");
@@ -102,7 +103,7 @@ namespace NestedFlowchart
 
                 //Export to CPN Tools file
                 var exportToCPN = new ExportToCPN();
-                exportToCPN.ExportFile(TemplatePath, ResultPath);
+                exportToCPN.ExportFile(TemplatePath, ResultPath, sortedFlowcharts);
             }
             catch (Exception ex)
             {
