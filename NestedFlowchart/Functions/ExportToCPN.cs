@@ -103,6 +103,8 @@ namespace NestedFlowchart.Functions
             TransitionModel rule6transition = new TransitionModel();
             ArcModel rule6ArcModel = new ArcModel();
 
+            PlaceModel rule7Place = new PlaceModel();
+
 
             TransitionModel definejTransition = new TransitionModel();
             string definejOldPage = string.Empty;
@@ -231,15 +233,19 @@ namespace NestedFlowchart.Functions
                     CreatePageNodeByCountSubPage(countSubPage, pages, rule6.Item5);
 
                 }
+                else if (sortedFlowcharts[i].NodeType.ToLower() == "end")
+                {
+                    //TODO: find solution to create Arc
+                    var rule7 = approach.Rule7(placeTemplate, arcTemplate, rule6place, rule6transition, rule6ArcModel);
+                    rule7Place = rule7.Item1;
+
+                    //Reset because it's need to end at main page
+                    countSubPage = 0;
+
+                    CreatePageNodeByCountSubPage(countSubPage, pages, rule7.Item2);
+                }
 
             }
-
-
-
-            //var rule7 = approach.Rule7(placeTemplate, arcTemplate, rule6.Item1, rule6.Item2, rule6.Item4);
-
-            //pages.mainPageModel.Node += $"{rule6.Item5}{rule7.Item2}";
-
 
 
             var page1 = approach.CreatePage(pageTemplate, pages.mainPageModel);
@@ -326,7 +332,6 @@ namespace NestedFlowchart.Functions
                     break;
             }
         }
-
         private string ConvertDecision(string condition)
         {
             if (condition.Contains("&gt;"))
