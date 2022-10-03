@@ -349,6 +349,8 @@ namespace NestedFlowchart.Functions
                     yPos = -167
                 };
 
+
+                var tr_subpage_yPos = PositionManagements.GetLastestyPos1();
                 var subst = new HierarchySubStModel()
                 {
                     SubPageId = page2Id,
@@ -361,8 +363,8 @@ namespace NestedFlowchart.Functions
                     Id = IdManagements.GetlastestSubStrId(),
                     Name = "New Subpage",
 
-                    xPos = -252,
-                    yPos = -339
+                    xPos = PositionManagements.xPos1,
+                    yPos = tr_subpage_yPos + 30
                 };
 
                 //New Subpage Transition
@@ -377,7 +379,7 @@ namespace NestedFlowchart.Functions
                     Name = "New Subpage",
 
                     xPos1 = PositionManagements.xPos1,
-                    yPos1 = PositionManagements.GetLastestyPos1(),
+                    yPos1 = tr_subpage_yPos,
 
                     xPos2 = PositionManagements.GetLastestxPos2(),
                     yPos2 = PositionManagements.GetLastestyPos2(),

@@ -79,6 +79,7 @@ namespace NestedFlowchart.Functions
             #endregion
 
             #region Page
+            int countSubPage = 0;
             PageDeclare pages = new PageDeclare();
 
             //Declaration
@@ -180,8 +181,22 @@ namespace NestedFlowchart.Functions
                         pages.mainPageModel.Node += definejOldPage;
 
                         //Add to sub page
-                        pages.subPageModel1.Node += defindjNewPage;
-                       
+                        countSubPage++;
+                        switch (countSubPage)
+                        {
+                            case 1:
+                                pages.subPageModel1.Node += defindjNewPage;
+                                break;
+                            case 2:
+                                pages.subPageModel2.Node += defindjNewPage;
+                                break;
+                            case 3:
+                                pages.subPageModel3.Node += defindjNewPage;
+                                break;
+                            case 4:
+                                pages.subPageModel4.Node += defindjNewPage;
+                                break;
+                        }
                     }
                     else
                     {
@@ -190,17 +205,17 @@ namespace NestedFlowchart.Functions
                     }
 
                 }
-                //else if (sortedFlowcharts[i].NodeType.ToLower() == "connector")
-                //{
-                //    //TODO: connecter เข้า condition 2 รอบ เพราะมี 2 อัน
-                //    //Rule3 place ส่งมาแบบนี้ไม่ได้ ต้องเอามาจาก node ก่อนหน้า
-                //    //ต้อง debug ข้าม connector ที่ 2
-                //    var rule5 = approach.Rule5(transitionTemplate, placeTemplate, arcTemplate, rule3place);
-                //    rule5place = rule5.Item1;
-                //    rule5transition = rule5.Item2;
-                //    rule5ArcModel = rule5.Item3;
-                //    pages.mainPageModel.Node += rule5.Item4;
-                //}
+                else if (sortedFlowcharts[i].NodeType.ToLower() == "connector")
+                {
+                    //TODO: connecter เข้า condition 2 รอบ เพราะมี 2 อัน
+                    //Rule3 place ส่งมาแบบนี้ไม่ได้ ต้องเอามาจาก node ก่อนหน้า
+                    //ต้อง debug ข้าม connector ที่ 2
+                    var rule5 = approach.Rule5(transitionTemplate, placeTemplate, arcTemplate, rule3place);
+                    rule5place = rule5.Item1;
+                    rule5transition = rule5.Item2;
+                    rule5ArcModel = rule5.Item3;
+                    pages.mainPageModel.Node += rule5.Item4;
+                }
 
             }
 
@@ -220,8 +235,26 @@ namespace NestedFlowchart.Functions
             {
                 page2 = approach.CreatePage(pageTemplate, pages.subPageModel1);
             }
-            
-            var allPage = page1 + page2;
+
+            string page3 = string.Empty;
+            if (pages.subPageModel2.Node != string.Empty)
+            {
+                page3 = approach.CreatePage(pageTemplate, pages.subPageModel2);
+            }
+
+            string page4 = string.Empty;
+            if (pages.subPageModel3.Node != string.Empty)
+            {
+                page4 = approach.CreatePage(pageTemplate, pages.subPageModel3);
+            }
+
+            string page5 = string.Empty;
+            if (pages.subPageModel4.Node != string.Empty)
+            {
+                page5 = approach.CreatePage(pageTemplate, pages.subPageModel4);
+            }
+
+            var allPage = page1 + page2 + page3 + page4 + page5;
             #endregion
 
             #region Instance
