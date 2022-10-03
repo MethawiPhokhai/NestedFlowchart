@@ -315,23 +315,28 @@ namespace NestedFlowchart.Functions
                 var inputPortPlaceName = IdManagements.GetlastestPlaceName();
                 var outoutPortPlaceName = IdManagements.GetlastestPlaceName();
 
+                var p3oldId = IdManagements.GetlastestPlaceId();
+                var p3newId = IdManagements.GetlastestPlaceId();
+
+                var p4oldId = IdManagements.GetlastestPlaceId();
+                var p4newId = IdManagements.GetlastestPlaceId();
+
+
+                #region Main Page
                 //P3 Place (Input port place) old page
                 PlaceModel p3old = new PlaceModel()
                 {
-                    Id1 = IdManagements.GetlastestPlaceId(),
+                    Id1 = p3oldId,
                     Id2 = IdManagements.GetlastestPlaceId(),
                     Id3 = IdManagements.GetlastestPlaceId(),
 
                     Name = inputPortPlaceName,
 
-                    xPos1 = placeRule2.xPos1 - 4,
-                    yPos1 = placeRule2.yPos1 - 168,
+                    xPos1 = PositionManagements.xPos1,
+                    yPos1 = PositionManagements.GetLastestyPos1(),
 
-                    xPos2 = placeRule2.xPos2 - 4,
-                    yPos2 = placeRule2.yPos2 - 167,
-
-                    xPos3 = placeRule2.xPos3 - 4,
-                    yPos3 = placeRule2.yPos3 - 167,
+                    xPos2 = PositionManagements.GetLastestxPos2(),
+                    yPos2 = PositionManagements.GetLastestyPos2(),
 
                     Type = "loopi"
                 };
@@ -344,10 +349,99 @@ namespace NestedFlowchart.Functions
                     yPos = -167
                 };
 
+                var subst = new HierarchySubStModel()
+                {
+                    SubPageId = page2Id,
+                    NewInputPlaceId = p3newId,
+                    OldInputPlaceId = p3oldId,
+
+                    NewOutputPlaceId = p4newId,
+                    OldOutputPlaceId = p4oldId,
+
+                    Id = IdManagements.GetlastestSubStrId(),
+                    Name = "New Subpage",
+
+                    xPos = -252,
+                    yPos = -339
+                };
+
+                //New Subpage Transition
+                TransitionModel tr_subpage = new TransitionModel()
+                {
+                    Id1 = IdManagements.GetlastestTransitionId(),
+                    Id2 = IdManagements.GetlastestTransitionId(),
+                    Id3 = IdManagements.GetlastestTransitionId(),
+                    Id4 = IdManagements.GetlastestTransitionId(),
+                    Id5 = IdManagements.GetlastestTransitionId(),
+
+                    Name = "New Subpage",
+
+                    xPos1 = PositionManagements.xPos1,
+                    yPos1 = PositionManagements.GetLastestyPos1(),
+
+                    xPos2 = PositionManagements.GetLastestxPos2(),
+                    yPos2 = PositionManagements.GetLastestyPos2(),
+
+                    SubsitutetionTransition = CreateHierarchySubSt(subStrTemplate, subst)
+
+                };
+
+                //P4 Place (output port place) old page
+                PlaceModel p4old = new PlaceModel()
+                {
+                    Id1 = p4oldId,
+                    Id2 = IdManagements.GetlastestPlaceId(),
+                    Id3 = IdManagements.GetlastestPlaceId(),
+                    Name = outoutPortPlaceName,
+
+                    xPos1 = PositionManagements.xPos1,
+                    yPos1 = PositionManagements.GetLastestyPos1(),
+
+                    xPos2 = PositionManagements.GetLastestxPos2(),
+                    yPos2 = PositionManagements.GetLastestyPos2(),
+
+                    Type = "loopi"
+                };
+
+                ArcModel a1 = new ArcModel()
+                {
+                    Id1 = IdManagements.GetlastestArcId(),
+                    Id2 = IdManagements.GetlastestArcId(),
+
+                    TransEnd = tr_subpage.Id1,
+                    PlaceEnd = p3oldId,
+
+                    xPos = PositionManagements.xArcPos,
+                    yPos = PositionManagements.yArcPos,
+
+                    Orientation = "PtoT", //Place to Transition
+                    Type = "(i,arr)"
+                };
+
+                ArcModel a2 = new ArcModel()
+                {
+                    Id1 = IdManagements.GetlastestArcId(),
+                    Id2 = IdManagements.GetlastestArcId(),
+
+                    TransEnd = tr_subpage.Id1,
+                    PlaceEnd = p4oldId,
+
+                    xPos = PositionManagements.GetLastestxArcPos(),
+                    yPos = PositionManagements.GetLastestyArcPos(),
+
+                    Orientation = "TtoP", //Transition to Place
+                    Type = "(i,arr)"
+                };
+
+                #endregion
+
+
+                #region SubPage
+                //TODO: Create position for sub page
                 //P3 Place (Input port place) new page
                 PlaceModel p3new = new PlaceModel()
                 {
-                    Id1 = IdManagements.GetlastestPlaceId(),
+                    Id1 = p3newId,
                     Id2 = IdManagements.GetlastestPlaceId(),
                     Id3 = IdManagements.GetlastestPlaceId(),
                     Name = inputPortPlaceName,
@@ -363,56 +457,6 @@ namespace NestedFlowchart.Functions
 
                     Type = "loopi",
                     Port = CreateHierarchyPort(portTemplate, p3InputPort)
-                };
-
-
-                //P4 Place (output port place) old page
-                PlaceModel p4old = new PlaceModel()
-                {
-                    Id1 = IdManagements.GetlastestPlaceId(),
-                    Id2 = IdManagements.GetlastestPlaceId(),
-                    Id3 = IdManagements.GetlastestPlaceId(),
-                    Name = outoutPortPlaceName,
-
-                    xPos1 = placeRule2.xPos1 - 4,
-                    yPos1 = placeRule2.yPos1 - 168,
-
-                    xPos2 = placeRule2.xPos2 - 4,
-                    yPos2 = placeRule2.yPos2 - 167,
-
-                    xPos3 = placeRule2.xPos3 - 4,
-                    yPos3 = placeRule2.yPos3 - 167,
-
-                    Type = "loopi"
-                };
-
-                var p4OutputPort = new HierarchyPortModel()
-                {
-                    Id = IdManagements.GetlastestPortId(),
-                    Type = "Out",
-                    xPos = -4,
-                    yPos = -168
-                };
-
-                //P4 Place (output port place) new page
-                PlaceModel p4new = new PlaceModel()
-                {
-                    Id1 = IdManagements.GetlastestPlaceId(),
-                    Id2 = IdManagements.GetlastestPlaceId(),
-                    Id3 = IdManagements.GetlastestPlaceId(),
-                    Name = outoutPortPlaceName,
-
-                    xPos1 = placeRule2.xPos1 - 4,
-                    yPos1 = placeRule2.yPos1 - 168,
-
-                    xPos2 = placeRule2.xPos2 - 4,
-                    yPos2 = placeRule2.yPos2 - 167,
-
-                    xPos3 = placeRule2.xPos3 - 4,
-                    yPos3 = placeRule2.yPos3 - 167,
-
-                    Type = "loopi",
-                    Port = CreateHierarchyPort(portTemplate, p4OutputPort)
                 };
 
                 //Define i=1 in Code Segment Inscription
@@ -455,64 +499,74 @@ namespace NestedFlowchart.Functions
 
                 };
 
-
-                var subst = new HierarchySubStModel()
+                var p4OutputPort = new HierarchyPortModel()
                 {
-                    SubPageId = page2Id, 
-                    NewInputPlaceId = p3new.Id1,
-                    OldInputPlaceId = p3old.Id1,
-
-                    NewOutputPlaceId = p4new.Id1,
-                    OldOutputPlaceId = p4old.Id1,
-
-                    Id = IdManagements.GetlastestSubStrId(),
-                    Name = "New Subpage",
-
-                    xPos = -252,
-                    yPos = -339
+                    Id = IdManagements.GetlastestPortId(),
+                    Type = "Out",
+                    xPos = -4,
+                    yPos = -168
                 };
 
-                //New Subpage Transition
-                TransitionModel tr_subpage = new TransitionModel()
+                //P4 Place (output port place) new page
+                PlaceModel p4new = new PlaceModel()
                 {
-                    Id1 = IdManagements.GetlastestTransitionId(),
-                    Id2 = IdManagements.GetlastestTransitionId(),
-                    Id3 = IdManagements.GetlastestTransitionId(),
-                    Id4 = IdManagements.GetlastestTransitionId(),
-                    Id5 = IdManagements.GetlastestTransitionId(),
+                    Id1 = p4newId,
+                    Id2 = IdManagements.GetlastestPlaceId(),
+                    Id3 = IdManagements.GetlastestPlaceId(),
+                    Name = outoutPortPlaceName,
 
-                    Name = "New Subpage",
+                    xPos1 = placeRule2.xPos1 - 4,
+                    yPos1 = placeRule2.yPos1 - 168,
 
-                    xPos1 = tranRule2.xPos1 - 9,
-                    yPos1 = tranRule2.yPos1 - 168,
+                    xPos2 = placeRule2.xPos2 - 4,
+                    yPos2 = placeRule2.yPos2 - 167,
 
-                    xPos2 = tranRule2.xPos2 - 9,
-                    yPos2 = tranRule2.yPos2 - 168,
+                    xPos3 = placeRule2.xPos3 - 4,
+                    yPos3 = placeRule2.yPos3 - 167,
 
-                    xPos3 = tranRule2.xPos3 - 9,
-                    yPos3 = tranRule2.yPos3 - 168,
-
-                    xPos4 = tranRule2.xPos4 - 9,
-                    yPos4 = tranRule2.yPos4 - 168,
-
-                    xPos5 = tranRule2.xPos5 - 9,
-                    yPos5 = tranRule2.yPos5 - 168,
-
-                    SubsitutetionTransition = CreateHierarchySubSt(subStrTemplate, subst)
-
+                    Type = "loopi",
+                    Port = CreateHierarchyPort(portTemplate, p4OutputPort)
                 };
+
+                ArcModel a3 = new ArcModel()
+                {
+                    Id1 = IdManagements.GetlastestArcId(),
+                    Id2 = IdManagements.GetlastestArcId(),
+
+                    TransEnd = ts1.Id1,
+                    PlaceEnd = p3newId,
+
+                    xPos = PositionManagements.xArcPos,
+                    yPos = PositionManagements.yArcPos,
+
+                    Orientation = "PtoT", //Place to Transition
+                    Type = "(i,arr)"
+                };
+
+                #endregion
+
+
+
 
                 //Main Page
                 var place3old = CreatePlace(placeTemplate, p3old);
                 var tr_subpage1 = CreateTransition(transitionTemplate, tr_subpage);
                 var place4old = CreatePlace(placeTemplate, p4old);
-                
+                var arc1 = CreateArc(arcTemplate, a1);
+                var arc2 = CreateArc(arcTemplate, a2);
+
+                var oldPageAllNode = place3old + tr_subpage1 + place4old + arc1 + arc2;
+
+
                 //Sub Page
                 var place3new = CreatePlace(placeTemplate, p3new);
                 var place4new = CreatePlace(placeTemplate, p4new);
                 var transition1 = CreateTransition(transitionTemplate, ts1);
+                var arc3 = CreateArc(arcTemplate, a3);
 
-                return (null, tr_subpage, null, place3old + tr_subpage1 + place4old, place3new + place4new + transition1);
+                var newPageAllNode = place3new + place4new + transition1 + arc3;
+
+                return (null, tr_subpage, null, oldPageAllNode, newPageAllNode);
             }
         }
 

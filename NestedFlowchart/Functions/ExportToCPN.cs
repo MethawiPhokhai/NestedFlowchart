@@ -1,4 +1,5 @@
-﻿using NestedFlowchart.Models;
+﻿using NestedFlowchart.Declaration;
+using NestedFlowchart.Models;
 
 namespace NestedFlowchart.Functions
 {
@@ -78,13 +79,12 @@ namespace NestedFlowchart.Functions
             #endregion
 
             #region Page
-
-            var page2Id = IdManagements.GetlastestPageId();
+            PageDeclare pages = new PageDeclare();
 
             //Declaration
             string rule1string = string.Empty;
             string rule2string = string.Empty;
-            string allNode = string.Empty;
+
 
             PlaceModel rule1place = new PlaceModel();
 
@@ -136,7 +136,7 @@ namespace NestedFlowchart.Functions
                         rule1string = string.Empty;
                     }
 
-                    allNode += rule1string + rule2string;
+                    pages.mainPageModel.Node += rule1string + rule2string;
                 }
                 //Rule3 : I=0, J=1
                 else if(sortedFlowcharts[i].NodeType.ToLower() == "process")
@@ -162,21 +162,26 @@ namespace NestedFlowchart.Functions
                         //var var2 = approach.CreateVar(varTemplate, var2Model);
 
                         var rule3 = approach.Rule3(transitionTemplate, placeTemplate, arcTemplate, string.Empty, string.Empty
-                            , rule2place, rule2transition, rule2ArcModel, false, page2Id, sortedFlowcharts[i].ValueText);
+                            , rule2place, rule2transition, rule2ArcModel, false, string.Empty, sortedFlowcharts[i].ValueText);
 
                         rule3place = rule3.Item1;
-                        allNode += rule3.Item4;
+                        pages.mainPageModel.Node += rule3.Item4;
                     }
                     //Case Nested => Create Hierachy Tool
                     else if(sortedFlowcharts[i].ValueText.ToLower().Trim().Contains("j =") || sortedFlowcharts[i].ValueText.ToLower().Trim().Contains("k =")
                         || sortedFlowcharts[i].ValueText.ToLower().Trim().Contains("l =") || sortedFlowcharts[i].ValueText.ToLower().Trim().Contains("m ="))
                     {
-                        var definej = approach.Rule3(transitionTemplate, placeTemplate, arcTemplate, subStrTemplate, portTemplate, rule2place, rule2transition, rule2ArcModel, true, page2Id, sortedFlowcharts[i].ValueText);
+                        var definej = approach.Rule3(transitionTemplate, placeTemplate, arcTemplate, subStrTemplate, portTemplate, rule2place, rule2transition, rule2ArcModel, true, pages.subPageModel1.Id, sortedFlowcharts[i].ValueText);
                         definejTransition = definej.Item2;
                         definejOldPage = definej.Item4;
                         defindjNewPage = definej.Item5;
 
-                        allNode += definejOldPage;
+                        //Add to old page
+                        pages.mainPageModel.Node += definejOldPage;
+
+                        //Add to sub page
+                        pages.subPageModel1.Node += defindjNewPage;
+                       
                     }
                     else
                     {
@@ -185,51 +190,42 @@ namespace NestedFlowchart.Functions
                     }
 
                 }
-                else if (sortedFlowcharts[i].NodeType.ToLower() == "connector")
-                {
-                    //TODO: connecter เข้า condition 2 รอบ เพราะมี 2 อัน
-                    //Rule3 place ส่งมาแบบนี้ไม่ได้ ต้องเอามาจาก node ก่อนหน้า
-                    //ต้อง debug ข้าม connector ที่ 2
-                    var rule5 = approach.Rule5(transitionTemplate, placeTemplate, arcTemplate, rule3place);
-                    rule5place = rule5.Item1;
-                    rule5transition = rule5.Item2;
-                    rule5ArcModel = rule5.Item3;
-                    allNode += rule5.Item4;
-                }
+                //else if (sortedFlowcharts[i].NodeType.ToLower() == "connector")
+                //{
+                //    //TODO: connecter เข้า condition 2 รอบ เพราะมี 2 อัน
+                //    //Rule3 place ส่งมาแบบนี้ไม่ได้ ต้องเอามาจาก node ก่อนหน้า
+                //    //ต้อง debug ข้าม connector ที่ 2
+                //    var rule5 = approach.Rule5(transitionTemplate, placeTemplate, arcTemplate, rule3place);
+                //    rule5place = rule5.Item1;
+                //    rule5transition = rule5.Item2;
+                //    rule5ArcModel = rule5.Item3;
+                //    pages.mainPageModel.Node += rule5.Item4;
+                //}
 
             }
 
 
 
-            var rule6 = approach.Rule6(transitionTemplate, placeTemplate, arcTemplate, rule5place, rule5transition, rule5ArcModel);
-            var rule7 = approach.Rule7(placeTemplate, arcTemplate, rule6.Item1, rule6.Item2, rule6.Item4);
+            //var rule6 = approach.Rule6(transitionTemplate, placeTemplate, arcTemplate, rule5place, rule5transition, rule5ArcModel);
+            //var rule7 = approach.Rule7(placeTemplate, arcTemplate, rule6.Item1, rule6.Item2, rule6.Item4);
 
-            allNode += $"{rule6.Item5}{rule7.Item2}";
-            //var allNode = $"{rule1string}{rule2string}{rule3string}{rule5string}{rule6.Item5}{rule7.Item2}{definej.Item4}";
+            //pages.mainPageModel.Node += $"{rule6.Item5}{rule7.Item2}";
 
-            //Page1
-            var p1 = new PageModel()
+
+
+            var page1 = approach.CreatePage(pageTemplate, pages.mainPageModel);
+
+            string page2 = string.Empty;
+            if(pages.subPageModel1.Node != string.Empty)
             {
-                Id = "ID6",
-                Name = "New Page",
-                Node = allNode
-            };
-
-            //New Subpage Page
-            var p2 = new PageModel()
-            {
-                Id = page2Id,
-                Name = "New Subpage",
-                Node = defindjNewPage
-            };
-
-            var page1 = approach.CreatePage(pageTemplate, p1);
-            var page2 = approach.CreatePage(pageTemplate, p2);
-
+                page2 = approach.CreatePage(pageTemplate, pages.subPageModel1);
+            }
+            
             var allPage = page1 + page2;
             #endregion
 
             #region Instance
+            //TODO: Define instance if have more than 2
             HierarchyInstanceModel inst = new HierarchyInstanceModel()
             {
                 Id = IdManagements.GetlastestInstanceId(),
