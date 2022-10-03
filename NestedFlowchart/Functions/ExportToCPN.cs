@@ -86,7 +86,7 @@ namespace NestedFlowchart.Functions
             string rule1string = string.Empty;
             string rule2string = string.Empty;
 
-
+            PlaceModel previousPlaceModel = new PlaceModel();
             PlaceModel rule1place = new PlaceModel();
 
             PlaceModel rule2place = new PlaceModel();
@@ -111,6 +111,7 @@ namespace NestedFlowchart.Functions
                 {
                     var rule1 = approach.Rule1(placeTemplate);
                     rule1place = rule1.Item1;
+                    previousPlaceModel = rule1place;
                     rule1string = rule1.Item2.ToString();
                 }
                 //Rule2 : Initialize Process
@@ -131,6 +132,7 @@ namespace NestedFlowchart.Functions
                     rule2transition = rule2.Item2;
                     rule2ArcModel = rule2.Item3;
                     rule2string = rule2.Item4;
+                    previousPlaceModel = rule2place;
 
                     if (rule2string.Contains("Start"))
                     {
@@ -166,6 +168,7 @@ namespace NestedFlowchart.Functions
                             , rule2place, rule2transition, rule2ArcModel, false, string.Empty, sortedFlowcharts[i].ValueText);
 
                         rule3place = rule3.Item1;
+                        previousPlaceModel = rule3place;
                         pages.mainPageModel.Node += rule3.Item4;
                     }
                     //Case Nested => Create Hierachy Tool
@@ -176,11 +179,13 @@ namespace NestedFlowchart.Functions
                         definejTransition = definej.Item2;
                         definejOldPage = definej.Item4;
                         defindjNewPage = definej.Item5;
+                        previousPlaceModel = definej.Item1;
 
                         //Add to old page
                         pages.mainPageModel.Node += definejOldPage;
 
                         //Add to sub page
+                        //countSubPage indicate current page you are in
                         countSubPage++;
                         switch (countSubPage)
                         {
@@ -210,18 +215,23 @@ namespace NestedFlowchart.Functions
                     //TODO: connecter เข้า condition 2 รอบ เพราะมี 2 อัน
                     //Rule3 place ส่งมาแบบนี้ไม่ได้ ต้องเอามาจาก node ก่อนหน้า
                     //ต้อง debug ข้าม connector ที่ 2
-                    var rule5 = approach.Rule5(transitionTemplate, placeTemplate, arcTemplate, rule3place);
+                    var rule5 = approach.Rule5(transitionTemplate, placeTemplate, arcTemplate, previousPlaceModel);
                     rule5place = rule5.Item1;
                     rule5transition = rule5.Item2;
                     rule5ArcModel = rule5.Item3;
+                    previousPlaceModel = rule5place;
                     pages.mainPageModel.Node += rule5.Item4;
+                }
+                else if(sortedFlowcharts[i].NodeType.ToLower() == "condition")
+                {
+
+                    var rule6 = approach.Rule6(transitionTemplate, placeTemplate, arcTemplate, rule5place, rule5transition, rule5ArcModel);
                 }
 
             }
 
 
 
-            //var rule6 = approach.Rule6(transitionTemplate, placeTemplate, arcTemplate, rule5place, rule5transition, rule5ArcModel);
             //var rule7 = approach.Rule7(placeTemplate, arcTemplate, rule6.Item1, rule6.Item2, rule6.Item4);
 
             //pages.mainPageModel.Node += $"{rule6.Item5}{rule7.Item2}";

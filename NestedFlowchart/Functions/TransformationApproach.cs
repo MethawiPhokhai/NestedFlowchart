@@ -568,7 +568,13 @@ namespace NestedFlowchart.Functions
 
                 var newPageAllNode = place3new + place4new + transition1 + arc3;
 
-                return (null, tr_subpage, null, oldPageAllNode, newPageAllNode);
+                //Return
+                //1. P4new => for next node
+                //2. tr_subpage => create instance
+                //3. Arc => null
+                //4. oldPageAllNode => all node for old page
+                //5. newPageAllNode => all node for new page
+                return (p4new, tr_subpage, null, oldPageAllNode, newPageAllNode);
             }
         }
 

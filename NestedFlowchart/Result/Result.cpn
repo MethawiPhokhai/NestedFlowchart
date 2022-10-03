@@ -734,7 +734,7 @@ end</text>
       </arc>
 <place id="ID1412948784">
         <posattr x="-15"
-                 y="-462"/>
+                 y="-546"/>
         <fillattr colour="White"
                   pattern=""
                   filled="false"/>
@@ -786,10 +786,10 @@ end</text>
         </initmark>
         
       </place>
-<trans id="ID1412848787"
+<trans id="ID1412848797"
              explicit="false">
         <posattr x="-15"
-                 y="-546"/>
+                 y="-630"/>
         <fillattr colour="White"
                   pattern=""
                   filled="false"/>
@@ -807,7 +807,7 @@ end</text>
           <subpageinfo id="ID1412399301"
                        name="New Subpage">
             <posattr x="-15"
-                     y="-516"/>
+                     y="-600"/>
             <fillattr colour="White"
                       pattern="Solid"
                       filled="false"/>
@@ -820,7 +820,7 @@ end</text>
         </subst>
         <binding x="7.200000"
                  y="-3.000000"/>
-        <cond id="ID1412848788">
+        <cond id="ID1412848798">
           <posattr x="24"
                    y="-733"/>
           <fillattr colour="White"
@@ -834,7 +834,7 @@ end</text>
           <text tool="CPN Tools"
                 version="4.0.1"></text>
         </cond>
-        <time id="ID1412848789">
+        <time id="ID1412848799">
           <posattr x="0"
                    y="0"/>
           <fillattr colour="White"
@@ -848,7 +848,7 @@ end</text>
           <text tool="CPN Tools"
                 version="4.0.1"/>
         </time>
-        <code id="ID1412848790">
+        <code id="ID1412848800">
           <posattr x="0"
                    y="0"/>
           <fillattr colour="White"
@@ -862,7 +862,7 @@ end</text>
           <text tool="CPN Tools"
                 version="4.0.1"></text>
         </code>
-        <priority id="ID1412848791">
+        <priority id="ID1412848801">
           <posattr x="0"
                    y="0"/>
           <fillattr colour="White"
@@ -879,7 +879,7 @@ end</text>
       </trans>
 <place id="ID1412948786">
         <posattr x="-15"
-                 y="-630"/>
+                 y="-714"/>
         <fillattr colour="White"
                   pattern=""
                   filled="false"/>
@@ -931,7 +931,7 @@ end</text>
         </initmark>
         
       </place>
-<arc id="ID1412949824"
+<arc id="ID1412949828"
            orientation="PtoT"
            order="1">
         <posattr x="0.000000"
@@ -946,11 +946,11 @@ end</text>
                   bold="false"/>
         <arrowattr headsize="1.200000"
                    currentcyckle="2"/>
-        <transend idref="ID1412848787"/>
+        <transend idref="ID1412848797"/>
         <placeend idref="ID1412948784"/>
-        <annot id="ID1412949825">
+        <annot id="ID1412949829">
           <posattr x="10"
-                   y="-336"/>
+                   y="-420"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>
@@ -963,7 +963,7 @@ end</text>
                 version="4.0.1">(i,arr)</text>
         </annot>
       </arc>
-<arc id="ID1412949826"
+<arc id="ID1412949830"
            orientation="TtoP"
            order="1">
         <posattr x="0.000000"
@@ -978,11 +978,11 @@ end</text>
                   bold="false"/>
         <arrowattr headsize="1.200000"
                    currentcyckle="2"/>
-        <transend idref="ID1412848787"/>
+        <transend idref="ID1412848797"/>
         <placeend idref="ID1412948786"/>
-        <annot id="ID1412949827">
+        <annot id="ID1412949831">
           <posattr x="10"
-                   y="-420"/>
+                   y="-504"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>
@@ -1134,7 +1134,7 @@ end</text>
             bold="false"/>
 </port>
       </place>
-<trans id="ID1412848792"
+<trans id="ID1412848802"
              explicit="false">
         <posattr x="-24"
                  y="-126"/>
@@ -1152,7 +1152,7 @@ end</text>
         
         <binding x="7.200000"
                  y="-3.000000"/>
-        <cond id="ID1412848793">
+        <cond id="ID1412848803">
           <posattr x="-9"
                    y="-168"/>
           <fillattr colour="White"
@@ -1166,7 +1166,7 @@ end</text>
           <text tool="CPN Tools"
                 version="4.0.1"></text>
         </cond>
-        <time id="ID1412848794">
+        <time id="ID1412848804">
           <posattr x="-9"
                    y="-168"/>
           <fillattr colour="White"
@@ -1180,7 +1180,7 @@ end</text>
           <text tool="CPN Tools"
                 version="4.0.1"/>
         </time>
-        <code id="ID1412848795">
+        <code id="ID1412848805">
           <posattr x="-9"
                    y="-168"/>
           <fillattr colour="White"
@@ -1201,7 +1201,7 @@ in
 (j) 
 end</text>
         </code>
-        <priority id="ID1412848796">
+        <priority id="ID1412848806">
           <posattr x="-9"
                    y="-168"/>
           <fillattr colour="White"
@@ -1216,7 +1216,7 @@ end</text>
                 version="4.0.1"/>
         </priority>
       </trans>
-<arc id="ID1412949828"
+<arc id="ID1412949832"
            orientation="PtoT"
            order="1">
         <posattr x="0.000000"
@@ -1231,11 +1231,11 @@ end</text>
                   bold="false"/>
         <arrowattr headsize="1.200000"
                    currentcyckle="2"/>
-        <transend idref="ID1412848792"/>
+        <transend idref="ID1412848802"/>
         <placeend idref="ID1412948785"/>
-        <annot id="ID1412949829">
+        <annot id="ID1412949833">
           <posattr x="10"
-                   y="-420"/>
+                   y="-504"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>
@@ -1268,7 +1268,7 @@ end</text>
     <instances>
           <instance id="ID2149"
                 page="ID6">      <instance id="ID2150"
-                trans="ID1412848787"/></instance>
+                trans="ID1412848797"/></instance>
     </instances>
     <options>
       <option name="realtimestamp">
