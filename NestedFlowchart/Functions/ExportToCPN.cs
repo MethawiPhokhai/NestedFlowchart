@@ -99,6 +99,10 @@ namespace NestedFlowchart.Functions
             TransitionModel rule5transition = new TransitionModel();
             ArcModel rule5ArcModel = new ArcModel();
 
+            PlaceModel rule6place = new PlaceModel();
+            TransitionModel rule6transition = new TransitionModel();
+            ArcModel rule6ArcModel = new ArcModel();
+
 
             TransitionModel definejTransition = new TransitionModel();
             string definejOldPage = string.Empty;
@@ -175,6 +179,11 @@ namespace NestedFlowchart.Functions
                     else if(sortedFlowcharts[i].ValueText.ToLower().Trim().Contains("j =") || sortedFlowcharts[i].ValueText.ToLower().Trim().Contains("k =")
                         || sortedFlowcharts[i].ValueText.ToLower().Trim().Contains("l =") || sortedFlowcharts[i].ValueText.ToLower().Trim().Contains("m ="))
                     {
+
+                        //TODO: if node before is place create transition
+
+
+
                         var definej = approach.Rule3(transitionTemplate, placeTemplate, arcTemplate, subStrTemplate, portTemplate, rule2place, rule2transition, rule2ArcModel, true, pages.subPageModel1.Id, sortedFlowcharts[i].ValueText);
                         definejTransition = definej.Item2;
                         definejOldPage = definej.Item4;
@@ -187,21 +196,7 @@ namespace NestedFlowchart.Functions
                         //Add to sub page
                         //countSubPage indicate current page you are in
                         countSubPage++;
-                        switch (countSubPage)
-                        {
-                            case 1:
-                                pages.subPageModel1.Node += defindjNewPage;
-                                break;
-                            case 2:
-                                pages.subPageModel2.Node += defindjNewPage;
-                                break;
-                            case 3:
-                                pages.subPageModel3.Node += defindjNewPage;
-                                break;
-                            case 4:
-                                pages.subPageModel4.Node += defindjNewPage;
-                                break;
-                        }
+                        CreatePageNodeByCountSubPage(countSubPage, pages, defindjNewPage);
                     }
                     else
                     {
@@ -224,8 +219,14 @@ namespace NestedFlowchart.Functions
                 }
                 else if(sortedFlowcharts[i].NodeType.ToLower() == "condition")
                 {
+                    var rule6 = approach.Rule6(transitionTemplate, placeTemplate, arcTemplate, previousPlaceModel, rule5transition, rule5ArcModel);
+                    rule6place = rule6.Item1;
+                    rule6transition = rule6.Item2;
+                    rule6ArcModel = rule6.Item4;
+                    previousPlaceModel = rule6place;
 
-                    var rule6 = approach.Rule6(transitionTemplate, placeTemplate, arcTemplate, rule5place, rule5transition, rule5ArcModel);
+                    CreatePageNodeByCountSubPage(countSubPage, pages, rule6.Item5);
+
                 }
 
             }
@@ -299,6 +300,28 @@ namespace NestedFlowchart.Functions
 
             //Write to CPN File
             File.WriteAllText(ResultPath + "Result.cpn", firstCPN);
+        }
+
+        private static void CreatePageNodeByCountSubPage(int countSubPage, PageDeclare pages, string rule)
+        {
+            switch (countSubPage)
+            {
+                case 0:
+                    pages.mainPageModel.Node += rule;
+                    break;
+                case 1:
+                    pages.subPageModel1.Node += rule;
+                    break;
+                case 2:
+                    pages.subPageModel2.Node += rule;
+                    break;
+                case 3:
+                    pages.subPageModel3.Node += rule;
+                    break;
+                case 4:
+                    pages.subPageModel4.Node += rule;
+                    break;
+            }
         }
     }
 }

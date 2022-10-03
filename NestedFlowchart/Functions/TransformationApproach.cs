@@ -664,7 +664,7 @@ namespace NestedFlowchart.Functions
 
         //Rule 6 : Decision
         public (PlaceModel, TransitionModel, TransitionModel, ArcModel, string) Rule6(string transitionTemplate, string placeTemplate, string arcTemplate,
-            PlaceModel placeRule5, TransitionModel tranRule5, ArcModel arcRule5)
+            PlaceModel previousPlace, TransitionModel tranRule5, ArcModel arcRule5)
         {
 
             var xPos1 = PositionManagements.xPos1;
@@ -722,7 +722,7 @@ namespace NestedFlowchart.Functions
                 Id2 = IdManagements.GetlastestArcId(),
 
                 TransEnd = tr1.Id1,
-                PlaceEnd = placeRule5.Id1,
+                PlaceEnd = previousPlace.Id1,
 
                 xPos = xPosArc - 84,
                 yPos = yPosArc,
@@ -738,7 +738,7 @@ namespace NestedFlowchart.Functions
                 Id2 = IdManagements.GetlastestArcId(),
 
                 TransEnd = tr2.Id1,
-                PlaceEnd = placeRule5.Id1,
+                PlaceEnd = previousPlace.Id1,
 
                 xPos = xPosArc + 34,
                 yPos = yPosArc,
@@ -754,7 +754,7 @@ namespace NestedFlowchart.Functions
             var arc2 = CreateArc(arcTemplate, a2);
 
             //Return transition an arc of GT
-            return (placeRule5, tr1, tr2, a2, transition1 + transition2 + arc1 + arc2);
+            return (previousPlace, tr1, tr2, a2, transition1 + transition2 + arc1 + arc2);
         }
 
         //Rule 7 : End
