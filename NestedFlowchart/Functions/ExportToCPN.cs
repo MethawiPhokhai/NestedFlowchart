@@ -207,15 +207,12 @@ namespace NestedFlowchart.Functions
                 }
                 else if (sortedFlowcharts[i].NodeType.ToLower() == "connector")
                 {
-                    //TODO: connecter เข้า condition 2 รอบ เพราะมี 2 อัน
-                    //Rule3 place ส่งมาแบบนี้ไม่ได้ ต้องเอามาจาก node ก่อนหน้า
-                    //ต้อง debug ข้าม connector ที่ 2
                     var rule5 = approach.Rule5(transitionTemplate, placeTemplate, arcTemplate, previousPlaceModel);
                     rule5place = rule5.Item1;
                     rule5transition = rule5.Item2;
                     rule5ArcModel = rule5.Item3;
                     previousPlaceModel = rule5place;
-                    pages.mainPageModel.Node += rule5.Item4;
+                    CreatePageNodeByCountSubPage(countSubPage, pages, rule5.Item4);
                 }
                 else if(sortedFlowcharts[i].NodeType.ToLower() == "condition")
                 {
