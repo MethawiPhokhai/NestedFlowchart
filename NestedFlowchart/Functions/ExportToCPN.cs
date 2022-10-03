@@ -223,6 +223,7 @@ namespace NestedFlowchart.Functions
 
                     //TODO: Replace Array with List.nth(arr,j)
 
+                    //TODO: Separate between true and false case by arrow[i+1]
                     var rule6 = approach.Rule6(transitionTemplate, placeTemplate, arcTemplate, previousPlaceModel, rule5transition, rule5ArcModel,
                         trueCondition, falseCondition);
                     rule6place = rule6.Item1;
@@ -236,6 +237,8 @@ namespace NestedFlowchart.Functions
                 else if (sortedFlowcharts[i].NodeType.ToLower() == "end")
                 {
                     //TODO: find solution to create Arc
+
+                    //TODO: Send previous transition to here
                     var rule7 = approach.Rule7(placeTemplate, arcTemplate, rule6place, rule6transition, rule6ArcModel);
                     rule7Place = rule7.Item1;
 

@@ -740,7 +740,6 @@ namespace NestedFlowchart.Functions
             var arc1 = CreateArc(arcTemplate, a1);
             var arc2 = CreateArc(arcTemplate, a2);
 
-            //Return transition an arc of GT
             return (previousPlace, tr1, tr2, a2, transition1 + transition2 + arc1 + arc2);
         }
 
