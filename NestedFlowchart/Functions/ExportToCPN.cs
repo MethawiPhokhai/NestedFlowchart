@@ -219,7 +219,13 @@ namespace NestedFlowchart.Functions
                 }
                 else if(sortedFlowcharts[i].NodeType.ToLower() == "condition")
                 {
-                    var rule6 = approach.Rule6(transitionTemplate, placeTemplate, arcTemplate, previousPlaceModel, rule5transition, rule5ArcModel);
+                    var trueCondition = "[" + sortedFlowcharts[i].ValueText.Replace("N", " length arr") + "]";
+                    var falseCondition = ConvertDecision(trueCondition);
+
+                    //TODO: Replace Array with List.nth(arr,j)
+
+                    var rule6 = approach.Rule6(transitionTemplate, placeTemplate, arcTemplate, previousPlaceModel, rule5transition, rule5ArcModel,
+                        trueCondition, falseCondition);
                     rule6place = rule6.Item1;
                     rule6transition = rule6.Item2;
                     rule6ArcModel = rule6.Item4;
@@ -321,6 +327,30 @@ namespace NestedFlowchart.Functions
                 case 4:
                     pages.subPageModel4.Node += rule;
                     break;
+            }
+        }
+
+        private string ConvertDecision(string condition)
+        {
+            if (condition.Contains("&gt;"))
+            {
+                return condition.Replace("&gt;", "&lt;=");
+            }
+            else if (condition.Contains("&lt;"))
+            {
+                return condition.Replace("&lt;", "&gt;=");
+            }
+            else if (condition.Contains("="))
+            {
+                return condition.Replace("=", "!=");
+            }
+            else if (condition.Contains("!="))
+            {
+                return condition.Replace("!=", "=");
+            }
+            else
+            {
+                return condition;
             }
         }
     }

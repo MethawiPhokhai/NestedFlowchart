@@ -762,7 +762,7 @@ end</text>
           <textattr colour="Black"
                     bold="false"/>
           <text tool="CPN Tools"
-                version="4.0.1">[i &gt;= length arr]</text>
+                version="4.0.1">[i &gt;=  length arr]</text>
         </cond>
         <time id="ID1412848789">
           <posattr x="0"
@@ -837,7 +837,7 @@ end</text>
           <textattr colour="Black"
                     bold="false"/>
           <text tool="CPN Tools"
-                version="4.0.1">[i &lt; length arr]</text>
+                version="4.0.1">[i &lt;  length arr]</text>
         </cond>
         <time id="ID1412848794">
           <posattr x="0"
@@ -1492,7 +1492,7 @@ end</text>
           <textattr colour="Black"
                     bold="false"/>
           <text tool="CPN Tools"
-                version="4.0.1">[i &gt;= length arr]</text>
+                version="4.0.1">[j &gt;=  length arr - 1]</text>
         </cond>
         <time id="ID1412848809">
           <posattr x="0"
@@ -1567,7 +1567,7 @@ end</text>
           <textattr colour="Black"
                     bold="false"/>
           <text tool="CPN Tools"
-                version="4.0.1">[i &lt; length arr]</text>
+                version="4.0.1">[j &lt;  length arr - 1]</text>
         </cond>
         <time id="ID1412848814">
           <posattr x="0"
@@ -1706,7 +1706,7 @@ end</text>
           <textattr colour="Black"
                     bold="false"/>
           <text tool="CPN Tools"
-                version="4.0.1">[i &gt;= length arr]</text>
+                version="4.0.1">[array[j] &lt;= array[j + 1]]</text>
         </cond>
         <time id="ID1412848819">
           <posattr x="0"
@@ -1781,7 +1781,7 @@ end</text>
           <textattr colour="Black"
                     bold="false"/>
           <text tool="CPN Tools"
-                version="4.0.1">[i &lt; length arr]</text>
+                version="4.0.1">[array[j] &gt; array[j + 1]]</text>
         </cond>
         <time id="ID1412848824">
           <posattr x="0"

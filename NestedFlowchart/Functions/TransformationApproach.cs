@@ -99,19 +99,6 @@ namespace NestedFlowchart.Functions
 
         #endregion
 
-        private string ConvertDecision(string sign)
-        {
-            return sign switch
-            {
-                "&gt;" => "&lt;=",
-                "&lt;" => "&gt;=",
-                "=" => "!=",
-                "!=" => "=",
-                _ => string.Empty
-            };
-        }
-
-
 
         //TODO: Rule 3-6 can specify to subpage
         //Rule 1 : Transform start to place start
@@ -664,7 +651,8 @@ namespace NestedFlowchart.Functions
 
         //Rule 6 : Decision
         public (PlaceModel, TransitionModel, TransitionModel, ArcModel, string) Rule6(string transitionTemplate, string placeTemplate, string arcTemplate,
-            PlaceModel previousPlace, TransitionModel tranRule5, ArcModel arcRule5)
+            PlaceModel previousPlace, TransitionModel tranRule5, ArcModel arcRule5,
+            string trueCondition, string falseCondition)
         {
 
             var xPos1 = PositionManagements.xPos1;
@@ -690,7 +678,7 @@ namespace NestedFlowchart.Functions
                 xPos2 = xPos1 - 80,
                 yPos2 = yPos1 + 30,
 
-                Condition = "[i " + ConvertDecision("&lt;")  + " length arr]"
+                Condition = falseCondition
 
             };
 
@@ -711,8 +699,7 @@ namespace NestedFlowchart.Functions
                 xPos2 = xPos1 + 80,
                 yPos2 = yPos1 + 30,
 
-                Condition = "[i &lt; length arr]"
-
+                Condition = trueCondition
             };
 
             //Arc from CN1 to GF1
