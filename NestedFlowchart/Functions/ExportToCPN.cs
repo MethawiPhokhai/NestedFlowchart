@@ -108,8 +108,7 @@ namespace NestedFlowchart.Functions
 
 
             TransitionModel definejTransition = new TransitionModel();
-            string definejOldPage = string.Empty;
-            string defindjNewPage = string.Empty;
+
 
             for (int i = 0; i < sortedFlowcharts.Count; i++)
             {
@@ -199,8 +198,9 @@ namespace NestedFlowchart.Functions
                             previousNode, true, pages.subPageModel1.Id, sortedFlowcharts[i].ValueText);
 
                         definejTransition = definej.Item2;
-                        definejOldPage = definej.Item4;
-                        defindjNewPage = definej.Item5;
+
+                        string definejOldPage = definej.Item4;
+                        string defindjNewPage = definej.Item5;
 
 
                         previousNode.previousPlaceModel = definej.Item1;
