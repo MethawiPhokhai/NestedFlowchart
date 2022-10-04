@@ -85,27 +85,7 @@ namespace NestedFlowchart.Functions
 
             //Declaration
             string rule1string = string.Empty;
-            string rule2string = string.Empty;
-
-            
             PlaceModel rule1place = new PlaceModel();
-
-            PlaceModel rule2place = new PlaceModel();
-            TransitionModel rule2transition = new TransitionModel();
-            ArcModel rule2ArcModel = new ArcModel();
-
-            PlaceModel rule3place = new PlaceModel();
-
-            PlaceModel rule5place = new PlaceModel();
-            TransitionModel rule5transition = new TransitionModel();
-            ArcModel rule5ArcModel = new ArcModel();
-
-            PlaceModel rule6place = new PlaceModel();
-            TransitionModel rule6transition = new TransitionModel();
-            ArcModel rule6ArcModel = new ArcModel();
-
-            PlaceModel rule7Place = new PlaceModel();
-
 
             TransitionModel definejTransition = new TransitionModel();
 
@@ -137,12 +117,10 @@ namespace NestedFlowchart.Functions
                     }
 
                     var rule2 = approach.Rule2(transitionTemplate, placeTemplate, arcTemplate, rule1place);
-                    rule2place = rule2.Item1;
-                    rule2transition = rule2.Item2;
-                    rule2ArcModel = rule2.Item3;
-                    rule2string = rule2.Item4;
+                    string rule2string = rule2.Item4;
 
-                    previousNode.previousPlaceModel = rule2place;
+                    previousNode.previousPlaceModel = rule2.Item1;
+                    previousNode.previousTransitionModel = rule2.Item2;
                     previousNode.Type = "place";
 
 
@@ -180,9 +158,7 @@ namespace NestedFlowchart.Functions
                         var rule3 = approach.Rule3(transitionTemplate, placeTemplate, arcTemplate, string.Empty, string.Empty
                             , previousNode, false, string.Empty, sortedFlowcharts[i].ValueText);
 
-                        rule3place = rule3.Item1;
-
-                        previousNode.previousPlaceModel = rule3place;
+                        previousNode.previousPlaceModel = rule3.Item1;
                         previousNode.Type = "place";
 
 
@@ -219,16 +195,12 @@ namespace NestedFlowchart.Functions
                         //TODO: Create Rule4
                         //Rule 4 here
                     }
-
                 }
                 else if (sortedFlowcharts[i].NodeType.ToLower() == "connector")
                 {
                     var rule5 = approach.Rule5(transitionTemplate, placeTemplate, arcTemplate, previousNode.previousPlaceModel);
-                    rule5place = rule5.Item1;
-                    rule5transition = rule5.Item2;
-                    rule5ArcModel = rule5.Item3;
-
-                    previousNode.previousPlaceModel = rule5place;
+                    previousNode.previousPlaceModel = rule5.Item1;
+                    previousNode.previousTransitionModel = rule5.Item2;
                     previousNode.Type = "place";
 
 
@@ -242,13 +214,10 @@ namespace NestedFlowchart.Functions
                     //TODO: Replace Array with List.nth(arr,j)
 
                     //TODO: Separate between true and false case by arrow[i+1]
-                    var rule6 = approach.Rule6(transitionTemplate, placeTemplate, arcTemplate, previousNode.previousPlaceModel, rule5transition, rule5ArcModel,
+                    var rule6 = approach.Rule6(transitionTemplate, placeTemplate, arcTemplate, previousNode,
                         trueCondition, falseCondition);
-                    rule6place = rule6.Item1;
-                    rule6transition = rule6.Item2;
-                    rule6ArcModel = rule6.Item4;
 
-                    previousNode.previousPlaceModel = rule6place;
+                    previousNode.previousPlaceModel = rule6.Item1;
                     previousNode.previousTransitionModel = rule6.Item3; //True Condition
                     previousNode.Type = "transition";
 
@@ -259,7 +228,7 @@ namespace NestedFlowchart.Functions
                 {
                     //TODO: Previous transition need to check (in subpage)
                     var rule7 = approach.Rule7(placeTemplate, arcTemplate, previousNode);
-                    rule7Place = rule7.Item1;
+                    previousNode.previousPlaceModel = rule7.Item1;
 
                     //Reset because it's need to end at main page
                     countSubPage = 0;
