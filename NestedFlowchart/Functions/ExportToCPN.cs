@@ -158,6 +158,7 @@ namespace NestedFlowchart.Functions
                 else if(sortedFlowcharts[i].NodeType.ToLower() == "process")
                 {
                     //TODO: Check in case define more than i
+
                     //Case Not Nested => Define i
                     if (sortedFlowcharts[i].ValueText.ToLower().Trim().Contains("i ="))
                     {
@@ -197,7 +198,9 @@ namespace NestedFlowchart.Functions
 
 
 
-                        var definej = approach.Rule3(transitionTemplate, placeTemplate, arcTemplate, subStrTemplate, portTemplate, rule2place, rule2transition, rule2ArcModel, true, pages.subPageModel1.Id, sortedFlowcharts[i].ValueText);
+                        var definej = approach.Rule3(transitionTemplate, placeTemplate, arcTemplate, subStrTemplate, portTemplate,
+                            previousNode, true, pages.subPageModel1.Id, sortedFlowcharts[i].ValueText);
+
                         definejTransition = definej.Item2;
                         definejOldPage = definej.Item4;
                         defindjNewPage = definej.Item5;

@@ -205,7 +205,7 @@ namespace NestedFlowchart.Functions
 
         //Rule 3 : Transform Nested Structure into Hierarchical
         public (PlaceModel, TransitionModel, ArcModel, string, string) Rule3(string transitionTemplate, string placeTemplate, string arcTemplate, string subStrTemplate, string portTemplate,
-            PlaceModel placeRule2, TransitionModel tranRule2, ArcModel arcRule2, bool isHierarchy, string page2Id, string CodeSegmentValue)
+            PreviousNode previousNode, bool isHierarchy, string page2Id, string CodeSegmentValue)
         {
             if (!isHierarchy)
             {
@@ -265,7 +265,7 @@ namespace NestedFlowchart.Functions
                     Id2 = IdManagements.GetlastestArcId(),
 
                     TransEnd = tr.Id1,
-                    PlaceEnd = placeRule2.Id1,
+                    PlaceEnd = previousNode.previousPlaceModel.Id1,
 
                     xPos = PositionManagements.GetLastestxArcPos(),
                     yPos = PositionManagements.GetLastestyArcPos(),
@@ -310,6 +310,13 @@ namespace NestedFlowchart.Functions
 
 
                 #region Main Page
+
+                //TODO: if node before is place create transition
+                if(previousNode.Type == "place")
+                {
+                    //TODO: create Transition
+                }
+
                 //P3 Place (Input port place) old page
                 PlaceModel p3old = new PlaceModel()
                 {
@@ -327,6 +334,11 @@ namespace NestedFlowchart.Functions
 
                     Type = "loopi"
                 };
+
+                if(previousNode.Type == "place")
+                {
+                    //TODO: Connect arc to P3 Place
+                }
 
                 var p3InputPort = new HierarchyPortModel()
                 {
@@ -427,6 +439,7 @@ namespace NestedFlowchart.Functions
 
                 #region SubPage
                 //TODO: Create position for sub page
+                //TODO: find solution for position on sub page
                 //P3 Place (Input port place) new page
                 PlaceModel p3new = new PlaceModel()
                 {
@@ -435,14 +448,14 @@ namespace NestedFlowchart.Functions
                     Id3 = IdManagements.GetlastestPlaceId(),
                     Name = inputPortPlaceName,
 
-                    xPos1 = placeRule2.xPos1 - 4,
-                    yPos1 = placeRule2.yPos1 - 168,
+                    xPos1 = previousNode.previousPlaceModel.xPos1 - 4,
+                    yPos1 = previousNode.previousPlaceModel.yPos1 - 168,
 
-                    xPos2 = placeRule2.xPos2 - 4,
-                    yPos2 = placeRule2.yPos2 - 167,
+                    xPos2 = previousNode.previousPlaceModel.xPos2 - 4,
+                    yPos2 = previousNode.previousPlaceModel.yPos2 - 167,
 
-                    xPos3 = placeRule2.xPos3 - 4,
-                    yPos3 = placeRule2.yPos3 - 167,
+                    xPos3 = previousNode.previousPlaceModel.xPos3 - 4,
+                    yPos3 = previousNode.previousPlaceModel.yPos3 - 167,
 
                     Type = "loopi",
                     Port = CreateHierarchyPort(portTemplate, p3InputPort)
@@ -469,23 +482,16 @@ namespace NestedFlowchart.Functions
 
                     Name = IdManagements.GetlastestSubPageTransitionName(),
 
-                    xPos1 = tranRule2.xPos1 - 9,
-                    yPos1 = tranRule2.yPos1 - 168,
+                    xPos1 = previousNode.previousPlaceModel.xPos1 - 9,
+                    yPos1 = previousNode.previousPlaceModel.yPos1 - 168,
 
-                    xPos2 = tranRule2.xPos2 - 9,
-                    yPos2 = tranRule2.yPos2 - 168,
+                    xPos2 = previousNode.previousPlaceModel.xPos2 - 9,
+                    yPos2 = previousNode.previousPlaceModel.yPos2 - 168,
 
-                    xPos3 = tranRule2.xPos3 - 9,
-                    yPos3 = tranRule2.yPos3 - 168,
-
-                    xPos4 = tranRule2.xPos4 - 9,
-                    yPos4 = tranRule2.yPos4 - 168,
-
-                    xPos5 = tranRule2.xPos5 - 9,
-                    yPos5 = tranRule2.yPos5 - 168,
+                    xPos3 = previousNode.previousPlaceModel.xPos3 - 9,
+                    yPos3 = previousNode.previousPlaceModel.yPos3 - 168,
 
                     CodeSegment = codeSeg
-
                 };
 
                 var p4OutputPort = new HierarchyPortModel()
@@ -504,14 +510,14 @@ namespace NestedFlowchart.Functions
                     Id3 = IdManagements.GetlastestPlaceId(),
                     Name = outoutPortPlaceName,
 
-                    xPos1 = placeRule2.xPos1 - 4,
-                    yPos1 = placeRule2.yPos1 - 168,
+                    xPos1 = previousNode.previousPlaceModel.xPos1 - 4,
+                    yPos1 = previousNode.previousPlaceModel.yPos1 - 168,
 
-                    xPos2 = placeRule2.xPos2 - 4,
-                    yPos2 = placeRule2.yPos2 - 167,
+                    xPos2 = previousNode.previousPlaceModel.xPos2 - 4,
+                    yPos2 = previousNode.previousPlaceModel.yPos2 - 167,
 
-                    xPos3 = placeRule2.xPos3 - 4,
-                    yPos3 = placeRule2.yPos3 - 167,
+                    xPos3 = previousNode.previousPlaceModel.xPos3 - 4,
+                    yPos3 = previousNode.previousPlaceModel.yPos3 - 167,
 
                     Type = "loopi",
                     Port = CreateHierarchyPort(portTemplate, p4OutputPort)
