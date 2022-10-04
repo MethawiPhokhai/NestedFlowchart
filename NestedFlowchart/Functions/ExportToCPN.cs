@@ -81,12 +81,13 @@ namespace NestedFlowchart.Functions
             #region Page
             int countSubPage = 0;
             PageDeclare pages = new PageDeclare();
+            PreviousNode previousNode = new PreviousNode();
 
             //Declaration
             string rule1string = string.Empty;
             string rule2string = string.Empty;
 
-            PlaceModel previousPlaceModel = new PlaceModel();
+            
             PlaceModel rule1place = new PlaceModel();
 
             PlaceModel rule2place = new PlaceModel();
@@ -117,7 +118,10 @@ namespace NestedFlowchart.Functions
                 {
                     var rule1 = approach.Rule1(placeTemplate);
                     rule1place = rule1.Item1;
-                    previousPlaceModel = rule1place;
+
+                    previousNode.previousPlaceModel = rule1place;
+                    previousNode.Type = "place";
+
                     rule1string = rule1.Item2.ToString();
                 }
                 //Rule2 : Initialize Process
@@ -138,7 +142,10 @@ namespace NestedFlowchart.Functions
                     rule2transition = rule2.Item2;
                     rule2ArcModel = rule2.Item3;
                     rule2string = rule2.Item4;
-                    previousPlaceModel = rule2place;
+
+                    previousNode.previousPlaceModel = rule2place;
+                    previousNode.Type = "place";
+
 
                     if (rule2string.Contains("Start"))
                     {
@@ -174,7 +181,11 @@ namespace NestedFlowchart.Functions
                             , rule2place, rule2transition, rule2ArcModel, false, string.Empty, sortedFlowcharts[i].ValueText);
 
                         rule3place = rule3.Item1;
-                        previousPlaceModel = rule3place;
+
+                        previousNode.previousPlaceModel = rule3place;
+                        previousNode.Type = "place";
+
+
                         pages.mainPageModel.Node += rule3.Item4;
                     }
                     //Case Nested => Create Hierachy Tool
@@ -190,7 +201,10 @@ namespace NestedFlowchart.Functions
                         definejTransition = definej.Item2;
                         definejOldPage = definej.Item4;
                         defindjNewPage = definej.Item5;
-                        previousPlaceModel = definej.Item1;
+
+
+                        previousNode.previousPlaceModel = definej.Item1;
+                        previousNode.Type = "place";
 
                         //Add to old page
                         pages.mainPageModel.Node += definejOldPage;
@@ -209,11 +223,15 @@ namespace NestedFlowchart.Functions
                 }
                 else if (sortedFlowcharts[i].NodeType.ToLower() == "connector")
                 {
-                    var rule5 = approach.Rule5(transitionTemplate, placeTemplate, arcTemplate, previousPlaceModel);
+                    var rule5 = approach.Rule5(transitionTemplate, placeTemplate, arcTemplate, previousNode.previousPlaceModel);
                     rule5place = rule5.Item1;
                     rule5transition = rule5.Item2;
                     rule5ArcModel = rule5.Item3;
-                    previousPlaceModel = rule5place;
+
+                    previousNode.previousPlaceModel = rule5place;
+                    previousNode.Type = "place";
+
+
                     CreatePageNodeByCountSubPage(countSubPage, pages, rule5.Item4);
                 }
                 else if(sortedFlowcharts[i].NodeType.ToLower() == "condition")
@@ -224,22 +242,23 @@ namespace NestedFlowchart.Functions
                     //TODO: Replace Array with List.nth(arr,j)
 
                     //TODO: Separate between true and false case by arrow[i+1]
-                    var rule6 = approach.Rule6(transitionTemplate, placeTemplate, arcTemplate, previousPlaceModel, rule5transition, rule5ArcModel,
+                    var rule6 = approach.Rule6(transitionTemplate, placeTemplate, arcTemplate, previousNode.previousPlaceModel, rule5transition, rule5ArcModel,
                         trueCondition, falseCondition);
                     rule6place = rule6.Item1;
                     rule6transition = rule6.Item2;
                     rule6ArcModel = rule6.Item4;
-                    previousPlaceModel = rule6place;
+
+                    previousNode.previousPlaceModel = rule6place;
+                    previousNode.previousTransitionModel = rule6.Item3; //True Condition
+                    previousNode.Type = "transition";
 
                     CreatePageNodeByCountSubPage(countSubPage, pages, rule6.Item5);
 
                 }
                 else if (sortedFlowcharts[i].NodeType.ToLower() == "end")
                 {
-                    //TODO: find solution to create Arc
-
-                    //TODO: Send previous transition to here
-                    var rule7 = approach.Rule7(placeTemplate, arcTemplate, rule6place, rule6transition, rule6ArcModel);
+                    //TODO: Previous transition need to check (in subpage)
+                    var rule7 = approach.Rule7(placeTemplate, arcTemplate, previousNode);
                     rule7Place = rule7.Item1;
 
                     //Reset because it's need to end at main page

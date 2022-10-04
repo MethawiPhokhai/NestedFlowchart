@@ -740,13 +740,20 @@ namespace NestedFlowchart.Functions
             var arc1 = CreateArc(arcTemplate, a1);
             var arc2 = CreateArc(arcTemplate, a2);
 
+            //Tr1 = GF
+            //Tr2 = GT
             return (previousPlace, tr1, tr2, a2, transition1 + transition2 + arc1 + arc2);
         }
 
         //Rule 7 : End
         public (PlaceModel, string) Rule7(string placeTemplate, string arcTemplate, 
-            PlaceModel lastestPlace, TransitionModel lastestTran, ArcModel lastestArc)
+            PreviousNode previousNode)
         {
+            if (previousNode.Type == "place")
+            {
+                //TODO: Create Transition
+            }
+
             //End Place
             PlaceModel pl = new PlaceModel()
             {
@@ -757,16 +764,22 @@ namespace NestedFlowchart.Functions
                 Type = "INTs",
                 InitialMarking = string.Empty,
 
-                xPos1 = lastestPlace.xPos1 - 4,
-                yPos1 = lastestPlace.yPos1 - 168,
+                xPos1 = previousNode.previousPlaceModel.xPos1 - 4,
+                yPos1 = previousNode.previousPlaceModel.yPos1 - 168,
 
-                xPos2 = lastestPlace.xPos2 - 4,
-                yPos2 = lastestPlace.yPos2 - 167,
+                xPos2 = previousNode.previousPlaceModel.xPos2 - 4,
+                yPos2 = previousNode.previousPlaceModel.yPos2 - 167,
 
-                xPos3 = lastestPlace.xPos3 - 4,
-                yPos3 = lastestPlace.yPos3 - 167,
+                xPos3 = previousNode.previousPlaceModel.xPos3 - 4,
+                yPos3 = previousNode.previousPlaceModel.yPos3 - 167,
 
             };
+
+            //TODO: find solution to create Arc
+            if(previousNode.Type == "place")
+            {
+                //TODO: Connect Arc to pl
+            }
 
             //Arc from GF1 to End
             ArcModel a1 = new ArcModel()
@@ -774,7 +787,7 @@ namespace NestedFlowchart.Functions
                 Id1 = IdManagements.GetlastestArcId(),
                 Id2 = IdManagements.GetlastestArcId(),
 
-                TransEnd = lastestTran.Id1,
+                TransEnd = previousNode.previousTransitionModel.Id1,
                 PlaceEnd = pl.Id1,
 
                 xPos = PositionManagements.GetLastestxArcPos(),

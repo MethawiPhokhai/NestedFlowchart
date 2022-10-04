@@ -1210,8 +1210,8 @@ end</text>
         </annot>
       </arc>
 <place id="ID1412948799">
-        <posattr x="-23"
-                 y="-378"/>
+        <posattr x="-19"
+                 y="-1218"/>
         <fillattr colour="White"
                   pattern=""
                   filled="false"/>
@@ -1233,8 +1233,8 @@ end</text>
                 anchor.vertical="0"/>
         </marking>
         <type id="ID1412948800">
-          <posattr x="16"
-                   y="-399"/>
+          <posattr x="20"
+                   y="-1234"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>
@@ -1248,8 +1248,8 @@ end</text>
                 version="4.0.1">INTs</text>
         </type>
         <initmark id="ID1412948801">
-          <posattr x="-8"
-                   y="-334"/>
+          <posattr x="-4"
+                   y="-167"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>
@@ -1278,7 +1278,7 @@ end</text>
                   bold="false"/>
         <arrowattr headsize="1.200000"
                    currentcyckle="2"/>
-        <transend idref="ID1412848817"/>
+        <transend idref="ID1412848822"/>
         <placeend idref="ID1412948799"/>
         <annot id="ID1412949847">
           <posattr x="10"
