@@ -192,8 +192,23 @@ namespace NestedFlowchart.Functions
                     }
                     else
                     {
-                        //TODO: Create Rule4
-                        //Rule 4 here
+                        //countSubPage = 0,1 to test create on current page
+
+                        if (sortedFlowcharts[i].ValueText.ToLower().Trim().Contains("i ++"))
+                        {
+                            //TODO: Send real process to code segment inscription
+                            //TODO: Find solution to create arc 
+                            var rule4 = approach.Rule4(transitionTemplate, placeTemplate, arcTemplate, previousNode);
+
+                            previousNode.previousPlaceModel = rule4.Item1;
+                            previousNode.previousTransitionModel = rule4.Item2;
+                            previousNode.Type = "transition";
+
+                            countSubPage = 0;
+                            CreatePageNodeByCountSubPage(countSubPage, pages, rule4.Item4);
+                        }
+
+                        countSubPage = 1;
                     }
                 }
                 else if (sortedFlowcharts[i].NodeType.ToLower() == "connector")
