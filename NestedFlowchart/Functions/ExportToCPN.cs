@@ -179,7 +179,7 @@ namespace NestedFlowchart.Functions
                         //var var2 = approach.CreateVar(varTemplate, var2Model);
 
                         var rule3 = approach.Rule3(transitionTemplate, placeTemplate, arcTemplate, string.Empty, string.Empty
-                            , rule2place, rule2transition, rule2ArcModel, false, string.Empty, sortedFlowcharts[i].ValueText);
+                            , previousNode, false, string.Empty, sortedFlowcharts[i].ValueText);
 
                         rule3place = rule3.Item1;
 
@@ -193,9 +193,6 @@ namespace NestedFlowchart.Functions
                     else if(sortedFlowcharts[i].ValueText.ToLower().Trim().Contains("j =") || sortedFlowcharts[i].ValueText.ToLower().Trim().Contains("k =")
                         || sortedFlowcharts[i].ValueText.ToLower().Trim().Contains("l =") || sortedFlowcharts[i].ValueText.ToLower().Trim().Contains("m ="))
                     {
-
-                        //TODO: if node before is place create transition
-
 
 
                         var definej = approach.Rule3(transitionTemplate, placeTemplate, arcTemplate, subStrTemplate, portTemplate,

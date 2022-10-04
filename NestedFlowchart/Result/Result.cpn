@@ -1146,7 +1146,7 @@ end</text>
         
       </place>
 <arc id="ID1412949828"
-           orientation="PtoT"
+           orientation="TtoP"
            order="1">
         <posattr x="0.000000"
                  y="0.000000"/>
@@ -1160,7 +1160,7 @@ end</text>
                   bold="false"/>
         <arrowattr headsize="1.200000"
                    currentcyckle="2"/>
-        <transend idref="ID1412848797"/>
+        <transend idref="ID1412848792"/>
         <placeend idref="ID1412948784"/>
         <annot id="ID1412949829">
           <posattr x="10"
@@ -1178,6 +1178,38 @@ end</text>
         </annot>
       </arc>
 <arc id="ID1412949830"
+           orientation="PtoT"
+           order="1">
+        <posattr x="0.000000"
+                 y="0.000000"/>
+        <fillattr colour="White"
+                  pattern=""
+                  filled="false"/>
+        <lineattr colour="Black"
+                  thick="1"
+                  type="Solid"/>
+        <textattr colour="Black"
+                  bold="false"/>
+        <arrowattr headsize="1.200000"
+                   currentcyckle="2"/>
+        <transend idref="ID1412848797"/>
+        <placeend idref="ID1412948784"/>
+        <annot id="ID1412949831">
+          <posattr x="10"
+                   y="-420"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1">(i,arr)</text>
+        </annot>
+      </arc>
+<arc id="ID1412949832"
            orientation="TtoP"
            order="1">
         <posattr x="0.000000"
@@ -1194,7 +1226,7 @@ end</text>
                    currentcyckle="2"/>
         <transend idref="ID1412848797"/>
         <placeend idref="ID1412948786"/>
-        <annot id="ID1412949831">
+        <annot id="ID1412949833">
           <posattr x="10"
                    y="-504"/>
           <fillattr colour="White"
@@ -1263,7 +1295,7 @@ end</text>
         </initmark>
         
       </place>
-<arc id="ID1412949846"
+<arc id="ID1412949848"
            orientation="TtoP"
            order="1">
         <posattr x="0.000000"
@@ -1280,7 +1312,7 @@ end</text>
                    currentcyckle="2"/>
         <transend idref="ID1412848822"/>
         <placeend idref="ID1412948799"/>
-        <annot id="ID1412949847">
+        <annot id="ID1412949849">
           <posattr x="10"
                    y="-924"/>
           <fillattr colour="White"
@@ -1302,7 +1334,7 @@ end</text>
 	
 <place id="ID1412948785">
         <posattr x="-19"
-                 y="-210"/>
+                 y="-546"/>
         <fillattr colour="White"
                   pattern=""
                   filled="false"/>
@@ -1325,7 +1357,7 @@ end</text>
         </marking>
         <type id="ID1412948792">
           <posattr x="20"
-                   y="-232"/>
+                   y="-566"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>
@@ -1369,7 +1401,7 @@ end</text>
       </place>
 <place id="ID1412948787">
         <posattr x="-19"
-                 y="-210"/>
+                 y="-546"/>
         <fillattr colour="White"
                   pattern=""
                   filled="false"/>
@@ -1392,7 +1424,7 @@ end</text>
         </marking>
         <type id="ID1412948794">
           <posattr x="20"
-                   y="-232"/>
+                   y="-566"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>
@@ -1437,7 +1469,7 @@ end</text>
 <trans id="ID1412848802"
              explicit="false">
         <posattr x="-24"
-                 y="-126"/>
+                 y="-546"/>
         <fillattr colour="White"
                   pattern=""
                   filled="false"/>
@@ -1453,8 +1485,8 @@ end</text>
         <binding x="7.200000"
                  y="-3.000000"/>
         <cond id="ID1412848803">
-          <posattr x="-9"
-                   y="-168"/>
+          <posattr x="15"
+                   y="-567"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>
@@ -1481,8 +1513,8 @@ end</text>
                 version="4.0.1"/>
         </time>
         <code id="ID1412848805">
-          <posattr x="-9"
-                   y="-168"/>
+          <posattr x="0"
+                   y="0"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>
@@ -1502,8 +1534,8 @@ in
 end</text>
         </code>
         <priority id="ID1412848806">
-          <posattr x="-9"
-                   y="-168"/>
+          <posattr x="0"
+                   y="0"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>
@@ -1516,7 +1548,7 @@ end</text>
                 version="4.0.1"/>
         </priority>
       </trans>
-<arc id="ID1412949832"
+<arc id="ID1412949834"
            orientation="PtoT"
            order="1">
         <posattr x="0.000000"
@@ -1533,7 +1565,7 @@ end</text>
                    currentcyckle="2"/>
         <transend idref="ID1412848802"/>
         <placeend idref="ID1412948785"/>
-        <annot id="ID1412949833">
+        <annot id="ID1412949835">
           <posattr x="10"
                    y="-504"/>
           <fillattr colour="White"
@@ -1698,7 +1730,7 @@ end</text>
                 version="4.0.1"/>
         </priority>
       </trans>
-<arc id="ID1412949834"
+<arc id="ID1412949836"
            orientation="PtoT"
            order="1">
         <posattr x="0.000000"
@@ -1715,7 +1747,7 @@ end</text>
                    currentcyckle="2"/>
         <transend idref="ID1412848807"/>
         <placeend idref="ID1412948787"/>
-        <annot id="ID1412949835">
+        <annot id="ID1412949837">
           <posattr x="-74"
                    y="-588"/>
           <fillattr colour="White"
@@ -1730,7 +1762,7 @@ end</text>
                 version="4.0.1">(i,arr)</text>
         </annot>
       </arc>
-<arc id="ID1412949836"
+<arc id="ID1412949838"
            orientation="PtoT"
            order="1">
         <posattr x="0.000000"
@@ -1747,7 +1779,7 @@ end</text>
                    currentcyckle="2"/>
         <transend idref="ID1412848812"/>
         <placeend idref="ID1412948787"/>
-        <annot id="ID1412949837">
+        <annot id="ID1412949839">
           <posattr x="44"
                    y="-588"/>
           <fillattr colour="White"
@@ -1912,7 +1944,7 @@ end</text>
                 version="4.0.1"/>
         </priority>
       </trans>
-<arc id="ID1412949838"
+<arc id="ID1412949840"
            orientation="PtoT"
            order="1">
         <posattr x="0.000000"
@@ -1929,7 +1961,7 @@ end</text>
                    currentcyckle="2"/>
         <transend idref="ID1412848817"/>
         <placeend idref="ID1412948787"/>
-        <annot id="ID1412949839">
+        <annot id="ID1412949841">
           <posattr x="-74"
                    y="-672"/>
           <fillattr colour="White"
@@ -1944,7 +1976,7 @@ end</text>
                 version="4.0.1">(i,arr)</text>
         </annot>
       </arc>
-<arc id="ID1412949840"
+<arc id="ID1412949842"
            orientation="PtoT"
            order="1">
         <posattr x="0.000000"
@@ -1961,7 +1993,7 @@ end</text>
                    currentcyckle="2"/>
         <transend idref="ID1412848822"/>
         <placeend idref="ID1412948787"/>
-        <annot id="ID1412949841">
+        <annot id="ID1412949843">
           <posattr x="44"
                    y="-672"/>
           <fillattr colour="White"
@@ -2105,7 +2137,7 @@ end</text>
                 version="4.0.1"/>
         </priority>
       </trans>
-<arc id="ID1412949842"
+<arc id="ID1412949844"
            orientation="PtoT"
            order="1">
         <posattr x="0.000000"
@@ -2122,7 +2154,7 @@ end</text>
                    currentcyckle="2"/>
         <transend idref="ID1412848827"/>
         <placeend idref="ID1412948787"/>
-        <annot id="ID1412949843">
+        <annot id="ID1412949845">
           <posattr x="10"
                    y="-756"/>
           <fillattr colour="White"
@@ -2137,7 +2169,7 @@ end</text>
                 version="4.0.1">(i,arr)</text>
         </annot>
       </arc>
-<arc id="ID1412949844"
+<arc id="ID1412949846"
            orientation="TtoP"
            order="1">
         <posattr x="0.000000"
@@ -2154,7 +2186,7 @@ end</text>
                    currentcyckle="2"/>
         <transend idref="ID1412848827"/>
         <placeend idref="ID1412948796"/>
-        <annot id="ID1412949845">
+        <annot id="ID1412949847">
           <posattr x="10"
                    y="-840"/>
           <fillattr colour="White"

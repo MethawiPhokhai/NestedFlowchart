@@ -308,13 +308,32 @@ namespace NestedFlowchart.Functions
                 var p4oldId = IdManagements.GetlastestPlaceId();
                 var p4newId = IdManagements.GetlastestPlaceId();
 
-
                 #region Main Page
+                var a0 = new ArcModel();
 
                 //TODO: if node before is place create transition
                 if(previousNode.Type == "place")
                 {
                     //TODO: create Transition
+
+                    //TODO: connect arc to P3old
+                }
+                else
+                {
+                    a0 = new ArcModel()
+                    {
+                        Id1 = IdManagements.GetlastestArcId(),
+                        Id2 = IdManagements.GetlastestArcId(),
+
+                        TransEnd = previousNode.previousTransitionModel.Id1,
+                        PlaceEnd = p3oldId,
+
+                        xPos = PositionManagements.xArcPos,
+                        yPos = PositionManagements.yArcPos,
+
+                        Orientation = "TtoP", //Transition to Place
+                        Type = "(i,arr)"
+                    };
                 }
 
                 //P3 Place (Input port place) old page
@@ -547,10 +566,11 @@ namespace NestedFlowchart.Functions
                 var place3old = CreatePlace(placeTemplate, p3old);
                 var tr_subpage1 = CreateTransition(transitionTemplate, tr_subpage);
                 var place4old = CreatePlace(placeTemplate, p4old);
+                var arc0 = CreateArc(arcTemplate, a0);
                 var arc1 = CreateArc(arcTemplate, a1);
                 var arc2 = CreateArc(arcTemplate, a2);
 
-                var oldPageAllNode = place3old + tr_subpage1 + place4old + arc1 + arc2;
+                var oldPageAllNode = place3old + tr_subpage1 + place4old + arc0 + arc1 + arc2;
 
 
                 //Sub Page
