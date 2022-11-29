@@ -102,30 +102,7 @@ namespace NestedFlowchart.Functions
 
         //TODO: Rule 3-6 can specify to subpage
         //Rule 1 : Transform start to place start
-        public (PlaceModel,string) Rule1(string placeTemplate)
-        {
-            PlaceModel pl = new PlaceModel()
-            {
-                Id1 = IdManagements.GetlastestPlaceId(),
-                Id2 = IdManagements.GetlastestPlaceId(),
-                Id3 = IdManagements.GetlastestPlaceId(),
-                Name = "Start",
-                Type = "UNIT",
-
-                xPos1 = PositionManagements.xPos1,
-                yPos1 = PositionManagements.yPos1,
-
-                xPos2 = PositionManagements.xPos2,
-                yPos2 = PositionManagements.yPos2,
-
-                xPos3 = PositionManagements.xPos3,
-                yPos3 = PositionManagements.yPos3
-            };
-
-            var place1 = CreatePlace(placeTemplate, pl);
-
-            return (pl, place1);
-        }
+        
 
         //Rule 2 : Transform initialize process to transition and place, and assign initial marking
         public (PlaceModel, TransitionModel, ArcModel, string) Rule2(string transitionTemplate, string placeTemplate, string arcTemplate, PlaceModel placeRule1)
