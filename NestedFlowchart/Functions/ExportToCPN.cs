@@ -301,7 +301,7 @@ namespace NestedFlowchart.Functions
 
             string[] allTemplates = new string[10];
 
-            for (int i = 0; i <= 10; i++)
+            for (int i = 0; i < 10; i++)
             {
                 allTemplates[i] = File.ReadAllText(TemplatePath + templateNames[i]);
             }
