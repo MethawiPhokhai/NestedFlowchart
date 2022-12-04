@@ -219,14 +219,19 @@ namespace NestedFlowchart.Functions
                     //TODO: Replace Array with List.nth(arr,j)
 
                     //TODO: Separate between true and false case by arrow[i+1]
-                    var rule6 = approach.Rule6(allTemplates[(int)TemplateEnum.TransitionTemplate], allTemplates[(int)TemplateEnum.PlaceTemplate], allTemplates[(int)TemplateEnum.ArcTemplate], previousNode,
+                    Rule6 rule6 = new Rule6();
+                    var rule6Result = rule6.ApplyRule(allTemplates[(int)TemplateEnum.TransitionTemplate], allTemplates[(int)TemplateEnum.PlaceTemplate], allTemplates[(int)TemplateEnum.ArcTemplate], previousNode,
                         trueCondition, falseCondition);
 
-                    previousNode.previousPlaceModel = rule6.Item1;
-                    previousNode.previousTransitionModel = rule6.Item3; //True Condition
+                    PlaceModel rule6Place = rule6Result.Item1;
+                    TransitionModel rule6Transition = rule6Result.Item3;
+                    string rule6String = rule6Result.Item5;
+
+                    previousNode.previousPlaceModel = rule6Place;
+                    previousNode.previousTransitionModel = rule6Transition; //True Condition
                     previousNode.Type = "transition";
 
-                    CreatePageNodeByCountSubPage(countSubPage, pages, rule6.Item5);
+                    CreatePageNodeByCountSubPage(countSubPage, pages, rule6String);
 
                 }
                 //Rule 7 End
@@ -245,32 +250,29 @@ namespace NestedFlowchart.Functions
             }
 
 
-            var page1 = approach.CreatePage(allTemplates[(int)TemplateEnum.PageTemplate], pages.mainPageModel);
+            var page1 = approach.CreatePage(allTemplates[(int)TemplateEnum.PageTemplate], 
+                pages.mainPageModel);
 
-            string page2 = string.Empty;
-            if (pages.subPageModel1.Node != string.Empty)
-            {
-                page2 = approach.CreatePage(allTemplates[(int)TemplateEnum.PageTemplate], pages.subPageModel1);
-            }
+            string page2 = (pages.subPageModel1.Node != string.Empty) ?
+                approach.CreatePage(allTemplates[(int)TemplateEnum.PageTemplate],
+                pages.subPageModel1) :
+                string.Empty;
 
-            string page3 = string.Empty;
-            if (pages.subPageModel2.Node != string.Empty)
-            {
-                page3 = approach.CreatePage(allTemplates[(int)TemplateEnum.PageTemplate], pages.subPageModel2);
-            }
-
-            string page4 = string.Empty;
-            if (pages.subPageModel3.Node != string.Empty)
-            {
-                page4 = approach.CreatePage(allTemplates[(int)TemplateEnum.PageTemplate], pages.subPageModel3);
-            }
-
-            string page5 = string.Empty;
-            if (pages.subPageModel4.Node != string.Empty)
-            {
-                page5 = approach.CreatePage(allTemplates[(int)TemplateEnum.PageTemplate], pages.subPageModel4);
-            }
-
+            string page3 = (pages.subPageModel2.Node != string.Empty) ?
+                approach.CreatePage(allTemplates[(int)TemplateEnum.PageTemplate],
+                    pages.subPageModel2) :
+                string.Empty;
+            
+            string page4 = (pages.subPageModel3.Node != string.Empty) ?
+                approach.CreatePage(allTemplates[(int)TemplateEnum.PageTemplate],
+                    pages.subPageModel3) :
+                string.Empty;
+           
+            string page5 = (pages.subPageModel4.Node != string.Empty) ?
+                approach.CreatePage(allTemplates[(int)TemplateEnum.PageTemplate],
+                    pages.subPageModel4) :
+                string.Empty;
+            
             var allPage = page1 + page2 + page3 + page4 + page5;
             #endregion
 
@@ -302,7 +304,8 @@ namespace NestedFlowchart.Functions
             var allColorSet = col1;
             var allVar = var1 + var2;
 
-            string firstCPN = string.Format(allTemplates[(int)TemplateEnum.EmptyCPNTemplate], allColorSet + allVar, allPage, allInstances);
+            string firstCPN = string.Format(allTemplates[(int)TemplateEnum.EmptyCPNTemplate],
+                allColorSet + allVar, allPage, allInstances);
 
             //Write to CPN File
             File.WriteAllText(ResultPath + "Result.cpn", firstCPN);
