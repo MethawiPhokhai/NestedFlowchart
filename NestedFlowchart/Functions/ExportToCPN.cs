@@ -181,14 +181,19 @@ namespace NestedFlowchart.Functions
                         {
                             //TODO: Send real process to code segment inscription
                             //TODO: Find solution to create arc 
-                            var rule4 = approach.Rule4(allTemplates[(int)TemplateEnum.TransitionTemplate], allTemplates[(int)TemplateEnum.PlaceTemplate], allTemplates[(int)TemplateEnum.ArcTemplate], previousNode);
+                            Rule4 rule4 = new Rule4();
+                            var rule4Result = rule4.ApplyRule(allTemplates[(int)TemplateEnum.TransitionTemplate], allTemplates[(int)TemplateEnum.PlaceTemplate], allTemplates[(int)TemplateEnum.ArcTemplate], previousNode);
 
-                            previousNode.previousPlaceModel = rule4.Item1;
-                            previousNode.previousTransitionModel = rule4.Item2;
+                            PlaceModel rule4Place = rule4Result.Item1;
+                            TransitionModel rule4Transition = rule4Result.Item2;
+                            string rule4String = rule4Result.Item4;
+
+                            previousNode.previousPlaceModel = rule4Place;
+                            previousNode.previousTransitionModel = rule4Transition;
                             previousNode.Type = "transition";
 
                             countSubPage = 0;
-                            CreatePageNodeByCountSubPage(countSubPage, pages, rule4.Item4);
+                            CreatePageNodeByCountSubPage(countSubPage, pages, rule4String);
                         }
 
                         countSubPage = 1;
@@ -238,13 +243,17 @@ namespace NestedFlowchart.Functions
                 else if (sortedFlowcharts[i].NodeType.ToLower() == "end")
                 {
                     //TODO: Previous transition need to check (in subpage)
-                    var rule7 = approach.Rule7(allTemplates[(int)TemplateEnum.PlaceTemplate], allTemplates[(int)TemplateEnum.ArcTemplate], previousNode);
-                    previousNode.previousPlaceModel = rule7.Item1;
+                    Rule7 rule7 = new Rule7();
+                    var rule7Result = rule7.ApplyRule(allTemplates[(int)TemplateEnum.PlaceTemplate], allTemplates[(int)TemplateEnum.ArcTemplate], previousNode);
+
+                    PlaceModel rule7Place = rule7Result.Item1;
+                    string rule7String = rule7Result.Item2;
+                    
+                    previousNode.previousPlaceModel = rule7Place;
 
                     //Reset because it's need to end at main page
                     countSubPage = 0;
-
-                    CreatePageNodeByCountSubPage(countSubPage, pages, rule7.Item2);
+                    CreatePageNodeByCountSubPage(countSubPage, pages, rule7String);
                 }
 
             }

@@ -10,6 +10,16 @@ namespace NestedFlowchart.Rules
 {
     public class Rule6
     {
+        /// <summary>
+        /// Transform dicision into place and transition connected by arc
+        /// </summary>
+        /// <param name="transitionTemplate"></param>
+        /// <param name="placeTemplate"></param>
+        /// <param name="arcTemplate"></param>
+        /// <param name="previousNode"></param>
+        /// <param name="trueCondition"></param>
+        /// <param name="falseCondition"></param>
+        /// <returns></returns>
         public (PlaceModel, TransitionModel, TransitionModel, ArcModel, string) ApplyRule(string transitionTemplate, string placeTemplate, string arcTemplate,
             PreviousNode previousNode, string trueCondition, string falseCondition)
         {
