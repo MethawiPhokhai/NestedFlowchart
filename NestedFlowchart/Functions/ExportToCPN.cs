@@ -83,7 +83,7 @@ namespace NestedFlowchart.Functions
                     && sortedFlowcharts[i - 2].NodeType.ToLower() == "start")
                 {
                     //Initial Marking
-                    //กรณี ตัดตัวอีกษร Array
+                    //TODO : กรณี ตัดตัวอีกษร Array
                     if (sortedFlowcharts[i].ValueText.Contains('[') || sortedFlowcharts[i].ValueText.ToLower().Contains("arr"))
                     {
                         var arrayValue = sortedFlowcharts[i].ValueText.Substring(sortedFlowcharts[i].ValueText.IndexOf('=') + 1).Trim();

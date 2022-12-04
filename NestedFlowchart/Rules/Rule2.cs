@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace NestedFlowchart.Rules
 {
+    /// <summary>
+    /// Transform Initialize Process into transition and place connected by arc
+    /// </summary>
     public class Rule2
     {
         public (PlaceModel, TransitionModel, ArcModel, string) ApplyRule(string transitionTemplate, string placeTemplate, string arcTemplate, PlaceModel placeRule1)
