@@ -197,13 +197,18 @@ namespace NestedFlowchart.Functions
                 //Rule 5 Connector
                 else if (sortedFlowcharts[i].NodeType.ToLower() == "connector")
                 {
-                    var rule5 = approach.Rule5(allTemplates[(int)TemplateEnum.TransitionTemplate], allTemplates[(int)TemplateEnum.PlaceTemplate], allTemplates[(int)TemplateEnum.ArcTemplate], previousNode.previousPlaceModel);
-                    previousNode.previousPlaceModel = rule5.Item1;
-                    previousNode.previousTransitionModel = rule5.Item2;
+                    Rule5 rule5 = new Rule5();
+                    var rule5Result = rule5.ApplyRule(allTemplates[(int)TemplateEnum.TransitionTemplate], allTemplates[(int)TemplateEnum.PlaceTemplate], allTemplates[(int)TemplateEnum.ArcTemplate], previousNode.previousPlaceModel);
+                    
+                    PlaceModel rule5Place = rule5Result.Item1;
+                    TransitionModel rule5Transition = rule5Result.Item2;
+                    string rule5String = rule5Result.Item4;
+
+                    previousNode.previousPlaceModel = rule5Place;
+                    previousNode.previousTransitionModel = rule5Transition;
                     previousNode.Type = "place";
 
-
-                    CreatePageNodeByCountSubPage(countSubPage, pages, rule5.Item4);
+                    CreatePageNodeByCountSubPage(countSubPage, pages, rule5String);
                 }
                 //Rule 6 Decision
                 else if (sortedFlowcharts[i].NodeType.ToLower() == "condition")
