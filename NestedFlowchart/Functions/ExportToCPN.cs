@@ -2,6 +2,7 @@
 using NestedFlowchart.Models;
 using NestedFlowchart.Rules;
 using NestedFlowchart.Templates;
+using System.Text;
 
 namespace NestedFlowchart.Functions
 {
@@ -82,6 +83,7 @@ namespace NestedFlowchart.Functions
                     && sortedFlowcharts[i - 2].NodeType.ToLower() == "start")
                 {
                     //Initial Marking
+                    //กรณี ตัดตัวอีกษร Array
                     if (sortedFlowcharts[i].ValueText.Contains('[') || sortedFlowcharts[i].ValueText.ToLower().Contains("arr"))
                     {
                         var arrayValue = sortedFlowcharts[i].ValueText.Substring(sortedFlowcharts[i].ValueText.IndexOf('=') + 1).Trim();
@@ -90,20 +92,26 @@ namespace NestedFlowchart.Functions
                         rulePlace.InitialMarking = arrayValue;
                     }
 
-                    var rule2 = approach.Rule2(allTemplates[(int)TemplateEnum.TransitionTemplate], allTemplates[(int)TemplateEnum.PlaceTemplate], allTemplates[(int)TemplateEnum.ArcTemplate], rulePlace);
-                    string rule2string = rule2.Item4;
+                    Rule2 rule2 = new Rule2();
+                    var rule2Result = rule2.ApplyRule(allTemplates[(int)TemplateEnum.TransitionTemplate], allTemplates[(int)TemplateEnum.PlaceTemplate], allTemplates[(int)TemplateEnum.ArcTemplate], rulePlace);
 
-                    previousNode.previousPlaceModel = rule2.Item1;
-                    previousNode.previousTransitionModel = rule2.Item2;
+                    PlaceModel rule2Place = rule2Result.Item1;
+                    TransitionModel rule2Transition = rule2Result.Item2;
+                    string rule2String = rule2Result.Item4;
+
+                    previousNode.previousPlaceModel = rule2Place;
+                    previousNode.previousTransitionModel = rule2Transition;
                     previousNode.Type = "place";
 
+                    //From previous rule
+                    ruleString = rule2String.Contains("Start") ? string.Empty : ruleString;
 
-                    if (rule2string.Contains("Start"))
-                    {
-                        ruleString = string.Empty;
-                    }
-
-                    pages.mainPageModel.Node += ruleString + rule2string;
+                    //Combine All String and add to page node
+                    StringBuilder allString = new StringBuilder();
+                    allString.Append(pages.mainPageModel.Node);
+                    allString.Append(ruleString);
+                    allString.Append(rule2String);
+                    pages.mainPageModel.Node = allString.ToString();
                 }
                 //Rule3 : I=0, J=1
                 else if (sortedFlowcharts[i].NodeType.ToLower() == "process")
@@ -185,6 +193,7 @@ namespace NestedFlowchart.Functions
                         countSubPage = 1;
                     }
                 }
+                //Rule 5 Connector
                 else if (sortedFlowcharts[i].NodeType.ToLower() == "connector")
                 {
                     var rule5 = approach.Rule5(allTemplates[(int)TemplateEnum.TransitionTemplate], allTemplates[(int)TemplateEnum.PlaceTemplate], allTemplates[(int)TemplateEnum.ArcTemplate], previousNode.previousPlaceModel);
@@ -195,6 +204,7 @@ namespace NestedFlowchart.Functions
 
                     CreatePageNodeByCountSubPage(countSubPage, pages, rule5.Item4);
                 }
+                //Rule 6 Decision
                 else if (sortedFlowcharts[i].NodeType.ToLower() == "condition")
                 {
                     var trueCondition = "[" + sortedFlowcharts[i].ValueText.Replace("N", " length arr") + "]";
@@ -213,6 +223,7 @@ namespace NestedFlowchart.Functions
                     CreatePageNodeByCountSubPage(countSubPage, pages, rule6.Item5);
 
                 }
+                //Rule 7 End
                 else if (sortedFlowcharts[i].NodeType.ToLower() == "end")
                 {
                     //TODO: Previous transition need to check (in subpage)
