@@ -137,22 +137,23 @@ namespace NestedFlowchart.Functions
 
                         //var var2 = approach.CreateVar(allTemplates[(int)TemplateEnum.varTemplate], var2Model);
 
-                        var rule3 = approach.Rule3(allTemplates[(int)TemplateEnum.TransitionTemplate], allTemplates[(int)TemplateEnum.PlaceTemplate], allTemplates[(int)TemplateEnum.ArcTemplate], string.Empty, string.Empty
+                        Rule3 rule3 = new Rule3();
+                        var rule3Result = rule3.ApplyRule(allTemplates[(int)TemplateEnum.TransitionTemplate], allTemplates[(int)TemplateEnum.PlaceTemplate], allTemplates[(int)TemplateEnum.ArcTemplate], string.Empty, string.Empty
                             , previousNode, false, string.Empty, sortedFlowcharts[i].ValueText);
 
-                        previousNode.previousPlaceModel = rule3.Item1;
+                        previousNode.previousPlaceModel = rule3Result.Item1;
                         previousNode.Type = "place";
 
 
-                        pages.mainPageModel.Node += rule3.Item4;
+                        pages.mainPageModel.Node += rule3Result.Item4;
                     }
                     //Case Nested => Create Hierachy Tool
                     else if (sortedFlowcharts[i].ValueText.ToLower().Trim().Contains("j =") || sortedFlowcharts[i].ValueText.ToLower().Trim().Contains("k =")
                         || sortedFlowcharts[i].ValueText.ToLower().Trim().Contains("l =") || sortedFlowcharts[i].ValueText.ToLower().Trim().Contains("m ="))
                     {
 
-
-                        var definej = approach.Rule3(allTemplates[(int)TemplateEnum.TransitionTemplate], allTemplates[(int)TemplateEnum.PlaceTemplate], allTemplates[(int)TemplateEnum.ArcTemplate], allTemplates[(int)TemplateEnum.SubStrTemplate], allTemplates[(int)TemplateEnum.PortTemplate],
+                        Rule3 rule3 = new Rule3();
+                        var definej = rule3.ApplyRule(allTemplates[(int)TemplateEnum.TransitionTemplate], allTemplates[(int)TemplateEnum.PlaceTemplate], allTemplates[(int)TemplateEnum.ArcTemplate], allTemplates[(int)TemplateEnum.SubStrTemplate], allTemplates[(int)TemplateEnum.PortTemplate],
                             previousNode, true, pages.subPageModel1.Id, sortedFlowcharts[i].ValueText);
 
                         definejTransition = definej.Item2;
