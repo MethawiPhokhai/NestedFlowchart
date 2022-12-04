@@ -113,7 +113,7 @@ namespace NestedFlowchart.Functions
                     allString.Append(rule2String);
                     pages.mainPageModel.Node = allString.ToString();
                 }
-                //Rule3 : I=0, J=1
+                //Rule3 : I=0, J=1 , Rule4
                 else if (sortedFlowcharts[i].NodeType.ToLower() == "process")
                 {
                     //TODO: Check in case define more than i
