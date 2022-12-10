@@ -1,9 +1,13 @@
-﻿using NestedFlowchart.Models;
+﻿using NestedFlowchart.Declaration;
+using NestedFlowchart.Models;
+using NestedFlowchart.Templates;
 
 namespace NestedFlowchart.Functions
 {
     public class TransformationApproach
     {
+        #region Create
+
         public string CreatePage(string pageTemplate, PageModel model)
         {
             return string.Format("\n" + pageTemplate, model.Id, model.Name, model.Node);
@@ -87,5 +91,107 @@ namespace NestedFlowchart.Functions
             return string.Format("\n" + portTemplate, model.Id,
                 model.Type, model.xPos, model.yPos);
         }
+
+        #endregion Create
+
+        #region Create All
+
+        public string CreateAllColorSets(TransformationApproach approach, string[] allTemplates)
+        {
+            ColorSetModel colorSetProduct1 = new ColorSetModel()
+            {
+                Id = IdManagements.GetlastestColorSetId(),
+                Name = "loopi",
+                Type = new List<string>()
+                {
+                    "INT",
+                    "INTs"
+                },
+                Text = "colset loopi = product INT*INTs;"
+            };
+
+            var col1 = approach.CreateColorSet(allTemplates[(int)TemplateEnum.ColorSetTemplate], colorSetProduct1);
+            var allColorSet = col1;
+            return allColorSet;
+        }
+
+        public string CreateAllVariables(TransformationApproach approach, string[] allTemplates)
+        {
+            VarModel var1Model = new VarModel()
+            {
+                Id = IdManagements.GetlastestVarId(),
+                Type = "INTs",
+                Name = "arr",
+                Layout = "var arr: INTs;"
+            };
+
+            VarModel var2Model = new VarModel()
+            {
+                Id = IdManagements.GetlastestVarId(),
+                Type = "INT",
+                Name = "i,i2,j,j2",
+                Layout = "var i,i2,j,j2: INT;"
+            };
+
+            var var1 = approach.CreateVar(allTemplates[(int)TemplateEnum.VarTemplate], var1Model);
+            var var2 = approach.CreateVar(allTemplates[(int)TemplateEnum.VarTemplate], var2Model);
+            var allVar = var1 + var2;
+            return allVar;
+        }
+
+        public string CreateAllPages(TransformationApproach approach, string[] allTemplates, PageDeclare pages)
+        {
+            var page1 = approach.CreatePage(allTemplates[(int)TemplateEnum.PageTemplate],
+                pages.mainPageModel);
+
+            string page2 = (pages.subPageModel1.Node != string.Empty) ?
+                approach.CreatePage(allTemplates[(int)TemplateEnum.PageTemplate],
+                pages.subPageModel1) :
+                string.Empty;
+
+            string page3 = (pages.subPageModel2.Node != string.Empty) ?
+                approach.CreatePage(allTemplates[(int)TemplateEnum.PageTemplate],
+                    pages.subPageModel2) :
+                string.Empty;
+
+            string page4 = (pages.subPageModel3.Node != string.Empty) ?
+                approach.CreatePage(allTemplates[(int)TemplateEnum.PageTemplate],
+                    pages.subPageModel3) :
+                string.Empty;
+
+            string page5 = (pages.subPageModel4.Node != string.Empty) ?
+                approach.CreatePage(allTemplates[(int)TemplateEnum.PageTemplate],
+                    pages.subPageModel4) :
+                string.Empty;
+
+            var allPage = page1 + page2 + page3 + page4 + page5;
+            return allPage;
+        }
+
+        public string CreateAllInstances(TransformationApproach approach, string[] allTemplates, TransitionModel definejTransition)
+        {
+            //TODO: Define instance if have more than 2
+            HierarchyInstanceModel inst = new HierarchyInstanceModel()
+            {
+                Id = IdManagements.GetlastestInstanceId(),
+                Text = "page=\"ID6\">",
+                Closer = "{0}"
+            };
+
+            HierarchyInstanceModel inst2 = new HierarchyInstanceModel()
+            {
+                Id = IdManagements.GetlastestInstanceId(),
+                Text = "trans=\"" + definejTransition.Id1 + "\"",
+                Closer = "/></instance>"
+            };
+
+            var instances = approach.CreateHierarchyInstance(allTemplates[(int)TemplateEnum.InstanceTemplate], inst);
+            var instances2 = approach.CreateHierarchyInstance(allTemplates[(int)TemplateEnum.InstanceTemplate], inst2);
+
+            var allInstances = string.Format(instances, instances2);
+            return allInstances;
+        }
+
+        #endregion Create All
     }
 }

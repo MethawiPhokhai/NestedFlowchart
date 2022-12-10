@@ -13,11 +13,12 @@ namespace NestedFlowchart.Functions
             TransformationApproach approach = new TransformationApproach();
             string[] allTemplates = ReadAllTemplate(TemplatePath);
 
-            string allColorSet = CreateAllColorSets(approach, allTemplates);
+            string allColorSet = approach.CreateAllColorSets(approach, allTemplates);
 
-            string allVar = CreateAllVariables(approach, allTemplates);
+            string allVar = approach.CreateAllVariables(approach, allTemplates);
 
             #region AppleRules
+
             int countSubPage = 0;
             PageDeclare pages = new PageDeclare();
             PreviousNode previousNode = new PreviousNode();
@@ -100,14 +101,12 @@ namespace NestedFlowchart.Functions
                         previousNode.previousPlaceModel = rule3Place;
                         previousNode.Type = "place";
 
-
                         pages.mainPageModel.Node += rule3OldString;
                     }
                     //Case Nested => Create Hierachy Tool
                     else if (sortedFlowcharts[i].ValueText.ToLower().Trim().Contains("j =") || sortedFlowcharts[i].ValueText.ToLower().Trim().Contains("k =")
                         || sortedFlowcharts[i].ValueText.ToLower().Trim().Contains("l =") || sortedFlowcharts[i].ValueText.ToLower().Trim().Contains("m ="))
                     {
-
                         Rule3 rule3 = new Rule3();
                         var (rule3Place, rule3Transition, _, rule3OldString, rule3NewString) = rule3.ApplyRuleWithHierarchy(allTemplates[(int)TemplateEnum.TransitionTemplate], allTemplates[(int)TemplateEnum.PlaceTemplate], allTemplates[(int)TemplateEnum.ArcTemplate], allTemplates[(int)TemplateEnum.SubStrTemplate], allTemplates[(int)TemplateEnum.PortTemplate],
                             previousNode, pages.subPageModel1.Id, sortedFlowcharts[i].ValueText);
@@ -131,7 +130,7 @@ namespace NestedFlowchart.Functions
                         if (sortedFlowcharts[i].ValueText.ToLower().Trim().Contains("i ++"))
                         {
                             //TODO: Send real process to code segment inscription
-                            //TODO: Find solution to create arc 
+                            //TODO: Find solution to create arc
                             Rule4 rule4 = new Rule4();
                             var (rule4Place, rule4Transition, _, rule4String) = rule4.ApplyRule(allTemplates[(int)TemplateEnum.TransitionTemplate], allTemplates[(int)TemplateEnum.PlaceTemplate], allTemplates[(int)TemplateEnum.ArcTemplate], previousNode);
 
@@ -176,7 +175,6 @@ namespace NestedFlowchart.Functions
                     previousNode.Type = "transition";
 
                     CreatePageNodeByCountSubPage(countSubPage, pages, rule6String);
-
                 }
                 //Rule 7 End
                 else if (sortedFlowcharts[i].NodeType.ToLower() == "end")
@@ -192,11 +190,12 @@ namespace NestedFlowchart.Functions
                     CreatePageNodeByCountSubPage(countSubPage, pages, rule7String);
                 }
             }
-            #endregion
 
-            string allPage = CreateAllPages(approach, allTemplates, pages);
+            #endregion AppleRules
 
-            string allInstances = CreateAllInstances(approach, allTemplates, definejTransition);
+            string allPage = approach.CreateAllPages(approach, allTemplates, pages);
+
+            string allInstances = approach.CreateAllInstances(approach, allTemplates, definejTransition);
 
             string firstCPN = string.Format(allTemplates[(int)TemplateEnum.EmptyCPNTemplate],
                 allColorSet + allVar, allPage, allInstances);
@@ -204,101 +203,6 @@ namespace NestedFlowchart.Functions
             //Write to CPN File
             File.WriteAllText(ResultPath + "Result.cpn", firstCPN);
         }
-
-
-        private string CreateAllColorSets(TransformationApproach approach, string[] allTemplates)
-        {
-            ColorSetModel colorSetProduct1 = new ColorSetModel()
-            {
-                Id = IdManagements.GetlastestColorSetId(),
-                Name = "loopi",
-                Type = new List<string>()
-                {
-                    "INT",
-                    "INTs"
-                },
-                Text = "colset loopi = product INT*INTs;"
-            };
-
-            var col1 = approach.CreateColorSet(allTemplates[(int)TemplateEnum.ColorSetTemplate], colorSetProduct1);
-            var allColorSet = col1;
-            return allColorSet;
-        }
-        private string CreateAllVariables(TransformationApproach approach, string[] allTemplates)
-        {
-            VarModel var1Model = new VarModel()
-            {
-                Id = IdManagements.GetlastestVarId(),
-                Type = "INTs",
-                Name = "arr",
-                Layout = "var arr: INTs;"
-            };
-
-            VarModel var2Model = new VarModel()
-            {
-                Id = IdManagements.GetlastestVarId(),
-                Type = "INT",
-                Name = "i,i2,j,j2",
-                Layout = "var i,i2,j,j2: INT;"
-            };
-
-            var var1 = approach.CreateVar(allTemplates[(int)TemplateEnum.VarTemplate], var1Model);
-            var var2 = approach.CreateVar(allTemplates[(int)TemplateEnum.VarTemplate], var2Model);
-            var allVar = var1 + var2;
-            return allVar;
-        }
-        private string CreateAllPages(TransformationApproach approach, string[] allTemplates, PageDeclare pages)
-        {
-            var page1 = approach.CreatePage(allTemplates[(int)TemplateEnum.PageTemplate],
-                pages.mainPageModel);
-
-            string page2 = (pages.subPageModel1.Node != string.Empty) ?
-                approach.CreatePage(allTemplates[(int)TemplateEnum.PageTemplate],
-                pages.subPageModel1) :
-                string.Empty;
-
-            string page3 = (pages.subPageModel2.Node != string.Empty) ?
-                approach.CreatePage(allTemplates[(int)TemplateEnum.PageTemplate],
-                    pages.subPageModel2) :
-                string.Empty;
-
-            string page4 = (pages.subPageModel3.Node != string.Empty) ?
-                approach.CreatePage(allTemplates[(int)TemplateEnum.PageTemplate],
-                    pages.subPageModel3) :
-                string.Empty;
-
-            string page5 = (pages.subPageModel4.Node != string.Empty) ?
-                approach.CreatePage(allTemplates[(int)TemplateEnum.PageTemplate],
-                    pages.subPageModel4) :
-                string.Empty;
-
-            var allPage = page1 + page2 + page3 + page4 + page5;
-            return allPage;
-        }
-        private string CreateAllInstances(TransformationApproach approach, string[] allTemplates, TransitionModel definejTransition)
-        {
-            //TODO: Define instance if have more than 2
-            HierarchyInstanceModel inst = new HierarchyInstanceModel()
-            {
-                Id = IdManagements.GetlastestInstanceId(),
-                Text = "page=\"ID6\">",
-                Closer = "{0}"
-            };
-
-            HierarchyInstanceModel inst2 = new HierarchyInstanceModel()
-            {
-                Id = IdManagements.GetlastestInstanceId(),
-                Text = "trans=\"" + definejTransition.Id1 + "\"",
-                Closer = "/></instance>"
-            };
-
-            var instances = approach.CreateHierarchyInstance(allTemplates[(int)TemplateEnum.InstanceTemplate], inst);
-            var instances2 = approach.CreateHierarchyInstance(allTemplates[(int)TemplateEnum.InstanceTemplate], inst2);
-
-            var allInstances = string.Format(instances, instances2);
-            return allInstances;
-        }
-
 
         private string[] ReadAllTemplate(string? TemplatePath)
         {
@@ -317,6 +221,7 @@ namespace NestedFlowchart.Functions
 
             return allTemplates;
         }
+
         private static void CreatePageNodeByCountSubPage(int countSubPage, PageDeclare pages, string rule)
         {
             switch (countSubPage)
@@ -324,20 +229,25 @@ namespace NestedFlowchart.Functions
                 case 0:
                     pages.mainPageModel.Node += rule;
                     break;
+
                 case 1:
                     pages.subPageModel1.Node += rule;
                     break;
+
                 case 2:
                     pages.subPageModel2.Node += rule;
                     break;
+
                 case 3:
                     pages.subPageModel3.Node += rule;
                     break;
+
                 case 4:
                     pages.subPageModel4.Node += rule;
                     break;
             }
         }
+
         private string ConvertDecision(string condition)
         {
             if (condition.Contains("&gt;"))
