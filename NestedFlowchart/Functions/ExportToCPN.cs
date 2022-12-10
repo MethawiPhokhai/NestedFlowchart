@@ -70,10 +70,7 @@ namespace NestedFlowchart.Functions
                 if (sortedFlowcharts[i].NodeType.ToLower() == "start")
                 {
                     Rule1 rule1 = new Rule1();
-                    var rule1Result = rule1.ApplyRule(allTemplates[(int)TemplateEnum.PlaceTemplate]);
-
-                    rulePlace = rule1Result.Item1;
-                    ruleString = rule1Result.Item2.ToString();
+                    (rulePlace, ruleString) = rule1.ApplyRule(allTemplates[(int)TemplateEnum.PlaceTemplate]);
 
                     previousNode.previousPlaceModel = rulePlace;
                     previousNode.Type = "place";
@@ -93,11 +90,7 @@ namespace NestedFlowchart.Functions
                     }
 
                     Rule2 rule2 = new Rule2();
-                    var rule2Result = rule2.ApplyRule(allTemplates[(int)TemplateEnum.TransitionTemplate], allTemplates[(int)TemplateEnum.PlaceTemplate], allTemplates[(int)TemplateEnum.ArcTemplate], rulePlace);
-
-                    PlaceModel rule2Place = rule2Result.Item1;
-                    TransitionModel rule2Transition = rule2Result.Item2;
-                    string rule2String = rule2Result.Item4;
+                    var (rule2Place, rule2Transition, _, rule2String) = rule2.ApplyRule(allTemplates[(int)TemplateEnum.TransitionTemplate], allTemplates[(int)TemplateEnum.PlaceTemplate], allTemplates[(int)TemplateEnum.ArcTemplate], rulePlace);
 
                     previousNode.previousPlaceModel = rule2Place;
                     previousNode.previousTransitionModel = rule2Transition;
@@ -138,14 +131,14 @@ namespace NestedFlowchart.Functions
                         //var var2 = approach.CreateVar(allTemplates[(int)TemplateEnum.varTemplate], var2Model);
 
                         Rule3 rule3 = new Rule3();
-                        var rule3Result = rule3.ApplyRuleWithoutHierarchy(allTemplates[(int)TemplateEnum.TransitionTemplate], allTemplates[(int)TemplateEnum.PlaceTemplate], allTemplates[(int)TemplateEnum.ArcTemplate]
+                        var (rule3Place, _, _, rule3OldString, _) = rule3.ApplyRuleWithoutHierarchy(allTemplates[(int)TemplateEnum.TransitionTemplate], allTemplates[(int)TemplateEnum.PlaceTemplate], allTemplates[(int)TemplateEnum.ArcTemplate]
                             , previousNode, sortedFlowcharts[i].ValueText);
 
-                        previousNode.previousPlaceModel = rule3Result.Item1;
+                        previousNode.previousPlaceModel = rule3Place;
                         previousNode.Type = "place";
 
 
-                        pages.mainPageModel.Node += rule3Result.Item4;
+                        pages.mainPageModel.Node += rule3OldString;
                     }
                     //Case Nested => Create Hierachy Tool
                     else if (sortedFlowcharts[i].ValueText.ToLower().Trim().Contains("j =") || sortedFlowcharts[i].ValueText.ToLower().Trim().Contains("k =")
@@ -153,25 +146,20 @@ namespace NestedFlowchart.Functions
                     {
 
                         Rule3 rule3 = new Rule3();
-                        var definej = rule3.ApplyRuleWithHierarchy(allTemplates[(int)TemplateEnum.TransitionTemplate], allTemplates[(int)TemplateEnum.PlaceTemplate], allTemplates[(int)TemplateEnum.ArcTemplate], allTemplates[(int)TemplateEnum.SubStrTemplate], allTemplates[(int)TemplateEnum.PortTemplate],
+                        var (rule3Place, rule3Transition, _, rule3OldString, rule3NewString) = rule3.ApplyRuleWithHierarchy(allTemplates[(int)TemplateEnum.TransitionTemplate], allTemplates[(int)TemplateEnum.PlaceTemplate], allTemplates[(int)TemplateEnum.ArcTemplate], allTemplates[(int)TemplateEnum.SubStrTemplate], allTemplates[(int)TemplateEnum.PortTemplate],
                             previousNode, pages.subPageModel1.Id, sortedFlowcharts[i].ValueText);
 
-                        definejTransition = definej.Item2;
-
-                        string definejOldPage = definej.Item4;
-                        string defindjNewPage = definej.Item5;
-
-
-                        previousNode.previousPlaceModel = definej.Item1;
+                        previousNode.previousPlaceModel = rule3Place;
+                        definejTransition = rule3Transition;
                         previousNode.Type = "place";
 
                         //Add to old page
-                        pages.mainPageModel.Node += definejOldPage;
+                        pages.mainPageModel.Node += rule3OldString;
 
                         //Add to sub page
                         //countSubPage indicate current page you are in
                         countSubPage++;
-                        CreatePageNodeByCountSubPage(countSubPage, pages, defindjNewPage);
+                        CreatePageNodeByCountSubPage(countSubPage, pages, rule3NewString);
                     }
                     else
                     {
@@ -182,11 +170,7 @@ namespace NestedFlowchart.Functions
                             //TODO: Send real process to code segment inscription
                             //TODO: Find solution to create arc 
                             Rule4 rule4 = new Rule4();
-                            var rule4Result = rule4.ApplyRule(allTemplates[(int)TemplateEnum.TransitionTemplate], allTemplates[(int)TemplateEnum.PlaceTemplate], allTemplates[(int)TemplateEnum.ArcTemplate], previousNode);
-
-                            PlaceModel rule4Place = rule4Result.Item1;
-                            TransitionModel rule4Transition = rule4Result.Item2;
-                            string rule4String = rule4Result.Item4;
+                            var (rule4Place, rule4Transition, _, rule4String) = rule4.ApplyRule(allTemplates[(int)TemplateEnum.TransitionTemplate], allTemplates[(int)TemplateEnum.PlaceTemplate], allTemplates[(int)TemplateEnum.ArcTemplate], previousNode);
 
                             previousNode.previousPlaceModel = rule4Place;
                             previousNode.previousTransitionModel = rule4Transition;
@@ -203,12 +187,8 @@ namespace NestedFlowchart.Functions
                 else if (sortedFlowcharts[i].NodeType.ToLower() == "connector")
                 {
                     Rule5 rule5 = new Rule5();
-                    var rule5Result = rule5.ApplyRule(allTemplates[(int)TemplateEnum.TransitionTemplate], allTemplates[(int)TemplateEnum.PlaceTemplate], allTemplates[(int)TemplateEnum.ArcTemplate], previousNode.previousPlaceModel);
+                    var (rule5Place, rule5Transition, _, rule5String) = rule5.ApplyRule(allTemplates[(int)TemplateEnum.TransitionTemplate], allTemplates[(int)TemplateEnum.PlaceTemplate], allTemplates[(int)TemplateEnum.ArcTemplate], previousNode.previousPlaceModel);
                     
-                    PlaceModel rule5Place = rule5Result.Item1;
-                    TransitionModel rule5Transition = rule5Result.Item2;
-                    string rule5String = rule5Result.Item4;
-
                     previousNode.previousPlaceModel = rule5Place;
                     previousNode.previousTransitionModel = rule5Transition;
                     previousNode.Type = "place";
@@ -225,12 +205,8 @@ namespace NestedFlowchart.Functions
 
                     //TODO: Separate between true and false case by arrow[i+1]
                     Rule6 rule6 = new Rule6();
-                    var rule6Result = rule6.ApplyRule(allTemplates[(int)TemplateEnum.TransitionTemplate], allTemplates[(int)TemplateEnum.PlaceTemplate], allTemplates[(int)TemplateEnum.ArcTemplate], previousNode,
+                    var (rule6Place, _, rule6Transition, _, rule6String) = rule6.ApplyRule(allTemplates[(int)TemplateEnum.TransitionTemplate], allTemplates[(int)TemplateEnum.PlaceTemplate], allTemplates[(int)TemplateEnum.ArcTemplate], previousNode,
                         trueCondition, falseCondition);
-
-                    PlaceModel rule6Place = rule6Result.Item1;
-                    TransitionModel rule6Transition = rule6Result.Item3;
-                    string rule6String = rule6Result.Item5;
 
                     previousNode.previousPlaceModel = rule6Place;
                     previousNode.previousTransitionModel = rule6Transition; //True Condition
@@ -244,11 +220,8 @@ namespace NestedFlowchart.Functions
                 {
                     //TODO: Previous transition need to check (in subpage)
                     Rule7 rule7 = new Rule7();
-                    var rule7Result = rule7.ApplyRule(allTemplates[(int)TemplateEnum.PlaceTemplate], allTemplates[(int)TemplateEnum.ArcTemplate], previousNode);
+                    var (rule7Place, rule7String) = rule7.ApplyRule(allTemplates[(int)TemplateEnum.PlaceTemplate], allTemplates[(int)TemplateEnum.ArcTemplate], previousNode);
 
-                    PlaceModel rule7Place = rule7Result.Item1;
-                    string rule7String = rule7Result.Item2;
-                    
                     previousNode.previousPlaceModel = rule7Place;
 
                     //Reset because it's need to end at main page
