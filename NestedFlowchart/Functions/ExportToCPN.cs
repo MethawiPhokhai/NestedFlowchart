@@ -17,17 +17,15 @@ namespace NestedFlowchart.Functions
 
             string allVar = CreateAllVariables(approach, allTemplates);
 
-
+            #region AppleRules
             int countSubPage = 0;
             PageDeclare pages = new PageDeclare();
             PreviousNode previousNode = new PreviousNode();
 
-            //Declaration
             string ruleString = string.Empty;
             PlaceModel rulePlace = new PlaceModel();
 
             TransitionModel definejTransition = new TransitionModel();
-
 
             for (int i = 0; i < sortedFlowcharts.Count; i++)
             {
@@ -193,8 +191,8 @@ namespace NestedFlowchart.Functions
                     countSubPage = 0;
                     CreatePageNodeByCountSubPage(countSubPage, pages, rule7String);
                 }
-
             }
+            #endregion
 
             string allPage = CreateAllPages(approach, allTemplates, pages);
 
