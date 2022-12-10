@@ -13,46 +13,11 @@ namespace NestedFlowchart.Functions
             TransformationApproach approach = new TransformationApproach();
             string[] allTemplates = ReadAllTemplate(TemplatePath);
 
-            #region Color Set
-            ColorSetModel colorSetProduct1 = new ColorSetModel()
-            {
-                Id = IdManagements.GetlastestColorSetId(),
-                Name = "loopi",
-                Type = new List<string>()
-                {
-                    "INT",
-                    "INTs"
-                },
-                Text = "colset loopi = product INT*INTs;"
-            };
+            string allColorSet = CreateAllColorSets(approach, allTemplates);
 
-            var col1 = approach.CreateColorSet(allTemplates[(int)TemplateEnum.ColorSetTemplate], colorSetProduct1);
+            string allVar = CreateAllVariables(approach, allTemplates);
 
-            #endregion
 
-            #region Var
-            VarModel var1Model = new VarModel()
-            {
-                Id = IdManagements.GetlastestVarId(),
-                Type = "INTs",
-                Name = "arr",
-                Layout = "var arr: INTs;"
-            };
-
-            VarModel var2Model = new VarModel()
-            {
-                Id = IdManagements.GetlastestVarId(),
-                Type = "INT",
-                Name = "i,i2,j,j2",
-                Layout = "var i,i2,j,j2: INT;"
-            };
-
-            var var1 = approach.CreateVar(allTemplates[(int)TemplateEnum.VarTemplate], var1Model);
-            var var2 = approach.CreateVar(allTemplates[(int)TemplateEnum.VarTemplate], var2Model);
-
-            #endregion
-
-            #region Page
             int countSubPage = 0;
             PageDeclare pages = new PageDeclare();
             PreviousNode previousNode = new PreviousNode();
@@ -188,7 +153,7 @@ namespace NestedFlowchart.Functions
                 {
                     Rule5 rule5 = new Rule5();
                     var (rule5Place, rule5Transition, _, rule5String) = rule5.ApplyRule(allTemplates[(int)TemplateEnum.TransitionTemplate], allTemplates[(int)TemplateEnum.PlaceTemplate], allTemplates[(int)TemplateEnum.ArcTemplate], previousNode.previousPlaceModel);
-                    
+
                     previousNode.previousPlaceModel = rule5Place;
                     previousNode.previousTransitionModel = rule5Transition;
                     previousNode.Type = "place";
@@ -231,8 +196,62 @@ namespace NestedFlowchart.Functions
 
             }
 
+            string allPage = CreateAllPages(approach, allTemplates, pages);
 
-            var page1 = approach.CreatePage(allTemplates[(int)TemplateEnum.PageTemplate], 
+            string allInstances = CreateAllInstances(approach, allTemplates, definejTransition);
+
+            string firstCPN = string.Format(allTemplates[(int)TemplateEnum.EmptyCPNTemplate],
+                allColorSet + allVar, allPage, allInstances);
+
+            //Write to CPN File
+            File.WriteAllText(ResultPath + "Result.cpn", firstCPN);
+        }
+
+
+        private string CreateAllColorSets(TransformationApproach approach, string[] allTemplates)
+        {
+            ColorSetModel colorSetProduct1 = new ColorSetModel()
+            {
+                Id = IdManagements.GetlastestColorSetId(),
+                Name = "loopi",
+                Type = new List<string>()
+                {
+                    "INT",
+                    "INTs"
+                },
+                Text = "colset loopi = product INT*INTs;"
+            };
+
+            var col1 = approach.CreateColorSet(allTemplates[(int)TemplateEnum.ColorSetTemplate], colorSetProduct1);
+            var allColorSet = col1;
+            return allColorSet;
+        }
+        private string CreateAllVariables(TransformationApproach approach, string[] allTemplates)
+        {
+            VarModel var1Model = new VarModel()
+            {
+                Id = IdManagements.GetlastestVarId(),
+                Type = "INTs",
+                Name = "arr",
+                Layout = "var arr: INTs;"
+            };
+
+            VarModel var2Model = new VarModel()
+            {
+                Id = IdManagements.GetlastestVarId(),
+                Type = "INT",
+                Name = "i,i2,j,j2",
+                Layout = "var i,i2,j,j2: INT;"
+            };
+
+            var var1 = approach.CreateVar(allTemplates[(int)TemplateEnum.VarTemplate], var1Model);
+            var var2 = approach.CreateVar(allTemplates[(int)TemplateEnum.VarTemplate], var2Model);
+            var allVar = var1 + var2;
+            return allVar;
+        }
+        private string CreateAllPages(TransformationApproach approach, string[] allTemplates, PageDeclare pages)
+        {
+            var page1 = approach.CreatePage(allTemplates[(int)TemplateEnum.PageTemplate],
                 pages.mainPageModel);
 
             string page2 = (pages.subPageModel1.Node != string.Empty) ?
@@ -244,21 +263,22 @@ namespace NestedFlowchart.Functions
                 approach.CreatePage(allTemplates[(int)TemplateEnum.PageTemplate],
                     pages.subPageModel2) :
                 string.Empty;
-            
+
             string page4 = (pages.subPageModel3.Node != string.Empty) ?
                 approach.CreatePage(allTemplates[(int)TemplateEnum.PageTemplate],
                     pages.subPageModel3) :
                 string.Empty;
-           
+
             string page5 = (pages.subPageModel4.Node != string.Empty) ?
                 approach.CreatePage(allTemplates[(int)TemplateEnum.PageTemplate],
                     pages.subPageModel4) :
                 string.Empty;
-            
-            var allPage = page1 + page2 + page3 + page4 + page5;
-            #endregion
 
-            #region Instance
+            var allPage = page1 + page2 + page3 + page4 + page5;
+            return allPage;
+        }
+        private string CreateAllInstances(TransformationApproach approach, string[] allTemplates, TransitionModel definejTransition)
+        {
             //TODO: Define instance if have more than 2
             HierarchyInstanceModel inst = new HierarchyInstanceModel()
             {
@@ -278,20 +298,9 @@ namespace NestedFlowchart.Functions
             var instances2 = approach.CreateHierarchyInstance(allTemplates[(int)TemplateEnum.InstanceTemplate], inst2);
 
             var allInstances = string.Format(instances, instances2);
-
-            #endregion
-
-
-            //Combine to put on Empty Color Set
-            var allColorSet = col1;
-            var allVar = var1 + var2;
-
-            string firstCPN = string.Format(allTemplates[(int)TemplateEnum.EmptyCPNTemplate],
-                allColorSet + allVar, allPage, allInstances);
-
-            //Write to CPN File
-            File.WriteAllText(ResultPath + "Result.cpn", firstCPN);
+            return allInstances;
         }
+
 
         private string[] ReadAllTemplate(string? TemplatePath)
         {
