@@ -241,31 +241,33 @@ namespace NestedFlowchart.Functions
             return allTemplates;
         }
 
-        private static void CreatePageNodeByCountSubPage(int countSubPage, PageDeclare pages, string rule)
+        private void CreatePageNodeByCountSubPage(int countSubPage, PageDeclare pages, string rule)
         {
+            if (countSubPage < 0 || countSubPage > 4)
+            {
+                throw new ArgumentOutOfRangeException(nameof(countSubPage), "โปรแกรม Support ไม่เกิน 5 nested loops, ปัจจุบันมี : " + countSubPage);
+            }
+
             switch (countSubPage)
             {
                 case 0:
                     pages.mainPageModel.Node += rule;
                     break;
-
                 case 1:
                     pages.subPageModel1.Node += rule;
                     break;
-
                 case 2:
                     pages.subPageModel2.Node += rule;
                     break;
-
                 case 3:
                     pages.subPageModel3.Node += rule;
                     break;
-
                 case 4:
                     pages.subPageModel4.Node += rule;
                     break;
             }
         }
+
 
         private string ConvertDecision(string condition)
         {
