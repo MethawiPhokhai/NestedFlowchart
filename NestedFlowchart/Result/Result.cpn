@@ -142,7 +142,7 @@
           <textattr colour="Black"
                     bold="false"/>
           <text tool="CPN Tools"
-                version="4.0.1">[7,8,0,3,5]</text>
+                version="4.0.1"> [7,8,0,3,5]</text>
         </initmark>
         
       </place>

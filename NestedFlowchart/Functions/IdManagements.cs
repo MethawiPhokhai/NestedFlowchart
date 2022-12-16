@@ -10,7 +10,6 @@
         public static int PlaceName { get; set; } = 0;
         public static int ConnectorPlaceName { get; set; } = 0;
 
-
         public static int TransitionId { get; set; } = 48771;
         public static int TransitionName { get; set; } = 0;
         public static int TrueGuardTransitionName { get; set; } = 0;
@@ -46,11 +45,13 @@
             PlaceId++;
             return "ID14129" + PlaceId;
         }
+
         public static string GetlastestPlaceName()
         {
             PlaceName++;
             return "P" + PlaceName;
         }
+
         public static string GetlastestPlaceConnectorName()
         {
             ConnectorPlaceName++;
@@ -62,28 +63,31 @@
             TransitionId++;
             return "ID14128" + TransitionId;
         }
+
         public static string GetlastestTransitionName()
         {
             TransitionName++;
             return "T" + TransitionName;
         }
+
         public static string GetlastestTrueGuardTransitionName()
         {
             TrueGuardTransitionName++;
             return "GT" + TrueGuardTransitionName;
         }
+
         public static string GetlastestFalseGuardTransitionName()
         {
             FalseGuardTransitionName++;
             return "GF" + FalseGuardTransitionName;
         }
+
         //TODO: Sub Page is need more id if nested
         public static string GetlastestSubPageTransitionName()
         {
             SubPageTransitionName++;
             return "TS" + SubPageTransitionName;
         }
-
 
         public static string GetlastestArcId()
         {

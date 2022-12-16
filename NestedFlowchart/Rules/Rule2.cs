@@ -13,7 +13,12 @@ namespace NestedFlowchart.Rules
     /// </summary>
     public class Rule2
     {
-        public (PlaceModel, TransitionModel, ArcModel, string) ApplyRule(string transitionTemplate, string placeTemplate, string arcTemplate, PlaceModel placeRule1)
+        public (PlaceModel, TransitionModel, ArcModel, string) 
+            ApplyRule(
+            string transitionTemplate, 
+            string placeTemplate, 
+            string arcTemplate, 
+            PlaceModel placeRule1)
         {
             TransitionModel tr = new TransitionModel()
             {
@@ -78,7 +83,12 @@ namespace NestedFlowchart.Rules
             };
 
             TransformationApproach approach = new TransformationApproach();
+
+
+            //Rule2 need to create rule1 here because initial marking
             var place1 = approach.CreatePlace(placeTemplate, placeRule1);
+
+
             var arc1 = approach.CreateArc(arcTemplate, a1);
             var transition = approach.CreateTransition(transitionTemplate, tr);
             var arc2 = approach.CreateArc(arcTemplate, a2);
@@ -88,5 +98,32 @@ namespace NestedFlowchart.Rules
             return (pl, tr, a2, allNode);
 
         }
+        public string AssignInitialMarking(List<XMLCellNode> sortedFlowcharts, string arrayName, PlaceModel rule1Place, int i)
+        {
+            if (sortedFlowcharts[i].ValueText.Contains('['))
+            {
+                arrayName = SubstringBefore(sortedFlowcharts[i].ValueText.Trim(), '=');
+                var arrayValue = SubstringAfter(sortedFlowcharts[i].ValueText.Trim(), '=');
+
+                rule1Place.Type = "INTs";
+                rule1Place.InitialMarking = arrayValue;
+            }
+
+            return arrayName;
+        }
+
+        string SubstringBefore(string str, char ch)
+        {
+            int index = str.IndexOf(ch);
+            return index >= 0 ? str.Substring(0, index) : str;
+        }
+
+        string SubstringAfter(string str, char ch)
+        {
+            int index = str.IndexOf(ch);
+            return index >= 0 ? str.Substring(index + 1) : string.Empty;
+        }
+
+
     }
 }

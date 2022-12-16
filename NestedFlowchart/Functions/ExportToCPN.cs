@@ -23,8 +23,22 @@ namespace NestedFlowchart.Functions
             PageDeclare pages = new PageDeclare();
             PreviousNode previousNode = new PreviousNode();
 
-            string ruleString = string.Empty;
-            PlaceModel rulePlace = new PlaceModel();
+            #region Array Name
+            /*
+             * Declare Array name for arc
+             */
+            string arrayName = string.Empty;
+            #endregion
+
+            #region Rule1 Variable
+            /*
+             * Need to declare these variable to temp the Rule1 because
+             * It use on initialize marking on Rule2
+             */
+            string rule1String = string.Empty;
+            PlaceModel rule1Place = new PlaceModel();
+            #endregion
+
 
             TransitionModel definejTransition = new TransitionModel();
 
@@ -34,39 +48,42 @@ namespace NestedFlowchart.Functions
                 if (sortedFlowcharts[i].NodeType.ToLower() == "start")
                 {
                     Rule1 rule1 = new Rule1();
-                    (rulePlace, ruleString) = rule1.ApplyRule(allTemplates[(int)TemplateEnum.PlaceTemplate]);
+                    (rule1Place, rule1String) = rule1.ApplyRule(
+                        allTemplates[(int)TemplateEnum.PlaceTemplate]
+                        );
 
-                    previousNode.previousPlaceModel = rulePlace;
+                    previousNode.previousPlaceModel = rule1Place;
                     previousNode.Type = "place";
                 }
                 //Rule2 : Initialize Process
                 else if (sortedFlowcharts[i].NodeType.ToLower() == "process"
                     && sortedFlowcharts[i - 2].NodeType.ToLower() == "start")
                 {
-                    //Initial Marking
-                    //TODO : กรณี ตัดตัวอีกษร Array
-                    if (sortedFlowcharts[i].ValueText.Contains('[') || sortedFlowcharts[i].ValueText.ToLower().Contains("arr"))
-                    {
-                        var arrayValue = sortedFlowcharts[i].ValueText.Substring(sortedFlowcharts[i].ValueText.IndexOf('=') + 1).Trim();
-
-                        rulePlace.Type = "INTs";
-                        rulePlace.InitialMarking = arrayValue;
-                    }
-
+                    
                     Rule2 rule2 = new Rule2();
-                    var (rule2Place, rule2Transition, _, rule2String) = rule2.ApplyRule(allTemplates[(int)TemplateEnum.TransitionTemplate], allTemplates[(int)TemplateEnum.PlaceTemplate], allTemplates[(int)TemplateEnum.ArcTemplate], rulePlace);
+                    arrayName = rule2.AssignInitialMarking(
+                        sortedFlowcharts, 
+                        arrayName, 
+                        rule1Place, 
+                        i);
+
+                    var (rule2Place, rule2Transition, _, rule2String) = rule2.ApplyRule(
+                        allTemplates[(int)TemplateEnum.TransitionTemplate],
+                        allTemplates[(int)TemplateEnum.PlaceTemplate],
+                        allTemplates[(int)TemplateEnum.ArcTemplate],
+                        rule1Place);
 
                     previousNode.previousPlaceModel = rule2Place;
                     previousNode.previousTransitionModel = rule2Transition;
                     previousNode.Type = "place";
 
                     //From previous rule
-                    ruleString = rule2String.Contains("Start") ? string.Empty : ruleString;
+                    rule1String = rule2String.Contains("Start") ? string.Empty : rule1String;
 
                     //Combine All String and add to page node
                     StringBuilder allString = new StringBuilder();
                     allString.Append(pages.mainPageModel.Node);
-                    allString.Append(ruleString);
+                    allString.Append(rule1String);
                     allString.Append(rule2String);
                     pages.mainPageModel.Node = allString.ToString();
                 }
@@ -203,6 +220,8 @@ namespace NestedFlowchart.Functions
             //Write to CPN File
             File.WriteAllText(ResultPath + "Result.cpn", firstCPN);
         }
+
+
 
         private string[] ReadAllTemplate(string? TemplatePath)
         {
