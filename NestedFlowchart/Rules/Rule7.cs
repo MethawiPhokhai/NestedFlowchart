@@ -17,7 +17,10 @@ namespace NestedFlowchart.Rules
         /// <param name="arcTemplate"></param>
         /// <param name="previousNode"></param>
         /// <returns></returns>
-        public (PlaceModel, string) ApplyRule(string placeTemplate, string arcTemplate,
+        public (PlaceModel, string) ApplyRule(
+            string placeTemplate, 
+            string arcTemplate,
+            string arrayName,
             PreviousNode previousNode)
         {
             if (previousNode.Type == "place")
@@ -65,7 +68,7 @@ namespace NestedFlowchart.Rules
                 yPos = PositionManagements.GetLastestyArcPos(),
 
                 Orientation = "TtoP", //Transition to Place
-                Type = "arr"
+                Type = arrayName
             };
 
             TransformationApproach approach = new TransformationApproach();

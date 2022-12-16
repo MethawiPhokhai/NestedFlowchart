@@ -115,14 +115,14 @@ namespace NestedFlowchart.Functions
             return allColorSet;
         }
 
-        public string CreateAllVariables(TransformationApproach approach, string[] allTemplates)
+        public string CreateAllVariables(TransformationApproach approach, string[] allTemplates, string arrayName)
         {
             VarModel var1Model = new VarModel()
             {
                 Id = IdManagements.GetlastestVarId(),
                 Type = "INTs",
-                Name = "arr",
-                Layout = "var arr: INTs;"
+                Name = arrayName,
+                Layout = $"var {arrayName}: INTs;"
             };
 
             VarModel var2Model = new VarModel()

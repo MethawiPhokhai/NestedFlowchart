@@ -20,8 +20,14 @@ namespace NestedFlowchart.Rules
         /// <param name="trueCondition"></param>
         /// <param name="falseCondition"></param>
         /// <returns></returns>
-        public (PlaceModel, TransitionModel, TransitionModel, ArcModel, string) ApplyRule(string transitionTemplate, string placeTemplate, string arcTemplate,
-            PreviousNode previousNode, string trueCondition, string falseCondition)
+        public (PlaceModel, TransitionModel, TransitionModel, ArcModel, string) ApplyRule(
+            string transitionTemplate, 
+            string placeTemplate, 
+            string arcTemplate,
+            PreviousNode previousNode, 
+            string trueCondition, 
+            string falseCondition,
+            string arrayName)
         {
 
             var xPos1 = PositionManagements.xPos1;
@@ -84,7 +90,7 @@ namespace NestedFlowchart.Rules
                 yPos = yPosArc,
 
                 Orientation = "PtoT", //Place to Transition
-                Type = "(i,arr)"
+                Type = $"(i,{arrayName})"
             };
 
             //Arc from CN1 to GT1
@@ -100,7 +106,7 @@ namespace NestedFlowchart.Rules
                 yPos = yPosArc,
 
                 Orientation = "PtoT", //Place to Transition
-                Type = "(i,arr)"
+                Type = $"(i,{arrayName})"
             };
 
             TransformationApproach approach = new TransformationApproach();

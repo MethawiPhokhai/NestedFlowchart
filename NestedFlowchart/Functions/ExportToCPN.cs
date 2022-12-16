@@ -15,8 +15,6 @@ namespace NestedFlowchart.Functions
 
             string allColorSet = approach.CreateAllColorSets(approach, allTemplates);
 
-            string allVar = approach.CreateAllVariables(approach, allTemplates);
-
             #region AppleRules
 
             int countSubPage = 0;
@@ -71,7 +69,8 @@ namespace NestedFlowchart.Functions
                         allTemplates[(int)TemplateEnum.TransitionTemplate],
                         allTemplates[(int)TemplateEnum.PlaceTemplate],
                         allTemplates[(int)TemplateEnum.ArcTemplate],
-                        rule1Place);
+                        rule1Place,
+                        arrayName);
 
                     previousNode.previousPlaceModel = rule2Place;
                     previousNode.previousTransitionModel = rule2Transition;
@@ -101,19 +100,15 @@ namespace NestedFlowchart.Functions
                         sortedFlowcharts[i].ValueText = sortedFlowcharts[i].ValueText.ToLower().Replace("int", "");
                         sortedFlowcharts[i].ValueText = sortedFlowcharts[i].ValueText.Replace(";", "");
 
-                        //VarModel var3Model = new VarModel()
-                        //{
-                        //    Id = IdManagements.GetlastestVarId(),
-                        //    Type = "INT",
-                        //    Name = "i,i2,j,j2",
-                        //    Layout = "var i,i2,j,j2: INT;"
-                        //};
-
-                        //var var2 = approach.CreateVar(allTemplates[(int)TemplateEnum.varTemplate], var2Model);
-
                         Rule3 rule3 = new Rule3();
-                        var (rule3Place, _, _, rule3OldString, _) = rule3.ApplyRuleWithoutHierarchy(allTemplates[(int)TemplateEnum.TransitionTemplate], allTemplates[(int)TemplateEnum.PlaceTemplate], allTemplates[(int)TemplateEnum.ArcTemplate]
-                            , previousNode, sortedFlowcharts[i].ValueText);
+                        var (rule3Place, _, _, rule3OldString, _) = rule3.ApplyRuleWithoutHierarchy(
+                            allTemplates[(int)TemplateEnum.TransitionTemplate], 
+                            allTemplates[(int)TemplateEnum.PlaceTemplate], 
+                            allTemplates[(int)TemplateEnum.ArcTemplate],
+                            sortedFlowcharts[i].ValueText,
+                            arrayName,
+                            previousNode
+                            );
 
                         previousNode.previousPlaceModel = rule3Place;
                         previousNode.Type = "place";
@@ -125,8 +120,17 @@ namespace NestedFlowchart.Functions
                         || sortedFlowcharts[i].ValueText.ToLower().Trim().Contains("l =") || sortedFlowcharts[i].ValueText.ToLower().Trim().Contains("m ="))
                     {
                         Rule3 rule3 = new Rule3();
-                        var (rule3Place, rule3Transition, _, rule3OldString, rule3NewString) = rule3.ApplyRuleWithHierarchy(allTemplates[(int)TemplateEnum.TransitionTemplate], allTemplates[(int)TemplateEnum.PlaceTemplate], allTemplates[(int)TemplateEnum.ArcTemplate], allTemplates[(int)TemplateEnum.SubStrTemplate], allTemplates[(int)TemplateEnum.PortTemplate],
-                            previousNode, pages.subPageModel1.Id, sortedFlowcharts[i].ValueText);
+                        var (rule3Place, rule3Transition, _, rule3OldString, rule3NewString) = rule3.ApplyRuleWithHierarchy(
+                            allTemplates[(int)TemplateEnum.TransitionTemplate], 
+                            allTemplates[(int)TemplateEnum.PlaceTemplate], 
+                            allTemplates[(int)TemplateEnum.ArcTemplate], 
+                            allTemplates[(int)TemplateEnum.SubStrTemplate],
+                            allTemplates[(int)TemplateEnum.PortTemplate],
+                            pages.subPageModel1.Id,
+                            sortedFlowcharts[i].ValueText,
+                            arrayName,
+                            previousNode
+                            );
 
                         previousNode.previousPlaceModel = rule3Place;
                         definejTransition = rule3Transition;
@@ -149,7 +153,12 @@ namespace NestedFlowchart.Functions
                             //TODO: Send real process to code segment inscription
                             //TODO: Find solution to create arc
                             Rule4 rule4 = new Rule4();
-                            var (rule4Place, rule4Transition, _, rule4String) = rule4.ApplyRule(allTemplates[(int)TemplateEnum.TransitionTemplate], allTemplates[(int)TemplateEnum.PlaceTemplate], allTemplates[(int)TemplateEnum.ArcTemplate], previousNode);
+                            var (rule4Place, rule4Transition, _, rule4String) = rule4.ApplyRule(
+                                allTemplates[(int)TemplateEnum.TransitionTemplate], 
+                                allTemplates[(int)TemplateEnum.PlaceTemplate], 
+                                allTemplates[(int)TemplateEnum.ArcTemplate], 
+                                arrayName,
+                                previousNode);
 
                             previousNode.previousPlaceModel = rule4Place;
                             previousNode.previousTransitionModel = rule4Transition;
@@ -166,7 +175,12 @@ namespace NestedFlowchart.Functions
                 else if (sortedFlowcharts[i].NodeType.ToLower() == "connector")
                 {
                     Rule5 rule5 = new Rule5();
-                    var (rule5Place, rule5Transition, _, rule5String) = rule5.ApplyRule(allTemplates[(int)TemplateEnum.TransitionTemplate], allTemplates[(int)TemplateEnum.PlaceTemplate], allTemplates[(int)TemplateEnum.ArcTemplate], previousNode.previousPlaceModel);
+                    var (rule5Place, rule5Transition, _, rule5String) = rule5.ApplyRule(
+                        allTemplates[(int)TemplateEnum.TransitionTemplate], 
+                        allTemplates[(int)TemplateEnum.PlaceTemplate], 
+                        allTemplates[(int)TemplateEnum.ArcTemplate], 
+                        arrayName,
+                        previousNode.previousPlaceModel);
 
                     previousNode.previousPlaceModel = rule5Place;
                     previousNode.previousTransitionModel = rule5Transition;
@@ -177,15 +191,21 @@ namespace NestedFlowchart.Functions
                 //Rule 6 Decision
                 else if (sortedFlowcharts[i].NodeType.ToLower() == "condition")
                 {
-                    var trueCondition = "[" + sortedFlowcharts[i].ValueText.Replace("N", " length arr") + "]";
+                    var trueCondition = "[" + sortedFlowcharts[i].ValueText.Replace("N", $" length {arrayName}") + "]";
                     var falseCondition = ConvertDecision(trueCondition);
 
                     //TODO: Replace Array with List.nth(arr,j)
 
                     //TODO: Separate between true and false case by arrow[i+1]
                     Rule6 rule6 = new Rule6();
-                    var (rule6Place, _, rule6Transition, _, rule6String) = rule6.ApplyRule(allTemplates[(int)TemplateEnum.TransitionTemplate], allTemplates[(int)TemplateEnum.PlaceTemplate], allTemplates[(int)TemplateEnum.ArcTemplate], previousNode,
-                        trueCondition, falseCondition);
+                    var (rule6Place, _, rule6Transition, _, rule6String) = rule6.ApplyRule(
+                        allTemplates[(int)TemplateEnum.TransitionTemplate], 
+                        allTemplates[(int)TemplateEnum.PlaceTemplate], 
+                        allTemplates[(int)TemplateEnum.ArcTemplate], 
+                        previousNode,
+                        trueCondition, 
+                        falseCondition,
+                        arrayName);
 
                     previousNode.previousPlaceModel = rule6Place;
                     previousNode.previousTransitionModel = rule6Transition; //True Condition
@@ -198,7 +218,11 @@ namespace NestedFlowchart.Functions
                 {
                     //TODO: Previous transition need to check (in subpage)
                     Rule7 rule7 = new Rule7();
-                    var (rule7Place, rule7String) = rule7.ApplyRule(allTemplates[(int)TemplateEnum.PlaceTemplate], allTemplates[(int)TemplateEnum.ArcTemplate], previousNode);
+                    var (rule7Place, rule7String) = rule7.ApplyRule(
+                        allTemplates[(int)TemplateEnum.PlaceTemplate], 
+                        allTemplates[(int)TemplateEnum.ArcTemplate], 
+                        arrayName,
+                        previousNode);
 
                     previousNode.previousPlaceModel = rule7Place;
 
@@ -209,6 +233,8 @@ namespace NestedFlowchart.Functions
             }
 
             #endregion AppleRules
+
+            string allVar = approach.CreateAllVariables(approach, allTemplates, arrayName);
 
             string allPage = approach.CreateAllPages(approach, allTemplates, pages);
 

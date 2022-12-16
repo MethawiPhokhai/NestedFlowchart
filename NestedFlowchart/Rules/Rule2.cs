@@ -1,10 +1,5 @@
 ﻿using NestedFlowchart.Functions;
 using NestedFlowchart.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NestedFlowchart.Rules
 {
@@ -13,12 +8,13 @@ namespace NestedFlowchart.Rules
     /// </summary>
     public class Rule2
     {
-        public (PlaceModel, TransitionModel, ArcModel, string) 
+        public (PlaceModel, TransitionModel, ArcModel, string)
             ApplyRule(
-            string transitionTemplate, 
-            string placeTemplate, 
-            string arcTemplate, 
-            PlaceModel placeRule1)
+            string transitionTemplate,
+            string placeTemplate,
+            string arcTemplate,
+            PlaceModel placeRule1,
+            string arrayName)
         {
             TransitionModel tr = new TransitionModel()
             {
@@ -32,7 +28,6 @@ namespace NestedFlowchart.Rules
 
                 xPos1 = PositionManagements.xPos1,
                 yPos1 = PositionManagements.GetLastestyPos1(),
-
             };
 
             PlaceModel pl = new PlaceModel()
@@ -64,7 +59,7 @@ namespace NestedFlowchart.Rules
                 yPos = PositionManagements.yArcPos,
 
                 Orientation = "PtoT", //Place to Transition
-                Type = "arr"
+                Type = arrayName
             };
 
             ArcModel a2 = new ArcModel()
@@ -79,15 +74,13 @@ namespace NestedFlowchart.Rules
                 yPos = PositionManagements.GetLastestyArcPos(),
 
                 Orientation = "TtoP", //Transition to Place
-                Type = "arr"
+                Type = arrayName
             };
 
             TransformationApproach approach = new TransformationApproach();
 
-
             //Rule2 need to create rule1 here because initial marking
             var place1 = approach.CreatePlace(placeTemplate, placeRule1);
-
 
             var arc1 = approach.CreateArc(arcTemplate, a1);
             var transition = approach.CreateTransition(transitionTemplate, tr);
@@ -96,13 +89,17 @@ namespace NestedFlowchart.Rules
 
             var allNode = place1 + place2 + transition + arc1 + arc2;
             return (pl, tr, a2, allNode);
-
         }
-        public string AssignInitialMarking(List<XMLCellNode> sortedFlowcharts, string arrayName, PlaceModel rule1Place, int i)
+
+        public string AssignInitialMarking(
+            List<XMLCellNode> sortedFlowcharts, 
+            string arrayName, 
+            PlaceModel rule1Place, 
+            int i)
         {
             if (sortedFlowcharts[i].ValueText.Contains('['))
             {
-                arrayName = SubstringBefore(sortedFlowcharts[i].ValueText.Trim(), '=');
+                arrayName = SubstringBefore(sortedFlowcharts[i].ValueText.Trim(), '=').Trim();
                 var arrayValue = SubstringAfter(sortedFlowcharts[i].ValueText.Trim(), '=');
 
                 rule1Place.Type = "INTs";
@@ -112,18 +109,16 @@ namespace NestedFlowchart.Rules
             return arrayName;
         }
 
-        string SubstringBefore(string str, char ch)
+        private string SubstringBefore(string str, char ch)
         {
             int index = str.IndexOf(ch);
             return index >= 0 ? str.Substring(0, index) : str;
         }
 
-        string SubstringAfter(string str, char ch)
+        private string SubstringAfter(string str, char ch)
         {
             int index = str.IndexOf(ch);
             return index >= 0 ? str.Substring(index + 1) : string.Empty;
         }
-
-
     }
 }

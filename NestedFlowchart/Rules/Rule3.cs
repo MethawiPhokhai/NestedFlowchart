@@ -17,8 +17,18 @@ namespace NestedFlowchart.Rules
         /// <param name="page2Id"></param>
         /// <param name="CodeSegmentValue"></param>
         /// <returns></returns>
-        public (PlaceModel, TransitionModel, ArcModel, string, string) ApplyRuleWithHierarchy(string transitionTemplate, string placeTemplate, string arcTemplate, string subStrTemplate, string portTemplate,
-        PreviousNode previousNode, string page2Id, string CodeSegmentValue)
+        public (PlaceModel, TransitionModel, ArcModel, string, string)
+            ApplyRuleWithHierarchy
+            (string transitionTemplate,
+            string placeTemplate, 
+            string arcTemplate, 
+            string subStrTemplate, 
+            string portTemplate,
+            string page2Id,
+            string CodeSegmentValue,
+            string arrayName,
+            PreviousNode previousNode)
+
         {
             TransformationApproach approach = new TransformationApproach();
 
@@ -56,7 +66,7 @@ namespace NestedFlowchart.Rules
                     yPos = PositionManagements.yArcPos,
 
                     Orientation = "TtoP", //Transition to Place
-                    Type = "(i,arr)"
+                    Type = $"(i,{arrayName})"
                 };
             }
 
@@ -157,7 +167,7 @@ namespace NestedFlowchart.Rules
                 yPos = PositionManagements.yArcPos,
 
                 Orientation = "PtoT", //Place to Transition
-                Type = "(i,arr)"
+                Type = $"(i,{arrayName})"
             };
 
             ArcModel a2 = new ArcModel()
@@ -172,7 +182,7 @@ namespace NestedFlowchart.Rules
                 yPos = PositionManagements.GetLastestyArcPos(),
 
                 Orientation = "TtoP", //Transition to Place
-                Type = "(i,arr)"
+                Type = $"(i,{arrayName})"
             };
 
             #endregion Main Page
@@ -276,7 +286,7 @@ namespace NestedFlowchart.Rules
                 yPos = PositionManagements.yArcPos,
 
                 Orientation = "PtoT", //Place to Transition
-                Type = "(i,arr)"
+                Type = $"(i,{arrayName})"
             };
 
             #endregion SubPage
@@ -308,8 +318,14 @@ namespace NestedFlowchart.Rules
             return (p4new, tr_subpage, null, oldPageAllNode, newPageAllNode);
         }
 
-        public (PlaceModel, TransitionModel, ArcModel, string, string) ApplyRuleWithoutHierarchy(string transitionTemplate, string placeTemplate, string arcTemplate,
-        PreviousNode previousNode, string CodeSegmentValue)
+        public (PlaceModel, TransitionModel, ArcModel, string, string) ApplyRuleWithoutHierarchy(
+            string transitionTemplate,
+            string placeTemplate, 
+            string arcTemplate,
+            string CodeSegmentValue,
+            string arrayName,
+            PreviousNode previousNode
+            )
         {
             TransformationApproach approach = new TransformationApproach();
 
@@ -375,7 +391,7 @@ namespace NestedFlowchart.Rules
                 yPos = PositionManagements.GetLastestyArcPos(),
 
                 Orientation = "PtoT", //Place to Transition
-                Type = "arr"
+                Type = arrayName
             };
 
             //Arc from T2 to P2
@@ -391,7 +407,7 @@ namespace NestedFlowchart.Rules
                 yPos = PositionManagements.GetLastestyArcPos(),
 
                 Orientation = "TtoP", //Transition to Place
-                Type = "(i,arr)"
+                Type = $"(i,{arrayName})"
             };
 
             var place1 = approach.CreatePlace(placeTemplate, pl);
