@@ -46,9 +46,8 @@ namespace NestedFlowchart.Functions
                 if (sortedFlowcharts[i].NodeType.ToLower() == "start")
                 {
                     Rule1 rule1 = new Rule1();
-                    (rule1Place, rule1String) = rule1.ApplyRule(
-                        allTemplates[(int)TemplateEnum.PlaceTemplate]
-                        );
+                    rule1Place = rule1.ApplyRule();
+                    rule1String = approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule1Place);
 
                     previousNode.previousPlaceModel = rule1Place;
                     previousNode.Type = "place";

@@ -8,7 +8,7 @@ namespace NestedFlowchart.Rules
     /// </summary>
     public class Rule1
     {
-        public (PlaceModel, string) ApplyRule(string placeTemplate)
+        public PlaceModel ApplyRule()
         {
             PlaceModel pl = new PlaceModel()
             {
@@ -28,10 +28,7 @@ namespace NestedFlowchart.Rules
                 yPos3 = PositionManagements.yPos3
             };
 
-            TransformationApproach approach = new TransformationApproach();
-            var place1 = approach.CreatePlace(placeTemplate, pl);
-
-            return (pl, place1);
+            return pl;
         }
     }
 }
