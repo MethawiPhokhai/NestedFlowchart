@@ -8,11 +8,8 @@ namespace NestedFlowchart.Rules
     /// </summary>
     public class Rule2
     {
-        public (PlaceModel, TransitionModel, ArcModel, string)
+        public (PlaceModel, TransitionModel, ArcModel, ArcModel)
             ApplyRule(
-            string transitionTemplate,
-            string placeTemplate,
-            string arcTemplate,
             PlaceModel placeRule1,
             string arrayName)
         {
@@ -77,18 +74,7 @@ namespace NestedFlowchart.Rules
                 Type = arrayName
             };
 
-            TransformationApproach approach = new TransformationApproach();
-
-            //Rule2 need to create rule1 here because initial marking
-            var place1 = approach.CreatePlace(placeTemplate, placeRule1);
-
-            var arc1 = approach.CreateArc(arcTemplate, a1);
-            var transition = approach.CreateTransition(transitionTemplate, tr);
-            var arc2 = approach.CreateArc(arcTemplate, a2);
-            var place2 = approach.CreatePlace(placeTemplate, pl);
-
-            var allNode = place1 + place2 + transition + arc1 + arc2;
-            return (pl, tr, a2, allNode);
+            return (pl, tr, a1, a2);
         }
 
         public string AssignInitialMarking(

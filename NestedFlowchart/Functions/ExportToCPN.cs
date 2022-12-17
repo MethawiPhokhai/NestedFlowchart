@@ -47,7 +47,6 @@ namespace NestedFlowchart.Functions
                 {
                     Rule1 rule1 = new Rule1();
                     rule1Place = rule1.ApplyRule();
-                    rule1String = approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule1Place);
 
                     previousNode.previousPlaceModel = rule1Place;
                     previousNode.Type = "place";
@@ -64,10 +63,7 @@ namespace NestedFlowchart.Functions
                         rule1Place, 
                         i);
 
-                    var (rule2Place, rule2Transition, _, rule2String) = rule2.ApplyRule(
-                        allTemplates[(int)TemplateEnum.TransitionTemplate],
-                        allTemplates[(int)TemplateEnum.PlaceTemplate],
-                        allTemplates[(int)TemplateEnum.ArcTemplate],
+                    var (rule2Place, rule2Transition, arc2_1, arc2_2) = rule2.ApplyRule(
                         rule1Place,
                         arrayName);
 
@@ -75,13 +71,19 @@ namespace NestedFlowchart.Functions
                     previousNode.previousTransitionModel = rule2Transition;
                     previousNode.Type = "place";
 
-                    //From previous rule
-                    rule1String = rule2String.Contains("Start") ? string.Empty : rule1String;
+
+                    //Rule2 need to create Rule1 here because initial marking
+                    var place1 = approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule1Place);
+
+                    var arc1 = approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], arc2_1);
+                    var transition = approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule2Transition);
+                    var arc2 = approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], arc2_2);
+                    var place2 = approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule2Place);
+                    var rule2String = place1 + place2 + transition + arc1 + arc2;
 
                     //Combine All String and add to page node
                     StringBuilder allString = new StringBuilder();
                     allString.Append(pages.mainPageModel.Node);
-                    allString.Append(rule1String);
                     allString.Append(rule2String);
                     pages.mainPageModel.Node = allString.ToString();
                 }
