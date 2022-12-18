@@ -1,5 +1,6 @@
 using NestedFlowchart.Functions;
 using NestedFlowchart.Models;
+using NestedFlowchart.Rules;
 using System.Configuration;
 using System.Diagnostics;
 
@@ -102,7 +103,16 @@ namespace NestedFlowchart
                 txt_ReultPath.Text = ResultPath;
 
                 //Export to CPN Tools file
-                var exportToCPN = new ExportToCPN();
+                Rule1 rule1 = new Rule1();
+                Rule2 rule2 = new Rule2();
+                Rule3 rule3 = new Rule3();
+                Rule4 rule4 = new Rule4();
+                Rule5 rule5 = new Rule5();
+                Rule6 rule6 = new Rule6();
+                Rule7 rule7 = new Rule7();
+                TransformationApproach approach = new TransformationApproach();
+
+                var exportToCPN = new ExportToCPN(rule1, rule2, rule3, rule4, rule5, rule6, rule7, approach);
                 exportToCPN.ExportFile(TemplatePath, ResultPath, sortedFlowcharts);
             }
             catch (Exception ex)
