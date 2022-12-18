@@ -33,7 +33,7 @@ namespace NestedFlowchart.Rules
             var yPosArc = PositionManagements.GetLastestyArcPos();
 
             //GF1 Transition
-            TransitionModel trueTransition = new TransitionModel()
+            TransitionModel falseTransition = new TransitionModel()
             {
                 Id1 = IdManagements.GetlastestTransitionId(),
                 Id2 = IdManagements.GetlastestTransitionId(),
@@ -54,7 +54,7 @@ namespace NestedFlowchart.Rules
             };
 
             //GT1 Transition
-            TransitionModel falseTransition = new TransitionModel()
+            TransitionModel trueTransition = new TransitionModel()
             {
                 Id1 = IdManagements.GetlastestTransitionId(),
                 Id2 = IdManagements.GetlastestTransitionId(),
@@ -79,7 +79,7 @@ namespace NestedFlowchart.Rules
                 Id1 = IdManagements.GetlastestArcId(),
                 Id2 = IdManagements.GetlastestArcId(),
 
-                TransEnd = trueTransition.Id1,
+                TransEnd = falseTransition.Id1,
                 PlaceEnd = previousPlace.Id1,
 
                 xPos = xPosArc - 84,
@@ -95,7 +95,7 @@ namespace NestedFlowchart.Rules
                 Id1 = IdManagements.GetlastestArcId(),
                 Id2 = IdManagements.GetlastestArcId(),
 
-                TransEnd = falseTransition.Id1,
+                TransEnd = trueTransition.Id1,
                 PlaceEnd = previousPlace.Id1,
 
                 xPos = xPosArc + 34,
@@ -105,7 +105,7 @@ namespace NestedFlowchart.Rules
                 Type = $"(i,{arrayName})"
             };
 
-            return (previousPlace, trueTransition, falseTransition, a1, a2);
+            return (previousPlace, falseTransition, trueTransition, a1, a2);
         }
 
         public string CreateTrueCondition(string condition, string arrayName)

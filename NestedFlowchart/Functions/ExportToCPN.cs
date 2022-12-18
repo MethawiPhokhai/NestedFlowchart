@@ -200,14 +200,14 @@ namespace NestedFlowchart.Functions
 
                     //TODO: Separate between true and false case by arrow[i+1]
 
-                    var (rule6Place, rule6TrueTransition, rule6FalseTransition, rule6Arc1, rule6Arc2) = rule6.ApplyRule(
+                    var (rule6Place, rule6FalseTransition, rule6TrueTransition, rule6Arc1, rule6Arc2) = rule6.ApplyRule(
                         previousNode.previousPlaceModel,
                         trueCondition,
                         falseCondition,
                         arrayName);
 
                     previousNode.previousPlaceModel = rule6Place;
-                    previousNode.previousTransitionModel = rule6FalseTransition; //True Condition
+                    previousNode.previousTransitionModel = rule6TrueTransition;
                     previousNode.Type = "transition";
 
 
