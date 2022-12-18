@@ -192,25 +192,30 @@ namespace NestedFlowchart.Functions
                 //Rule 6 Decision
                 else if (sortedFlowcharts[i].NodeType.ToLower() == "condition")
                 {
-                    var trueCondition = "[" + sortedFlowcharts[i].ValueText.Replace("N", $" length {arrayName}") + "]";
-                    var falseCondition = ConvertDecision(trueCondition);
+                    Rule6 rule6 = new Rule6();
+                    string trueCondition = rule6.CreateTrueCondition(sortedFlowcharts[i].ValueText, arrayName);
+                    string falseCondition = rule6.CreateFalseDecision(trueCondition);
 
                     //TODO: Replace Array with List.nth(arr,j)
 
                     //TODO: Separate between true and false case by arrow[i+1]
-                    Rule6 rule6 = new Rule6();
-                    var (rule6Place, _, rule6Transition, _, rule6String) = rule6.ApplyRule(
-                        allTemplates[(int)TemplateEnum.TransitionTemplate], 
-                        allTemplates[(int)TemplateEnum.PlaceTemplate], 
-                        allTemplates[(int)TemplateEnum.ArcTemplate], 
-                        previousNode,
-                        trueCondition, 
+
+                    var (rule6Place, rule6TrueTransition, rule6FalseTransition, rule6Arc1, rule6Arc2) = rule6.ApplyRule(
+                        previousNode.previousPlaceModel,
+                        trueCondition,
                         falseCondition,
                         arrayName);
 
                     previousNode.previousPlaceModel = rule6Place;
-                    previousNode.previousTransitionModel = rule6Transition; //True Condition
+                    previousNode.previousTransitionModel = rule6FalseTransition; //True Condition
                     previousNode.Type = "transition";
+
+
+                    var trueTransition = approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule6TrueTransition);
+                    var falseTransition = approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule6FalseTransition);
+                    var arc1 = approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule6Arc1);
+                    var arc2 = approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule6Arc2);
+                    var rule6String = trueTransition + falseTransition + arc1 + arc2;
 
                     CreatePageNodeByCountSubPage(countSubPage, pages, rule6String);
                 }
@@ -247,8 +252,6 @@ namespace NestedFlowchart.Functions
             //Write to CPN File
             File.WriteAllText(ResultPath + "Result.cpn", firstCPN);
         }
-
-
 
         private string[] ReadAllTemplate(string? TemplatePath)
         {
@@ -296,28 +299,5 @@ namespace NestedFlowchart.Functions
         }
 
 
-        private string ConvertDecision(string condition)
-        {
-            if (condition.Contains("&gt;"))
-            {
-                return condition.Replace("&gt;", "&lt;=");
-            }
-            else if (condition.Contains("&lt;"))
-            {
-                return condition.Replace("&lt;", "&gt;=");
-            }
-            else if (condition.Contains("="))
-            {
-                return condition.Replace("=", "!=");
-            }
-            else if (condition.Contains("!="))
-            {
-                return condition.Replace("!=", "=");
-            }
-            else
-            {
-                return condition;
-            }
-        }
     }
 }
