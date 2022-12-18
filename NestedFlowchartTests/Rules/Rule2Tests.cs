@@ -15,7 +15,7 @@ namespace NestedFlowchart.Rules.Tests
     public class Rule2Tests
     {
         [TestMethod]
-        public void ApplyRule_ReturnsExpectedModels()
+        public void ApplyRule_ValidInput_ReturnsExpectedOutput()
         {
             // Arrange
             PlaceModel placeRule1 = new PlaceModel()

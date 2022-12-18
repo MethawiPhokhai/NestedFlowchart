@@ -14,7 +14,7 @@ namespace NestedFlowchart.Rules.Tests
     public class Rule6Tests
     {
         [TestMethod()]
-        public void ApplyRuleTest()
+        public void ApplyRule_ValidInput_ReturnsExpectedOutput()
         {
             // Arrange
             PlaceModel previousPlace = new PlaceModel()
