@@ -18,6 +18,7 @@ namespace NestedFlowchart.Rules
                 Name = "Start",
                 Type = "UNIT",
 
+
                 xPos1 = PositionManagements.xPos1,
                 yPos1 = PositionManagements.yPos1,
 
