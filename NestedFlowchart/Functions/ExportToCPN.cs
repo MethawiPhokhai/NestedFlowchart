@@ -81,11 +81,7 @@ namespace NestedFlowchart.Functions
                     var place2 = approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule2Place);
                     var rule2String = place1 + place2 + transition + arc1 + arc2;
 
-                    //Combine All String and add to page node
-                    StringBuilder allString = new StringBuilder();
-                    allString.Append(pages.mainPageModel.Node);
-                    allString.Append(rule2String);
-                    pages.mainPageModel.Node = allString.ToString();
+                    CreatePageNodeByCountSubPage(countSubPage, pages, rule2String);
                 }
                 //Rule3 : I=0, J=1 , Rule4
                 else if (sortedFlowcharts[i].NodeType.ToLower() == "process")
@@ -176,16 +172,20 @@ namespace NestedFlowchart.Functions
                 else if (sortedFlowcharts[i].NodeType.ToLower() == "connector")
                 {
                     Rule5 rule5 = new Rule5();
-                    var (rule5Place, rule5Transition, _, rule5String) = rule5.ApplyRule(
-                        allTemplates[(int)TemplateEnum.TransitionTemplate], 
-                        allTemplates[(int)TemplateEnum.PlaceTemplate], 
-                        allTemplates[(int)TemplateEnum.ArcTemplate], 
+                    var (rule5Place, rule5Transition, rule5arc1, rule5arc2) = rule5.ApplyRule(
                         arrayName,
                         previousNode.previousPlaceModel);
 
                     previousNode.previousPlaceModel = rule5Place;
                     previousNode.previousTransitionModel = rule5Transition;
                     previousNode.Type = "place";
+
+                    
+                    var place1 = approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule5Place);
+                    var arc1 = approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule5arc1);
+                    var transition = approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule5Transition);
+                    var arc2 = approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule5arc2);
+                    var rule5String = place1 + transition + arc1 + arc2;
 
                     CreatePageNodeByCountSubPage(countSubPage, pages, rule5String);
                 }

@@ -18,10 +18,7 @@ namespace NestedFlowchart.Rules
         /// <param name="arcTemplate"></param>
         /// <param name="previousPlace"></param>
         /// <returns></returns>
-        public (PlaceModel, TransitionModel, ArcModel, string) ApplyRule(
-            string transitionTemplate, 
-            string placeTemplate, 
-            string arcTemplate,
+        public (PlaceModel, TransitionModel, ArcModel, ArcModel) ApplyRule(
             string arrayName,
             PlaceModel previousPlace)
         {
@@ -93,13 +90,7 @@ namespace NestedFlowchart.Rules
                 Type = $"(i,{arrayName})"
             };
 
-            TransformationApproach approach = new TransformationApproach();
-            var place1 = approach.CreatePlace(placeTemplate, pl);
-            var arc1 = approach.CreateArc(arcTemplate, a1);
-            var transition = approach.CreateTransition(transitionTemplate, tr);
-            var arc2 = approach.CreateArc(arcTemplate, a2);
-
-            return (pl, tr, a2, (place1 + transition + arc1 + arc2));
+            return (pl, tr, a1, a2);
         }
     }
 }
