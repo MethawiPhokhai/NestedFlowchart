@@ -17,11 +17,11 @@ namespace NestedFlowchart.Rules
         /// <param name="page2Id"></param>
         /// <param name="CodeSegmentValue"></param>
         /// <returns></returns>
-        public (PlaceModel, TransitionModel, ArcModel, string, string)
+        public (PlaceModel, PlaceModel, PlaceModel, PlaceModel,
+            TransitionModel, TransitionModel, 
+            ArcModel, ArcModel, ArcModel, ArcModel)
             ApplyRuleWithHierarchy
-            (string transitionTemplate,
-            string placeTemplate, 
-            string arcTemplate, 
+            (
             string subStrTemplate, 
             string portTemplate,
             string page2Id,
@@ -71,7 +71,7 @@ namespace NestedFlowchart.Rules
             }
 
             //P3 Place (Input port place) old page
-            PlaceModel p3old = new PlaceModel()
+            PlaceModel p3InputPlace = new PlaceModel()
             {
                 Id1 = p3oldId,
                 Id2 = IdManagements.GetlastestPlaceId(),
@@ -139,7 +139,7 @@ namespace NestedFlowchart.Rules
             };
 
             //P4 Place (output port place) old page
-            PlaceModel p4old = new PlaceModel()
+            PlaceModel p4OutputPlace = new PlaceModel()
             {
                 Id1 = p4oldId,
                 Id2 = IdManagements.GetlastestPlaceId(),
@@ -192,7 +192,7 @@ namespace NestedFlowchart.Rules
             //TODO: Create position for sub page
             //TODO: find solution for position on sub page
             //P3 Place (Input port place) new page
-            PlaceModel p3new = new PlaceModel()
+            PlaceModel p3SubPageInputPlace = new PlaceModel()
             {
                 Id1 = p3newId,
                 Id2 = IdManagements.GetlastestPlaceId(),
@@ -254,7 +254,7 @@ namespace NestedFlowchart.Rules
             };
 
             //P4 Place (output port place) new page
-            PlaceModel p4new = new PlaceModel()
+            PlaceModel p4SubPageOutputPlace = new PlaceModel()
             {
                 Id1 = p4newId,
                 Id2 = IdManagements.GetlastestPlaceId(),
@@ -291,44 +291,16 @@ namespace NestedFlowchart.Rules
 
             #endregion SubPage
 
-            //Main Page
-            var place3old = approach.CreatePlace(placeTemplate, p3old);
-            var tr_subpage1 = approach.CreateTransition(transitionTemplate, tr_subpage);
-            var place4old = approach.CreatePlace(placeTemplate, p4old);
-            var arc0 = approach.CreateArc(arcTemplate, a0);
-            var arc1 = approach.CreateArc(arcTemplate, a1);
-            var arc2 = approach.CreateArc(arcTemplate, a2);
 
-            var oldPageAllNode = place3old + tr_subpage1 + place4old + arc0 + arc1 + arc2;
-
-            //Sub Page
-            var place3new = approach.CreatePlace(placeTemplate, p3new);
-            var place4new = approach.CreatePlace(placeTemplate, p4new);
-            var transition1 = approach.CreateTransition(transitionTemplate, ts1);
-            var arc3 = approach.CreateArc(arcTemplate, a3);
-
-            var newPageAllNode = place3new + place4new + transition1 + arc3;
-
-            //Return
-            //1. P4new => for next node
-            //2. tr_subpage => create instance
-            //3. Arc => null
-            //4. oldPageAllNode => all node for old page
-            //5. newPageAllNode => all node for new page
-            return (p4new, tr_subpage, null, oldPageAllNode, newPageAllNode);
+            return (p3InputPlace, p4OutputPlace, p3SubPageInputPlace, p4SubPageOutputPlace, tr_subpage, ts1, a0, a1, a2, a3);
         }
 
-        public (PlaceModel, TransitionModel, ArcModel, string, string) ApplyRuleWithoutHierarchy(
-            string transitionTemplate,
-            string placeTemplate, 
-            string arcTemplate,
+        public (PlaceModel, TransitionModel, ArcModel, ArcModel) ApplyRuleWithoutHierarchy(
             string CodeSegmentValue,
             string arrayName,
             PreviousNode previousNode
             )
         {
-            TransformationApproach approach = new TransformationApproach();
-
             //T2 Code Segment Inscription
             //Define i=1 in Code Segment Inscription
             var codeSeg = "input (); \n " +
@@ -410,12 +382,7 @@ namespace NestedFlowchart.Rules
                 Type = $"(i,{arrayName})"
             };
 
-            var place1 = approach.CreatePlace(placeTemplate, pl);
-            var arc1 = approach.CreateArc(arcTemplate, a1);
-            var transition = approach.CreateTransition(transitionTemplate, tr);
-            var arc2 = approach.CreateArc(arcTemplate, a2);
-
-            return (pl, tr, a2, (place1 + transition + arc1 + arc2), string.Empty);
+            return (pl, tr, a1, a2);
         }
     }
 }

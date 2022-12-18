@@ -98,10 +98,7 @@ namespace NestedFlowchart.Functions
                         sortedFlowcharts[i].ValueText = sortedFlowcharts[i].ValueText.Replace(";", "");
 
                         Rule3 rule3 = new Rule3();
-                        var (rule3Place, _, _, rule3OldString, _) = rule3.ApplyRuleWithoutHierarchy(
-                            allTemplates[(int)TemplateEnum.TransitionTemplate], 
-                            allTemplates[(int)TemplateEnum.PlaceTemplate], 
-                            allTemplates[(int)TemplateEnum.ArcTemplate],
+                        var (rule3Place, rule3Transition, rule3Arc1, rule3Arc2) = rule3.ApplyRuleWithoutHierarchy(
                             sortedFlowcharts[i].ValueText,
                             arrayName,
                             previousNode
@@ -110,17 +107,23 @@ namespace NestedFlowchart.Functions
                         previousNode.previousPlaceModel = rule3Place;
                         previousNode.Type = "place";
 
-                        pages.mainPageModel.Node += rule3OldString;
+                        var place1 = approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule3Place);
+                        var arc1 = approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule3Arc1);
+                        var transition = approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule3Transition);
+                        var arc2 = approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule3Arc2);
+
+                        var rule3OldString = place1 + transition + arc1 + arc2;
+
+                        CreatePageNodeByCountSubPage(countSubPage, pages, rule3OldString);
                     }
                     //Case Nested => Create Hierachy Tool
                     else if (sortedFlowcharts[i].ValueText.ToLower().Trim().Contains("j =") || sortedFlowcharts[i].ValueText.ToLower().Trim().Contains("k =")
                         || sortedFlowcharts[i].ValueText.ToLower().Trim().Contains("l =") || sortedFlowcharts[i].ValueText.ToLower().Trim().Contains("m ="))
                     {
                         Rule3 rule3 = new Rule3();
-                        var (rule3Place, rule3Transition, _, rule3OldString, rule3NewString) = rule3.ApplyRuleWithHierarchy(
-                            allTemplates[(int)TemplateEnum.TransitionTemplate], 
-                            allTemplates[(int)TemplateEnum.PlaceTemplate], 
-                            allTemplates[(int)TemplateEnum.ArcTemplate], 
+                        var (rule3InputPlace, rule3OutputPlace, rule3InputPlace2, rule3OutputPlace2,
+                            rule3Transition, rule3Transition2, 
+                            rule3Arc1, rule3Arc2, rule3Arc3, rule3Arc4) = rule3.ApplyRuleWithHierarchy(
                             allTemplates[(int)TemplateEnum.SubStrTemplate],
                             allTemplates[(int)TemplateEnum.PortTemplate],
                             pages.subPageModel1.Id,
@@ -129,15 +132,32 @@ namespace NestedFlowchart.Functions
                             previousNode
                             );
 
-                        previousNode.previousPlaceModel = rule3Place;
+                        previousNode.previousPlaceModel = rule3OutputPlace2;
                         definejTransition = rule3Transition;
                         previousNode.Type = "place";
 
-                        //Add to old page
-                        pages.mainPageModel.Node += rule3OldString;
+                        //Main Page
+                        var inputPlace = approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule3InputPlace);
+                        var subPageTransition = approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule3Transition);
+                        var outputPlace = approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule3OutputPlace);
+                        var arc0 = approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule3Arc1);
+                        var arc1 = approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule3Arc2);
+                        var arc2 = approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule3Arc3);
+
+                        var rule3OldString = inputPlace + subPageTransition + outputPlace + arc0 + arc1 + arc2;
+
+                        //Sub Page
+                        var inputPlace2 = approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule3InputPlace2);
+                        var outputPlace2 = approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule3OutputPlace2);
+                        var afterInputTransition = approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule3Transition2);
+                        var arc3 = approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule3Arc4);
+
+                        var rule3NewString = inputPlace2 + outputPlace2 + afterInputTransition + arc3;
+
+                        //Add to main page 
+                        CreatePageNodeByCountSubPage(countSubPage, pages, rule3OldString);
 
                         //Add to sub page
-                        //countSubPage indicate current page you are in
                         countSubPage++;
                         CreatePageNodeByCountSubPage(countSubPage, pages, rule3NewString);
                     }
