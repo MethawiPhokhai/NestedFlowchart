@@ -223,14 +223,38 @@ namespace NestedFlowchart.Functions
                 else if (sortedFlowcharts[i].NodeType.ToLower() == "end")
                 {
                     //TODO: Previous transition need to check (in subpage)
+
+                    /*
+                     * For Test (force set GF to end)
+                     */
+                    previousNode = new PreviousNode
+                    {
+                        previousTransitionModel = new TransitionModel
+                        {
+                            Id1 = "ID1412848787"
+                        },
+                        Type = "transition",
+                    };
+
+
+
+
+
                     Rule7 rule7 = new Rule7();
-                    var (rule7Place, rule7String) = rule7.ApplyRule(
-                        allTemplates[(int)TemplateEnum.PlaceTemplate], 
-                        allTemplates[(int)TemplateEnum.ArcTemplate], 
+                    var (rule7Place, rule7Transition, rule7Arc1) = rule7.ApplyRule(
                         arrayName,
                         previousNode);
 
                     previousNode.previousPlaceModel = rule7Place;
+
+                    var place1 = approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule7Place);
+
+                    var transition = rule7Transition != null ? 
+                        approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule7Transition) : 
+                        string .Empty;
+
+                    var arc1 = approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule7Arc1);
+                    var rule7String = place1 + transition + arc1;
 
                     //Reset because it's need to end at main page
                     countSubPage = 0;

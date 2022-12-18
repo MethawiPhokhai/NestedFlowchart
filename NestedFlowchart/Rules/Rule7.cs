@@ -12,22 +12,17 @@ namespace NestedFlowchart.Rules
     {
         /// <summary>
         /// Transform end into place or transition, place connected by arc
+        /// If previous node is place => Create Transition and then create place connected by arc
+        /// If previous node is transition => Create place connected by arc
         /// </summary>
         /// <param name="placeTemplate"></param>
         /// <param name="arcTemplate"></param>
         /// <param name="previousNode"></param>
         /// <returns></returns>
-        public (PlaceModel, string) ApplyRule(
-            string placeTemplate, 
-            string arcTemplate,
+        public (PlaceModel, TransitionModel, ArcModel) ApplyRule(
             string arrayName,
             PreviousNode previousNode)
         {
-            if (previousNode.Type == "place")
-            {
-                //TODO: Create Transition
-            }
-
             //End Place
             PlaceModel pl = new PlaceModel()
             {
@@ -49,32 +44,59 @@ namespace NestedFlowchart.Rules
 
             };
 
-            //TODO: find solution to create Arc
-            if (previousNode.Type == "place")
+            if(previousNode.Type == "transition")
             {
-                //TODO: Connect Arc to pl
+                //Arc from GF1 to End
+                ArcModel a1 = new ArcModel()
+                {
+                    Id1 = IdManagements.GetlastestArcId(),
+                    Id2 = IdManagements.GetlastestArcId(),
+
+                    TransEnd = previousNode.previousTransitionModel.Id1,
+                    PlaceEnd = pl.Id1,
+
+                    xPos = PositionManagements.GetLastestxArcPos(),
+                    yPos = PositionManagements.GetLastestyArcPos(),
+
+                    Orientation = "TtoP", //Transition to Place
+                    Type = arrayName
+                };
+
+                return (pl, null, a1);
             }
-
-            //Arc from GF1 to End
-            ArcModel a1 = new ArcModel()
+            else
             {
-                Id1 = IdManagements.GetlastestArcId(),
-                Id2 = IdManagements.GetlastestArcId(),
+                TransitionModel tr = new TransitionModel()
+                {
+                    Id1 = IdManagements.GetlastestTransitionId(),
+                    Id2 = IdManagements.GetlastestTransitionId(),
+                    Id3 = IdManagements.GetlastestTransitionId(),
+                    Id4 = IdManagements.GetlastestTransitionId(),
+                    Id5 = IdManagements.GetlastestTransitionId(),
 
-                TransEnd = previousNode.previousTransitionModel.Id1,
-                PlaceEnd = pl.Id1,
+                    Name = IdManagements.GetlastestTransitionName(),
 
-                xPos = PositionManagements.GetLastestxArcPos(),
-                yPos = PositionManagements.GetLastestyArcPos(),
+                    xPos1 = PositionManagements.xPos1,
+                    yPos1 = PositionManagements.GetLastestyPos1(),
+                };
 
-                Orientation = "TtoP", //Transition to Place
-                Type = arrayName
-            };
+                ArcModel a1 = new ArcModel()
+                {
+                    Id1 = IdManagements.GetlastestArcId(),
+                    Id2 = IdManagements.GetlastestArcId(),
 
-            TransformationApproach approach = new TransformationApproach();
-            var place1 = approach.CreatePlace(placeTemplate, pl);
-            var arc1 = approach.CreateArc(arcTemplate, a1);
-            return (pl, place1 + arc1);
+                    TransEnd = tr.Id1,
+                    PlaceEnd = pl.Id1,
+
+                    xPos = PositionManagements.GetLastestxArcPos(),
+                    yPos = PositionManagements.GetLastestyArcPos(),
+
+                    Orientation = "TtoP", //Transition to Place
+                    Type = arrayName
+                };
+
+                return (pl, tr, a1);
+            }
         }
     }
 }
