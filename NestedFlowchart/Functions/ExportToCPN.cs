@@ -54,7 +54,6 @@ namespace NestedFlowchart.Functions
              * Need to declare these variable to temp the Rule1 because
              * It use on initialize marking on Rule2
              */
-            string rule1String = string.Empty;
             PlaceModel rule1Place = new PlaceModel();
             #endregion
 
