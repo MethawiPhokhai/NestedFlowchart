@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NestedFlowchart.Functions;
 using NestedFlowchart.Models;
+using NestedFlowchart.Position;
 using NestedFlowchart.Rules;
 using Newtonsoft.Json;
 using System;

@@ -1,5 +1,6 @@
 ﻿using NestedFlowchart.Declaration;
 using NestedFlowchart.Models;
+using NestedFlowchart.Position;
 using NestedFlowchart.Rules;
 using NestedFlowchart.Templates;
 using System.Text;
@@ -354,6 +355,24 @@ namespace NestedFlowchart.Functions
             }
         }
 
+        private PositionManagementBase PositionByCountSubPage(int countSubPage)
+        {
+            switch (countSubPage)
+            {
+                case 0:
+                    return new Page1Position();
+                case 1:
+                    return new Page2Position();
+                case 2:
+                    return new Page3Position();
+                case 3:
+                    return new Page4Position();
+                case 4:
+                    return new Page5Position();
+                default:
+                    return new Page1Position();
+            }
+        }
 
     }
 }

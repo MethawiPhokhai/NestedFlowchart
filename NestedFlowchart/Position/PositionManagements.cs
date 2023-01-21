@@ -1,4 +1,4 @@
-﻿namespace NestedFlowchart.Functions
+﻿namespace NestedFlowchart.Position
 {
     public static class PositionManagements
     {
