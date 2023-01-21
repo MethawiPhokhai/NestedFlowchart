@@ -302,7 +302,6 @@ namespace NestedFlowchart.Rules
             PreviousNode previousNode
             )
         {
-            Page1Position position = new Page1Position();
             //T2 Code Segment Inscription
             //Define i=1 in Code Segment Inscription
             var codeSeg = "input (); \n " +
@@ -325,11 +324,11 @@ namespace NestedFlowchart.Rules
 
                 Name = IdManagements.GetlastestTransitionName(),
 
-                xPos1 = position.xPos1,
-                yPos1 = position.GetLastestyPos1(),
+                xPos1 = PositionManagements.xPos1,
+                yPos1 = PositionManagements.GetLastestyPos1(),
 
-                xPos4 = position.GetLastestxPos4(),
-                yPos4 = position.GetLastestyPos4(),
+                xPos4 = PositionManagements.GetLastestxPos4(),
+                yPos4 = PositionManagements.GetLastestyPos4(),
 
                 CodeSegment = codeSeg
             };
@@ -343,11 +342,11 @@ namespace NestedFlowchart.Rules
 
                 Name = IdManagements.GetlastestPlaceName(),
 
-                xPos1 = position.xPos1,
-                yPos1 = position.GetLastestyPos1(),
+                xPos1 = PositionManagements.xPos1,
+                yPos1 = PositionManagements.GetLastestyPos1(),
 
-                xPos2 = position.GetLastestxPos2(),
-                yPos2 = position.GetLastestyPos2(),
+                xPos2 = PositionManagements.GetLastestxPos2(),
+                yPos2 = PositionManagements.GetLastestyPos2(),
 
                 Type = "loopi"
             };
@@ -361,8 +360,8 @@ namespace NestedFlowchart.Rules
                 TransEnd = tr.Id1,
                 PlaceEnd = previousNode.previousPlaceModel.Id1,
 
-                xPos = position.GetLastestxArcPos(),
-                yPos = position.GetLastestyArcPos(),
+                xPos = PositionManagements.GetLastestxArcPos(),
+                yPos = PositionManagements.GetLastestyArcPos(),
 
                 Orientation = "PtoT", //Place to Transition
                 Type = arrayName
@@ -377,8 +376,8 @@ namespace NestedFlowchart.Rules
                 TransEnd = tr.Id1,
                 PlaceEnd = pl.Id1,
 
-                xPos = position.GetLastestxArcPos(),
-                yPos = position.GetLastestyArcPos(),
+                xPos = PositionManagements.GetLastestxArcPos(),
+                yPos = PositionManagements.GetLastestyArcPos(),
 
                 Orientation = "TtoP", //Transition to Place
                 Type = $"(i,{arrayName})"
