@@ -139,7 +139,7 @@ namespace NestedFlowchart.Functions
                         || sortedFlowcharts[i].ValueText.ToLower().Trim().Contains("l =") || sortedFlowcharts[i].ValueText.ToLower().Trim().Contains("m ="))
                     {
                         var (rule3InputPlace, rule3OutputPlace, rule3InputPlace2, rule3OutputPlace2,
-                            rule3Transition, rule3Transition2, 
+                            rule3Transition, rule3Transition2,
                             rule3Arc1, rule3Arc2, rule3Arc3, rule3Arc4) = _rule3.ApplyRuleWithHierarchy(
                             allTemplates[(int)TemplateEnum.SubStrTemplate],
                             allTemplates[(int)TemplateEnum.PortTemplate],
@@ -187,9 +187,9 @@ namespace NestedFlowchart.Functions
                             //TODO: Send real process to code segment inscription
                             //TODO: Find solution to create arc
                             var (rule4Place, rule4Transition, _, rule4String) = _rule4.ApplyRule(
-                                allTemplates[(int)TemplateEnum.TransitionTemplate], 
-                                allTemplates[(int)TemplateEnum.PlaceTemplate], 
-                                allTemplates[(int)TemplateEnum.ArcTemplate], 
+                                allTemplates[(int)TemplateEnum.TransitionTemplate],
+                                allTemplates[(int)TemplateEnum.PlaceTemplate],
+                                allTemplates[(int)TemplateEnum.ArcTemplate],
                                 arrayName,
                                 previousNode);
 
@@ -215,7 +215,7 @@ namespace NestedFlowchart.Functions
                     previousNode.previousTransitionModel = rule5Transition;
                     previousNode.Type = "place";
 
-                    
+
                     var place1 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule5Place);
                     var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule5Arc1);
                     var transition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule5Transition);
@@ -282,9 +282,9 @@ namespace NestedFlowchart.Functions
 
                     var place1 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule7Place);
 
-                    var transition = rule7Transition != null ? 
-                        _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule7Transition) : 
-                        string .Empty;
+                    var transition = rule7Transition != null ?
+                        _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule7Transition) :
+                        string.Empty;
 
                     var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule7Arc1);
                     var rule7String = place1 + transition + arc1;

@@ -144,22 +144,22 @@ namespace NestedFlowchart.Functions
             var page1 = approach.CreatePage(allTemplates[(int)TemplateEnum.PageTemplate],
                 pages.mainPageModel);
 
-            string page2 = (pages.subPageModel1.Node != string.Empty) ?
+            string page2 = (!string.IsNullOrEmpty(pages.subPageModel1.Node)) ?
                 approach.CreatePage(allTemplates[(int)TemplateEnum.PageTemplate],
                 pages.subPageModel1) :
                 string.Empty;
 
-            string page3 = (pages.subPageModel2.Node != string.Empty) ?
+            string page3 = (!string.IsNullOrEmpty(pages.subPageModel2.Node)) ?
                 approach.CreatePage(allTemplates[(int)TemplateEnum.PageTemplate],
                     pages.subPageModel2) :
                 string.Empty;
 
-            string page4 = (pages.subPageModel3.Node != string.Empty) ?
+            string page4 = (!string.IsNullOrEmpty(pages.subPageModel3.Node)) ?
                 approach.CreatePage(allTemplates[(int)TemplateEnum.PageTemplate],
                     pages.subPageModel3) :
                 string.Empty;
 
-            string page5 = (pages.subPageModel4.Node != string.Empty) ?
+            string page5 = (!string.IsNullOrEmpty(pages.subPageModel4.Node)) ?
                 approach.CreatePage(allTemplates[(int)TemplateEnum.PageTemplate],
                     pages.subPageModel4) :
                 string.Empty;
@@ -170,24 +170,30 @@ namespace NestedFlowchart.Functions
 
         public string CreateAllInstances(TransformationApproach approach, string[] allTemplates, TransitionModel definejTransition)
         {
-            //TODO: Define instance if have more than 2
             HierarchyInstanceModel inst = new HierarchyInstanceModel()
             {
                 Id = IdManagements.GetlastestInstanceId(),
-                Text = "page=\"ID6\">",
+                Text = !string.IsNullOrEmpty(definejTransition.Id1) ? "page=\"ID6\">" : "page=\"ID6\" />",
                 Closer = "{0}"
             };
 
-            HierarchyInstanceModel inst2 = new HierarchyInstanceModel()
-            {
-                Id = IdManagements.GetlastestInstanceId(),
-                Text = "trans=\"" + definejTransition.Id1 + "\"",
-                Closer = "/></instance>"
-            };
-
             var instances = approach.CreateHierarchyInstance(allTemplates[(int)TemplateEnum.InstanceTemplate], inst);
-            var instances2 = approach.CreateHierarchyInstance(allTemplates[(int)TemplateEnum.InstanceTemplate], inst2);
 
+            //Check empty, if more than two => Create otherwise leave it as empty
+            string instances2 = string.Empty;
+            if (!string.IsNullOrEmpty(definejTransition.Id1))
+            {
+                HierarchyInstanceModel inst2 = new HierarchyInstanceModel()
+                {
+                    Id = IdManagements.GetlastestInstanceId(),
+                    Text = "trans=\"" + definejTransition.Id1 + "\"",
+                    Closer = "/></instance>"
+                };
+
+
+                instances2 = approach.CreateHierarchyInstance(allTemplates[(int)TemplateEnum.InstanceTemplate], inst2);
+            }
+            
             var allInstances = string.Format(instances, instances2);
             return allInstances;
         }
