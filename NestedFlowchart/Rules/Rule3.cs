@@ -19,16 +19,18 @@ namespace NestedFlowchart.Rules
         /// <param name="CodeSegmentValue"></param>
         /// <returns></returns>
         public (PlaceModel, PlaceModel, PlaceModel, PlaceModel,
-            TransitionModel, TransitionModel, 
+            TransitionModel, TransitionModel,
             ArcModel, ArcModel, ArcModel, ArcModel)
             ApplyRuleWithHierarchy
             (
-            string subStrTemplate, 
+            string subStrTemplate,
             string portTemplate,
             string page2Id,
             string CodeSegmentValue,
             string arrayName,
-            PreviousNode previousNode)
+            PreviousNode previousNode,
+            PositionManagements position1,
+            PositionManagements position2)
 
         {
             TransformationApproach approach = new TransformationApproach();
@@ -63,8 +65,8 @@ namespace NestedFlowchart.Rules
                     TransEnd = previousNode.previousTransitionModel.Id1,
                     PlaceEnd = p3oldId,
 
-                    xPos = PositionManagements.xArcPos,
-                    yPos = PositionManagements.yArcPos,
+                    xPos = position1.xArcPos,
+                    yPos = position1.yArcPos,
 
                     Orientation = "TtoP", //Transition to Place
                     Type = $"(i,{arrayName})"
@@ -80,11 +82,11 @@ namespace NestedFlowchart.Rules
 
                 Name = inputPortPlaceName,
 
-                xPos1 = PositionManagements.xPos1,
-                yPos1 = PositionManagements.GetLastestyPos1(),
+                xPos1 = position1.xPos1,
+                yPos1 = position1.GetLastestyPos1(),
 
-                xPos2 = PositionManagements.GetLastestxPos2(),
-                yPos2 = PositionManagements.GetLastestyPos2(),
+                xPos2 = position1.GetLastestxPos2(),
+                yPos2 = position1.GetLastestyPos2(),
 
                 Type = "loopi"
             };
@@ -102,7 +104,7 @@ namespace NestedFlowchart.Rules
                 yPos = -167
             };
 
-            var tr_subpage_yPos = PositionManagements.GetLastestyPos1();
+            var tr_subpage_yPos = position1.GetLastestyPos1();
             var subst = new HierarchySubStModel()
             {
                 SubPageId = page2Id,
@@ -115,7 +117,7 @@ namespace NestedFlowchart.Rules
                 Id = IdManagements.GetlastestSubStrId(),
                 Name = "New Subpage",
 
-                xPos = PositionManagements.xPos1,
+                xPos = position1.xPos1,
                 yPos = tr_subpage_yPos + 30
             };
 
@@ -130,11 +132,11 @@ namespace NestedFlowchart.Rules
 
                 Name = "New Subpage",
 
-                xPos1 = PositionManagements.xPos1,
+                xPos1 = position1.xPos1,
                 yPos1 = tr_subpage_yPos,
 
-                xPos2 = PositionManagements.GetLastestxPos2(),
-                yPos2 = PositionManagements.GetLastestyPos2(),
+                xPos2 = position1.GetLastestxPos2(),
+                yPos2 = position1.GetLastestyPos2(),
 
                 SubsitutetionTransition = approach.CreateHierarchySubSt(subStrTemplate, subst)
             };
@@ -147,11 +149,11 @@ namespace NestedFlowchart.Rules
                 Id3 = IdManagements.GetlastestPlaceId(),
                 Name = outoutPortPlaceName,
 
-                xPos1 = PositionManagements.xPos1,
-                yPos1 = PositionManagements.GetLastestyPos1(),
+                xPos1 = position1.xPos1,
+                yPos1 = position1.GetLastestyPos1(),
 
-                xPos2 = PositionManagements.GetLastestxPos2(),
-                yPos2 = PositionManagements.GetLastestyPos2(),
+                xPos2 = position1.GetLastestxPos2(),
+                yPos2 = position1.GetLastestyPos2(),
 
                 Type = "loopi"
             };
@@ -164,8 +166,8 @@ namespace NestedFlowchart.Rules
                 TransEnd = tr_subpage.Id1,
                 PlaceEnd = p3oldId,
 
-                xPos = PositionManagements.xArcPos,
-                yPos = PositionManagements.yArcPos,
+                xPos = position1.xArcPos,
+                yPos = position1.yArcPos,
 
                 Orientation = "PtoT", //Place to Transition
                 Type = $"(i,{arrayName})"
@@ -179,8 +181,8 @@ namespace NestedFlowchart.Rules
                 TransEnd = tr_subpage.Id1,
                 PlaceEnd = p4oldId,
 
-                xPos = PositionManagements.GetLastestxArcPos(),
-                yPos = PositionManagements.GetLastestyArcPos(),
+                xPos = position1.GetLastestxArcPos(),
+                yPos = position1.GetLastestyArcPos(),
 
                 Orientation = "TtoP", //Transition to Place
                 Type = $"(i,{arrayName})"
@@ -190,8 +192,11 @@ namespace NestedFlowchart.Rules
 
             #region SubPage
 
-            //TODO: Create position for sub page
-            //TODO: find solution for position on sub page
+
+            //TODO : ใช้ position2 แทน previousnode ในการระบุ position
+
+
+
             //P3 Place (Input port place) new page
             PlaceModel p3SubPageInputPlace = new PlaceModel()
             {
@@ -283,8 +288,8 @@ namespace NestedFlowchart.Rules
                 TransEnd = ts1.Id1,
                 PlaceEnd = p3newId,
 
-                xPos = PositionManagements.xArcPos,
-                yPos = PositionManagements.yArcPos,
+                xPos = position2.xArcPos,
+                yPos = position2.yArcPos,
 
                 Orientation = "PtoT", //Place to Transition
                 Type = $"(i,{arrayName})"
@@ -299,7 +304,8 @@ namespace NestedFlowchart.Rules
         public (PlaceModel, TransitionModel, ArcModel, ArcModel) ApplyRuleWithoutHierarchy(
             string CodeSegmentValue,
             string arrayName,
-            PreviousNode previousNode
+            PreviousNode previousNode,
+            PositionManagements position
             )
         {
             //T2 Code Segment Inscription
@@ -324,11 +330,11 @@ namespace NestedFlowchart.Rules
 
                 Name = IdManagements.GetlastestTransitionName(),
 
-                xPos1 = PositionManagements.xPos1,
-                yPos1 = PositionManagements.GetLastestyPos1(),
+                xPos1 = position.xPos1,
+                yPos1 = position.GetLastestyPos1(),
 
-                xPos4 = PositionManagements.GetLastestxPos4(),
-                yPos4 = PositionManagements.GetLastestyPos4(),
+                xPos4 = position.GetLastestxPos4(),
+                yPos4 = position.GetLastestyPos4(),
 
                 CodeSegment = codeSeg
             };
@@ -342,11 +348,11 @@ namespace NestedFlowchart.Rules
 
                 Name = IdManagements.GetlastestPlaceName(),
 
-                xPos1 = PositionManagements.xPos1,
-                yPos1 = PositionManagements.GetLastestyPos1(),
+                xPos1 = position.xPos1,
+                yPos1 = position.GetLastestyPos1(),
 
-                xPos2 = PositionManagements.GetLastestxPos2(),
-                yPos2 = PositionManagements.GetLastestyPos2(),
+                xPos2 = position.GetLastestxPos2(),
+                yPos2 = position.GetLastestyPos2(),
 
                 Type = "loopi"
             };
@@ -360,8 +366,8 @@ namespace NestedFlowchart.Rules
                 TransEnd = tr.Id1,
                 PlaceEnd = previousNode.previousPlaceModel.Id1,
 
-                xPos = PositionManagements.GetLastestxArcPos(),
-                yPos = PositionManagements.GetLastestyArcPos(),
+                xPos = position.GetLastestxArcPos(),
+                yPos = position.GetLastestyArcPos(),
 
                 Orientation = "PtoT", //Place to Transition
                 Type = arrayName
@@ -376,8 +382,8 @@ namespace NestedFlowchart.Rules
                 TransEnd = tr.Id1,
                 PlaceEnd = pl.Id1,
 
-                xPos = PositionManagements.GetLastestxArcPos(),
-                yPos = PositionManagements.GetLastestyArcPos(),
+                xPos = position.GetLastestxArcPos(),
+                yPos = position.GetLastestyArcPos(),
 
                 Orientation = "TtoP", //Transition to Place
                 Type = $"(i,{arrayName})"

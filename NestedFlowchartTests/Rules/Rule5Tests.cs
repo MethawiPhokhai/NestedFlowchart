@@ -17,6 +17,8 @@ namespace NestedFlowchart.Rules.Tests
         public void ApplyRule_ValidInput_ReturnsExpectedOutput()
         {
             // Arrange
+            PositionManagements page1Position = new PositionManagements();
+
             PlaceModel previousPlace = new PlaceModel()
             {
                 Id1 = "ID1412948772",
@@ -24,18 +26,18 @@ namespace NestedFlowchart.Rules.Tests
                 Id3 = "ID1412948774",
                 Name = "Start",
                 Type = "UNIT",
-                xPos1 = PositionManagements.xPos1,
-                yPos1 = PositionManagements.yPos1,
-                xPos2 = PositionManagements.xPos2,
-                yPos2 = PositionManagements.yPos2,
-                xPos3 = PositionManagements.xPos3,
-                yPos3 = PositionManagements.yPos3
+                xPos1 = page1Position.xPos1,
+                yPos1 = page1Position.yPos1,
+                xPos2 = page1Position.xPos2,
+                yPos2 = page1Position.yPos2,
+                xPos3 = page1Position.xPos3,
+                yPos3 = page1Position.yPos3
             };
             var arrayName = "array";
 
             // Act
             Rule5 rule5 = new Rule5();
-            var (pl, tr, a1, a2) = rule5.ApplyRule(arrayName, previousPlace);
+            var (pl, tr, a1, a2) = rule5.ApplyRule(arrayName, previousPlace, page1Position);
 
             // Assert
             Assert.IsNotNull(pl);

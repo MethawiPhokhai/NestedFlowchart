@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NestedFlowchart.Models;
+using NestedFlowchart.Position;
 
 namespace NestedFlowchart.Rules.Tests
 {
@@ -10,6 +11,8 @@ namespace NestedFlowchart.Rules.Tests
         public void ApplyRule_TransitionNodeInput_ReturnsExpectedOutput()
         {
             //Arrange
+            PositionManagements page1Position = new PositionManagements();
+
             string arrayName = "array";
             var previousNode = new PreviousNode
             {
@@ -22,7 +25,7 @@ namespace NestedFlowchart.Rules.Tests
 
             //Act
             Rule7 rule7 = new Rule7();
-            var (pl, tr, a1) = rule7.ApplyRule(arrayName, previousNode);
+            var (pl, tr, a1) = rule7.ApplyRule(arrayName, previousNode, page1Position);
 
             //Assert
             Assert.IsNotNull(pl);
@@ -34,6 +37,8 @@ namespace NestedFlowchart.Rules.Tests
         public void ApplyRule_PlaceNodeInput_ReturnsExpectedOutput()
         {
             //Arrange
+            PositionManagements page1Position = new PositionManagements();
+
             string arrayName = "array";
             var previousNode = new PreviousNode
             {
@@ -42,7 +47,7 @@ namespace NestedFlowchart.Rules.Tests
 
             //Act
             Rule7 rule7 = new Rule7();
-            var (pl, tr, a1) = rule7.ApplyRule(arrayName, previousNode);
+            var (pl, tr, a1) = rule7.ApplyRule(arrayName, previousNode, page1Position);
 
             //Assert
             Assert.IsNotNull(pl);

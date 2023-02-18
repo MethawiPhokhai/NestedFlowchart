@@ -58,6 +58,9 @@ namespace NestedFlowchart.Functions
             PlaceModel rule1Place = new PlaceModel();
             #endregion
 
+            //Declare page position
+            PositionManagements page1Position = new PositionManagements();
+            PositionManagements page2Position = new PositionManagements();
 
             TransitionModel definejTransition = new TransitionModel();
 
@@ -66,7 +69,7 @@ namespace NestedFlowchart.Functions
                 //Rule1 : Start
                 if (sortedFlowcharts[i].NodeType.ToLower() == "start")
                 {
-                    rule1Place = _rule1.ApplyRule();
+                    rule1Place = _rule1.ApplyRule(page1Position);
 
                     previousNode.previousPlaceModel = rule1Place;
                     previousNode.Type = "place";
@@ -84,7 +87,8 @@ namespace NestedFlowchart.Functions
 
                     var (rule2Place, rule2Transition, rule2Arc1, rule2Arc2) = _rule2.ApplyRule(
                         rule1Place,
-                        arrayName);
+                        arrayName,
+                        page1Position);
 
                     previousNode.previousPlaceModel = rule2Place;
                     previousNode.previousTransitionModel = rule2Transition;
@@ -119,7 +123,8 @@ namespace NestedFlowchart.Functions
                         var (rule3Place, rule3Transition, rule3Arc1, rule3Arc2) = _rule3.ApplyRuleWithoutHierarchy(
                             sortedFlowcharts[i].ValueText,
                             arrayName,
-                            previousNode
+                            previousNode,
+                            page1Position
                             );
 
                         previousNode.previousPlaceModel = rule3Place;
@@ -146,7 +151,9 @@ namespace NestedFlowchart.Functions
                             pages.subPageModel1.Id,
                             sortedFlowcharts[i].ValueText,
                             arrayName,
-                            previousNode
+                            previousNode,
+                            page1Position,
+                            page2Position
                             );
 
                         previousNode.previousPlaceModel = rule3OutputPlace2;
@@ -191,7 +198,8 @@ namespace NestedFlowchart.Functions
                                 allTemplates[(int)TemplateEnum.PlaceTemplate],
                                 allTemplates[(int)TemplateEnum.ArcTemplate],
                                 arrayName,
-                                previousNode);
+                                previousNode,
+                                page1Position);
 
                             previousNode.previousPlaceModel = rule4Place;
                             previousNode.previousTransitionModel = rule4Transition;
@@ -209,7 +217,8 @@ namespace NestedFlowchart.Functions
                 {
                     var (rule5Place, rule5Transition, rule5Arc1, rule5Arc2) = _rule5.ApplyRule(
                         arrayName,
-                        previousNode.previousPlaceModel);
+                        previousNode.previousPlaceModel,
+                        page1Position);
 
                     previousNode.previousPlaceModel = rule5Place;
                     previousNode.previousTransitionModel = rule5Transition;
@@ -238,7 +247,8 @@ namespace NestedFlowchart.Functions
                         previousNode.previousPlaceModel,
                         trueCondition,
                         falseCondition,
-                        arrayName);
+                        arrayName,
+                        page1Position);
 
                     previousNode.previousPlaceModel = rule6Place;
                     previousNode.previousTransitionModel = rule6TrueTransition;
@@ -276,7 +286,8 @@ namespace NestedFlowchart.Functions
 
                     var (rule7Place, rule7Transition, rule7Arc1) = _rule7.ApplyRule(
                         arrayName,
-                        previousNode);
+                        previousNode,
+                        page1Position);
 
                     previousNode.previousPlaceModel = rule7Place;
 

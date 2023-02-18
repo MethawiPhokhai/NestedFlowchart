@@ -22,7 +22,8 @@ namespace NestedFlowchart.Rules
         /// <returns></returns>
         public (PlaceModel, TransitionModel, ArcModel) ApplyRule(
             string arrayName,
-            PreviousNode previousNode)
+            PreviousNode previousNode,
+            PositionManagements position)
         {
             //End Place
             PlaceModel pl = new PlaceModel()
@@ -56,8 +57,8 @@ namespace NestedFlowchart.Rules
                     TransEnd = previousNode.previousTransitionModel.Id1,
                     PlaceEnd = pl.Id1,
 
-                    xPos = PositionManagements.GetLastestxArcPos(),
-                    yPos = PositionManagements.GetLastestyArcPos(),
+                    xPos = position.GetLastestxArcPos(),
+                    yPos = position.GetLastestyArcPos(),
 
                     Orientation = "TtoP", //Transition to Place
                     Type = arrayName
@@ -77,8 +78,8 @@ namespace NestedFlowchart.Rules
 
                     Name = IdManagements.GetlastestTransitionName(),
 
-                    xPos1 = PositionManagements.xPos1,
-                    yPos1 = PositionManagements.GetLastestyPos1(),
+                    xPos1 = position.xPos1,
+                    yPos1 = position.GetLastestyPos1(),
                 };
 
                 ArcModel a1 = new ArcModel()
@@ -89,8 +90,8 @@ namespace NestedFlowchart.Rules
                     TransEnd = tr.Id1,
                     PlaceEnd = pl.Id1,
 
-                    xPos = PositionManagements.GetLastestxArcPos(),
-                    yPos = PositionManagements.GetLastestyArcPos(),
+                    xPos = position.GetLastestxArcPos(),
+                    yPos = position.GetLastestyArcPos(),
 
                     Orientation = "TtoP", //Transition to Place
                     Type = arrayName

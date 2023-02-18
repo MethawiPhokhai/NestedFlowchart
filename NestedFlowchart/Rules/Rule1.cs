@@ -9,7 +9,7 @@ namespace NestedFlowchart.Rules
     /// </summary>
     public class Rule1
     {
-        public PlaceModel ApplyRule()
+        public PlaceModel ApplyRule(PositionManagements position)
         {
             PlaceModel pl = new PlaceModel()
             {
@@ -20,14 +20,14 @@ namespace NestedFlowchart.Rules
                 Type = "UNIT",
 
 
-                xPos1 = PositionManagements.xPos1,
-                yPos1 = PositionManagements.yPos1,
+                xPos1 = position.xPos1,
+                yPos1 = position.yPos1,
 
-                xPos2 = PositionManagements.xPos2,
-                yPos2 = PositionManagements.yPos2,
+                xPos2 = position.xPos2,
+                yPos2 = position.yPos2,
 
-                xPos3 = PositionManagements.xPos3,
-                yPos3 = PositionManagements.yPos3
+                xPos3 = position.xPos3,
+                yPos3 = position.yPos3
             };
 
             return pl;

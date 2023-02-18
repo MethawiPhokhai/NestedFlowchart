@@ -35,16 +35,22 @@ namespace NestedFlowchart.Functions
             return string.Format(varTemplate, model.Id, model.Type, newName, model.Layout);
         }
 
-        public string CreatePlace(string placeTemplate, PlaceModel model)
+        public string CreatePlace(string placeTemplate, PlaceModel? model)
         {
-            placeTemplate = string.Format("\n" + placeTemplate, model.Id1, model.Id2, model.Id3,
+            if(model != null)
+            {
+                placeTemplate = string.Format("\n" + placeTemplate, model.Id1, model.Id2, model.Id3,
                 model.Name, model.Type, model.InitialMarking,
                 model.xPos1, model.yPos1,
                 model.xPos2, model.yPos2,
                 model.xPos3, model.yPos3,
                 model.Port);
 
-            return placeTemplate;
+                return placeTemplate;
+            }
+
+            return string.Empty;
+            
         }
 
         public string CreateTransition(string transitionTemplate, TransitionModel model)
@@ -62,14 +68,19 @@ namespace NestedFlowchart.Functions
             return transition;
         }
 
-        public string CreateArc(string arcTemplate, ArcModel model)
+        public string CreateArc(string arcTemplate, ArcModel? model)
         {
-            string arc = string.Format("\n" + arcTemplate, model.Id1, model.Id2,
+            if(model != null)
+            {
+                string arc = string.Format("\n" + arcTemplate, model.Id1, model.Id2,
                 model.TransEnd, model.PlaceEnd,
                 model.Orientation, model.Type,
                 model.xPos, model.yPos);
 
-            return arc;
+                return arc;
+            }
+
+            return string.Empty;
         }
 
         public string CreateHierarchyInstance(string instanceTemplate, HierarchyInstanceModel model)

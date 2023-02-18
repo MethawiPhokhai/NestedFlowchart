@@ -12,7 +12,8 @@ namespace NestedFlowchart.Rules
         public (PlaceModel, TransitionModel, ArcModel, ArcModel)
             ApplyRule(
             PlaceModel placeRule1,
-            string arrayName)
+            string arrayName,
+            PositionManagements position)
         {
             TransitionModel tr = new TransitionModel()
             {
@@ -24,8 +25,8 @@ namespace NestedFlowchart.Rules
 
                 Name = IdManagements.GetlastestTransitionName(),
 
-                xPos1 = PositionManagements.xPos1,
-                yPos1 = PositionManagements.GetLastestyPos1(),
+                xPos1 = position.xPos1,
+                yPos1 = position.GetLastestyPos1(),
             };
 
             PlaceModel pl = new PlaceModel()
@@ -36,11 +37,11 @@ namespace NestedFlowchart.Rules
 
                 Name = IdManagements.GetlastestPlaceName(),
 
-                xPos1 = PositionManagements.xPos1,
-                yPos1 = PositionManagements.GetLastestyPos1(),
+                xPos1 = position.xPos1,
+                yPos1 = position.GetLastestyPos1(),
 
-                xPos2 = PositionManagements.GetLastestxPos2(),
-                yPos2 = PositionManagements.GetLastestyPos2(),
+                xPos2 = position.GetLastestxPos2(),
+                yPos2 = position.GetLastestyPos2(),
 
                 Type = "INTs"
             };
@@ -53,8 +54,8 @@ namespace NestedFlowchart.Rules
                 TransEnd = tr.Id1,
                 PlaceEnd = placeRule1.Id1,
 
-                xPos = PositionManagements.xArcPos,
-                yPos = PositionManagements.yArcPos,
+                xPos = position.xArcPos,
+                yPos = position.yArcPos,
 
                 Orientation = "PtoT", //Place to Transition
                 Type = arrayName
@@ -68,8 +69,8 @@ namespace NestedFlowchart.Rules
                 TransEnd = tr.Id1,
                 PlaceEnd = pl.Id1,
 
-                xPos = PositionManagements.GetLastestxArcPos(),
-                yPos = PositionManagements.GetLastestyArcPos(),
+                xPos = position.GetLastestxArcPos(),
+                yPos = position.GetLastestyArcPos(),
 
                 Orientation = "TtoP", //Transition to Place
                 Type = arrayName

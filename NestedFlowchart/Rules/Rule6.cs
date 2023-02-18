@@ -25,13 +25,14 @@ namespace NestedFlowchart.Rules
             PlaceModel previousPlace, 
             string trueCondition, 
             string falseCondition,
-            string arrayName)
+            string arrayName,
+            PositionManagements position)
         {
-            var xPos1 = PositionManagements.xPos1;
-            var yPos1 = PositionManagements.GetLastestyPos1();
+            var xPos1 = position.xPos1;
+            var yPos1 = position.GetLastestyPos1();
 
-            var xPosArc = PositionManagements.GetLastestxArcPos();
-            var yPosArc = PositionManagements.GetLastestyArcPos();
+            var xPosArc = position.GetLastestxArcPos();
+            var yPosArc = position.GetLastestyArcPos();
 
             //GF1 Transition
             TransitionModel falseTransition = new TransitionModel()
