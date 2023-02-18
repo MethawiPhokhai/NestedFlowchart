@@ -121,8 +121,22 @@ namespace NestedFlowchart.Functions
                 Text = "colset loopi = product INT*INTs;"
             };
 
+            ColorSetModel colorSetProduct2 = new ColorSetModel()
+            {
+                Id = IdManagements.GetlastestColorSetId(),
+                Name = "loopj",
+                Type = new List<string>()
+                {
+                    "INT",
+                    "INT",
+                    "INTs"
+                },
+                Text = "colset loopj = product INT*INT*INTs;"
+            };
+
             var col1 = approach.CreateColorSet(allTemplates[(int)TemplateEnum.ColorSetTemplate], colorSetProduct1);
-            var allColorSet = col1;
+            var col2 = approach.CreateColorSet(allTemplates[(int)TemplateEnum.ColorSetTemplate], colorSetProduct2);
+            var allColorSet = col1 + col2;
             return allColorSet;
         }
 

@@ -150,6 +150,7 @@ namespace NestedFlowchart.Functions
                 arrayName,
                 page1Position);
 
+            //Set previous node for create arc next rule
             previousNode.previousPlaceModel = rule2Place;
             previousNode.previousTransitionModel = rule2Transition;
             previousNode.Type = "place";
@@ -197,9 +198,9 @@ namespace NestedFlowchart.Functions
         private TransitionModel Rule3_2(List<XMLCellNode> sortedFlowcharts, string[] allTemplates, ref int countSubPage, PageDeclare pages, PreviousNode previousNode, string arrayName, PositionManagements page1Position, PositionManagements page2Position, int i)
         {
             TransitionModel definejTransition;
-            var (rule3InputPlace, rule3OutputPlace, rule3InputPlace2, rule3OutputPlace2,
+            var (rule3InputPlace, rule3OutputPlace, rule3InputPlace2, rule3OutputPlace2, rule3PS2,
                                         rule3Transition, rule3Transition2,
-                                        rule3Arc1, rule3Arc2, rule3Arc3, rule3Arc4) = _rule3.ApplyRuleWithHierarchy(
+                                        rule3Arc1, rule3Arc2, rule3Arc3, rule3Arc4, rule3Arc5) = _rule3.ApplyRuleWithHierarchy(
                                         allTemplates[(int)TemplateEnum.SubStrTemplate],
                                         allTemplates[(int)TemplateEnum.PortTemplate],
                                         pages.subPageModel1.Id,
@@ -210,7 +211,8 @@ namespace NestedFlowchart.Functions
                                         page2Position
                                         );
 
-            previousNode.previousPlaceModel = rule3OutputPlace2;
+            //Set previous in subpage first
+            previousNode.previousPlaceModel = rule3PS2;
             definejTransition = rule3Transition;
             previousNode.Type = "place";
 
@@ -229,8 +231,10 @@ namespace NestedFlowchart.Functions
             var outputPlace2 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule3OutputPlace2);
             var afterInputTransition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule3Transition2);
             var arc3 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule3Arc4);
+            var ps2 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule3PS2);
+            var arc4 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule3Arc5);
 
-            var rule3NewString = inputPlace2 + outputPlace2 + afterInputTransition + arc3;
+            var rule3NewString = inputPlace2 + outputPlace2 + afterInputTransition + arc3 + ps2 + arc4;
 
             //Add to main page 
             CreatePageNodeByCountSubPage(countSubPage, pages, rule3OldString);

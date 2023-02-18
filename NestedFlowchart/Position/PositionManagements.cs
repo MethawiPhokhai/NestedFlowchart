@@ -43,6 +43,18 @@
             return yPos2;
         }
 
+        public double GetLastestxPos3()
+        {
+            xPos3 = xPos3 + 90;
+            return xPos3;
+        }
+
+        public double GetLastestyPos3()
+        {
+            yPos3 = yPos3 - 167;
+            return yPos3;
+        }
+
         public double GetLastestxPos4()
         {
             xPos4 = xPos4 + 90;

@@ -18,9 +18,9 @@ namespace NestedFlowchart.Rules
         /// <param name="page2Id"></param>
         /// <param name="CodeSegmentValue"></param>
         /// <returns></returns>
-        public (PlaceModel, PlaceModel, PlaceModel, PlaceModel,
+        public (PlaceModel, PlaceModel, PlaceModel, PlaceModel, PlaceModel,
             TransitionModel, TransitionModel,
-            ArcModel, ArcModel, ArcModel, ArcModel)
+            ArcModel, ArcModel, ArcModel, ArcModel, ArcModel)
             ApplyRuleWithHierarchy
             (
             string subStrTemplate,
@@ -38,11 +38,11 @@ namespace NestedFlowchart.Rules
             var inputPortPlaceName = IdManagements.GetlastestPlaceName();
             var outoutPortPlaceName = IdManagements.GetlastestPlaceName();
 
-            var p3oldId = IdManagements.GetlastestPlaceId();
-            var p3newId = IdManagements.GetlastestPlaceId();
+            var p3MainPageId = IdManagements.GetlastestPlaceId();
+            var p3SubPageId = IdManagements.GetlastestPlaceId();
 
-            var p4oldId = IdManagements.GetlastestPlaceId();
-            var p4newId = IdManagements.GetlastestPlaceId();
+            var p4OldPageId = IdManagements.GetlastestPlaceId();
+            var p4SubPageId = IdManagements.GetlastestPlaceId();
 
             #region Main Page
 
@@ -63,7 +63,7 @@ namespace NestedFlowchart.Rules
                     Id2 = IdManagements.GetlastestArcId(),
 
                     TransEnd = previousNode.previousTransitionModel.Id1,
-                    PlaceEnd = p3oldId,
+                    PlaceEnd = p3MainPageId,
 
                     xPos = position1.xArcPos,
                     yPos = position1.yArcPos,
@@ -76,7 +76,7 @@ namespace NestedFlowchart.Rules
             //P3 Place (Input port place) old page
             PlaceModel p3InputPlace = new PlaceModel()
             {
-                Id1 = p3oldId,
+                Id1 = p3MainPageId,
                 Id2 = IdManagements.GetlastestPlaceId(),
                 Id3 = IdManagements.GetlastestPlaceId(),
 
@@ -96,23 +96,15 @@ namespace NestedFlowchart.Rules
                 //TODO: Connect arc to P3 Place
             }
 
-            var p3InputPort = new HierarchyPortModel()
-            {
-                Id = IdManagements.GetlastestPortId(),
-                Type = "In",
-                xPos = -4,
-                yPos = -167
-            };
-
             var tr_subpage_yPos = position1.GetLastestyPos1();
             var subst = new HierarchySubStModel()
             {
                 SubPageId = page2Id,
-                NewInputPlaceId = p3newId,
-                OldInputPlaceId = p3oldId,
+                NewInputPlaceId = p3SubPageId,
+                OldInputPlaceId = p3MainPageId,
 
-                NewOutputPlaceId = p4newId,
-                OldOutputPlaceId = p4oldId,
+                NewOutputPlaceId = p4SubPageId,
+                OldOutputPlaceId = p4OldPageId,
 
                 Id = IdManagements.GetlastestSubStrId(),
                 Name = "New Subpage",
@@ -144,7 +136,7 @@ namespace NestedFlowchart.Rules
             //P4 Place (output port place) old page
             PlaceModel p4OutputPlace = new PlaceModel()
             {
-                Id1 = p4oldId,
+                Id1 = p4OldPageId,
                 Id2 = IdManagements.GetlastestPlaceId(),
                 Id3 = IdManagements.GetlastestPlaceId(),
                 Name = outoutPortPlaceName,
@@ -164,7 +156,7 @@ namespace NestedFlowchart.Rules
                 Id2 = IdManagements.GetlastestArcId(),
 
                 TransEnd = tr_subpage.Id1,
-                PlaceEnd = p3oldId,
+                PlaceEnd = p3MainPageId,
 
                 xPos = position1.xArcPos,
                 yPos = position1.yArcPos,
@@ -179,7 +171,7 @@ namespace NestedFlowchart.Rules
                 Id2 = IdManagements.GetlastestArcId(),
 
                 TransEnd = tr_subpage.Id1,
-                PlaceEnd = p4oldId,
+                PlaceEnd = p4OldPageId,
 
                 xPos = position1.GetLastestxArcPos(),
                 yPos = position1.GetLastestyArcPos(),
@@ -195,24 +187,30 @@ namespace NestedFlowchart.Rules
 
             //TODO : ใช้ position2 แทน previousnode ในการระบุ position
 
-
+            var p3InputPort = new HierarchyPortModel()
+            {
+                Id = IdManagements.GetlastestPortId(),
+                Type = "In",
+                xPos = position2.xPos1 - 20,
+                yPos = position2.yPos1 - 10
+            };
 
             //P3 Place (Input port place) new page
             PlaceModel p3SubPageInputPlace = new PlaceModel()
             {
-                Id1 = p3newId,
+                Id1 = p3SubPageId,
                 Id2 = IdManagements.GetlastestPlaceId(),
                 Id3 = IdManagements.GetlastestPlaceId(),
                 Name = inputPortPlaceName,
 
-                xPos1 = previousNode.previousPlaceModel.xPos1 - 4,
-                yPos1 = previousNode.previousPlaceModel.yPos1 - 168,
+                xPos1 = position2.xPos1,
+                yPos1 = position2.yPos1,
 
-                xPos2 = previousNode.previousPlaceModel.xPos2 - 4,
-                yPos2 = previousNode.previousPlaceModel.yPos2 - 167,
+                xPos2 = position2.xPos2,
+                yPos2 = position2.yPos2,
 
-                xPos3 = previousNode.previousPlaceModel.xPos3 - 4,
-                yPos3 = previousNode.previousPlaceModel.yPos3 - 167,
+                xPos3 = position2.xPos3,
+                yPos3 = position2.yPos3,
 
                 Type = "loopi",
                 Port = approach.CreateHierarchyPort(portTemplate, p3InputPort)
@@ -239,45 +237,16 @@ namespace NestedFlowchart.Rules
 
                 Name = IdManagements.GetlastestSubPageTransitionName(),
 
-                xPos1 = previousNode.previousPlaceModel.xPos1 - 9,
-                yPos1 = previousNode.previousPlaceModel.yPos1 - 168,
+                xPos1 = position2.xPos1,
+                yPos1 = position2.GetLastestyPos1(),
 
-                xPos2 = previousNode.previousPlaceModel.xPos2 - 9,
-                yPos2 = previousNode.previousPlaceModel.yPos2 - 168,
+                xPos2 = position2.xPos2,
+                yPos2 = position2.GetLastestyPos2(),
 
-                xPos3 = previousNode.previousPlaceModel.xPos3 - 9,
-                yPos3 = previousNode.previousPlaceModel.yPos3 - 168,
+                xPos4 = position2.xPos4 + 85,
+                yPos4= position2.yPos4 - 80,
 
                 CodeSegment = codeSeg
-            };
-
-            var p4OutputPort = new HierarchyPortModel()
-            {
-                Id = IdManagements.GetlastestPortId(),
-                Type = "Out",
-                xPos = -4,
-                yPos = -168
-            };
-
-            //P4 Place (output port place) new page
-            PlaceModel p4SubPageOutputPlace = new PlaceModel()
-            {
-                Id1 = p4newId,
-                Id2 = IdManagements.GetlastestPlaceId(),
-                Id3 = IdManagements.GetlastestPlaceId(),
-                Name = outoutPortPlaceName,
-
-                xPos1 = previousNode.previousPlaceModel.xPos1 - 4,
-                yPos1 = previousNode.previousPlaceModel.yPos1 - 168,
-
-                xPos2 = previousNode.previousPlaceModel.xPos2 - 4,
-                yPos2 = previousNode.previousPlaceModel.yPos2 - 167,
-
-                xPos3 = previousNode.previousPlaceModel.xPos3 - 4,
-                yPos3 = previousNode.previousPlaceModel.yPos3 - 167,
-
-                Type = "loopi",
-                Port = approach.CreateHierarchyPort(portTemplate, p4OutputPort)
             };
 
             ArcModel a3 = new ArcModel()
@@ -286,7 +255,7 @@ namespace NestedFlowchart.Rules
                 Id2 = IdManagements.GetlastestArcId(),
 
                 TransEnd = ts1.Id1,
-                PlaceEnd = p3newId,
+                PlaceEnd = p3SubPageId,
 
                 xPos = position2.xArcPos,
                 yPos = position2.yArcPos,
@@ -295,10 +264,76 @@ namespace NestedFlowchart.Rules
                 Type = $"(i,{arrayName})"
             };
 
+            //PS2 Place
+            PlaceModel ps2 = new PlaceModel()
+            {
+                Id1 = IdManagements.GetlastestPlaceId(),
+                Id2 = IdManagements.GetlastestPlaceId(),
+                Id3 = IdManagements.GetlastestPlaceId(),
+
+                Name = IdManagements.GetlastestPlaceName(),
+
+                xPos1 = position2.xPos1,
+                yPos1 = position2.GetLastestyPos1(),
+
+                xPos2 = position2.GetLastestxPos2(),
+                yPos2 = position2.GetLastestyPos2() + 170,
+
+                Type = "loopj"
+            };
+
+            ArcModel a4 = new ArcModel()
+            {
+                Id1 = IdManagements.GetlastestArcId(),
+                Id2 = IdManagements.GetlastestArcId(),
+
+                TransEnd = ts1.Id1,
+                PlaceEnd = ps2.Id1,
+
+                xPos = position2.xArcPos,
+                yPos = position2.GetLastestyArcPos(),
+
+                Orientation = "TtoP", //Transition to Place
+                Type = $"(i,j,{arrayName})"
+            };
+
+            //TODO: After finish create output port
+
+            //var p4OutputPort = new HierarchyPortModel()
+            //{
+            //    Id = IdManagements.GetlastestPortId(),
+            //    Type = "Out",
+            //    xPos = -4,
+            //    yPos = -168
+            //};
+
+            ////P4 Place (output port place) new page
+            //PlaceModel p4SubPageOutputPlace = new PlaceModel()
+            //{
+            //    Id1 = p4SubPageId,
+            //    Id2 = IdManagements.GetlastestPlaceId(),
+            //    Id3 = IdManagements.GetlastestPlaceId(),
+            //    Name = outoutPortPlaceName,
+
+            //    xPos1 = previousNode.previousPlaceModel.xPos1 - 4,
+            //    yPos1 = previousNode.previousPlaceModel.yPos1 - 168,
+
+            //    xPos2 = previousNode.previousPlaceModel.xPos2 - 4,
+            //    yPos2 = previousNode.previousPlaceModel.yPos2 - 167,
+
+            //    xPos3 = previousNode.previousPlaceModel.xPos3 - 4,
+            //    yPos3 = previousNode.previousPlaceModel.yPos3 - 167,
+
+            //    Type = "loopi",
+            //    Port = approach.CreateHierarchyPort(portTemplate, p4OutputPort)
+            //};
+
+
+
             #endregion SubPage
 
 
-            return (p3InputPlace, p4OutputPlace, p3SubPageInputPlace, p4SubPageOutputPlace, tr_subpage, ts1, a0, a1, a2, a3);
+            return (p3InputPlace, p4OutputPlace, p3SubPageInputPlace, null/*p4SubPageOutputPlace*/, ps2, tr_subpage, ts1, a0, a1, a2, a3, a4);
         }
 
         public (PlaceModel, TransitionModel, ArcModel, ArcModel) ApplyRuleWithoutHierarchy(
