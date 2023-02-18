@@ -296,8 +296,6 @@ namespace NestedFlowchart.Functions
             string trueCondition = _rule6.CreateTrueCondition(sortedFlowcharts[i].ValueText, arrayName);
             string falseCondition = _rule6.CreateFalseDecision(trueCondition);
 
-            //TODO: Replace Array with List.nth(arr,j)
-
             //TODO: Separate between true and false case by arrow[i+1]
             var (rule6Place, rule6Place2, rule6FalseTransition, rule6TrueTransition, rule6Arc1, rule6Arc2, rule6Arc3) = _rule6.ApplyRule(
                 previousNode,
