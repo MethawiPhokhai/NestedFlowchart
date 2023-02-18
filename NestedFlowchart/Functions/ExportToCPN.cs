@@ -69,7 +69,7 @@ namespace NestedFlowchart.Functions
                 //Rule1 : Start
                 if (sortedFlowcharts[i].NodeType.ToLower() == "start")
                 {
-                    rule1Place = Rule1(previousNode, page1Position);
+                    rule1Place = Rule1(page1Position);
                 }
                 //Rule2 : Initialize Process
                 else if (sortedFlowcharts[i].NodeType.ToLower() == "process"
@@ -133,12 +133,9 @@ namespace NestedFlowchart.Functions
 
 
 
-        private PlaceModel Rule1(PreviousNode previousNode, PositionManagements page1Position)
+        private PlaceModel Rule1(PositionManagements page1Position)
         {
-            PlaceModel rule1Place = _rule1.ApplyRule(page1Position);
-            previousNode.previousPlaceModel = rule1Place;
-            previousNode.Type = "place";
-            return rule1Place;
+            return _rule1.ApplyRule(page1Position);
         }
         private string Rule2(List<XMLCellNode> sortedFlowcharts, string[] allTemplates, int countSubPage, PageDeclare pages, PreviousNode previousNode, string arrayName, PlaceModel rule1Place, PositionManagements page1Position, int i)
         {
