@@ -21,7 +21,7 @@ namespace NestedFlowchart.Rules
         /// <param name="trueCondition"></param>
         /// <param name="falseCondition"></param>
         /// <returns></returns>
-        public (PlaceModel, PlaceModel, TransitionModel, TransitionModel, ArcModel, ArcModel, ArcModel) ApplyRule(
+        public (PlaceModel, PlaceModel, TransitionModel, TransitionModel, ArcModel, ArcModel, ArcModel?) ApplyRule(
             PreviousNode previousNode, 
             string trueCondition, 
             string falseCondition,
@@ -29,11 +29,56 @@ namespace NestedFlowchart.Rules
             PositionManagements position,
             int countSubPage)
         {
+
+            string arcVariable = DeclareArcVariable(arrayName, countSubPage);
+
             var xPos1 = position.xPos1;
             var yPos1 = position.GetLastestyPos1();
 
             var xPosArc = position.GetLastestxArcPos();
             var yPosArc = position.GetLastestyArcPos();
+
+            PlaceModel ps3 = new PlaceModel();
+            ArcModel a1, a2;
+            ArcModel a3 = null;
+            if (previousNode.Type == "transition")
+            {
+                ps3 = new PlaceModel()
+                {
+                    Id1 = IdManagements.GetlastestPlaceId(),
+                    Id2 = IdManagements.GetlastestPlaceId(),
+                    Id3 = IdManagements.GetlastestPlaceId(),
+
+                    Name = IdManagements.GetlastestPlaceName(),
+
+                    xPos1 = position.xPos1,
+                    yPos1 = position.GetLastestyPos1() + 100,
+
+                    xPos2 = position.GetLastestxPos2(),
+                    yPos2 = position.GetLastestyPos2() + 190,
+
+                    Type = "loopj"
+                };
+
+                a3 = new ArcModel()
+                {
+                    Id1 = IdManagements.GetlastestArcId(),
+                    Id2 = IdManagements.GetlastestArcId(),
+
+                    TransEnd = previousNode.previousTransitionModel.Id1,
+                    PlaceEnd = ps3.Id1,
+
+                    xPos = xPosArc - 84,
+                    yPos = yPosArc,
+
+                    Orientation = "TtoP", //Transition to Place
+                    Type = arcVariable
+                };
+
+                //Move more because it add on place above
+                yPos1 -= 80;
+                yPosArc -= 60;
+            }
 
 
             //GF1 Transition
@@ -77,30 +122,8 @@ namespace NestedFlowchart.Rules
                 Condition = trueCondition
             };
 
-            string arcVariable = DeclareArcVariable(arrayName, countSubPage);
-
-            PlaceModel ps3 = new PlaceModel();
-            ArcModel a1, a2;
-            ArcModel a3 = new ArcModel();
-            if (previousNode.Type == "transition")
+            if(previousNode.Type == "transition")
             {
-                ps3 = new PlaceModel()
-                {
-                    Id1 = IdManagements.GetlastestPlaceId(),
-                    Id2 = IdManagements.GetlastestPlaceId(),
-                    Id3 = IdManagements.GetlastestPlaceId(),
-
-                    Name = IdManagements.GetlastestPlaceName(),
-
-                    xPos1 = position.xPos1,
-                    yPos1 = position.GetLastestyPos1(),
-
-                    xPos2 = position.GetLastestxPos2(),
-                    yPos2 = position.GetLastestyPos2(),
-
-                    Type = "loopj"
-                };
-
                 //Arc from CN1 to GF1
                 a1 = new ArcModel()
                 {
@@ -130,21 +153,6 @@ namespace NestedFlowchart.Rules
                     yPos = yPosArc,
 
                     Orientation = "PtoT", //Place to Transition
-                    Type = arcVariable
-                };
-
-                a3 = new ArcModel()
-                {
-                    Id1 = IdManagements.GetlastestArcId(),
-                    Id2 = IdManagements.GetlastestArcId(),
-
-                    TransEnd = previousNode.previousTransitionModel.Id1,
-                    PlaceEnd = ps3.Id1,
-
-                    xPos = xPosArc + 34,
-                    yPos = yPosArc,
-
-                    Orientation = "TtoP", //Transition to Place
                     Type = arcVariable
                 };
             }

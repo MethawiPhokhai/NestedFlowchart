@@ -311,16 +311,14 @@ namespace NestedFlowchart.Functions
             previousNode.previousTransitionModel = rule6TrueTransition;
             previousNode.Type = "transition";
 
-
+            var ps3 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule6Place2);
             var trueTransition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule6TrueTransition);
             var falseTransition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule6FalseTransition);
             var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule6Arc1);
             var arc2 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule6Arc2);
-
-            var ps3 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule6Place2);
             var arc3 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule6Arc3);
 
-            var rule6String = ps3 + trueTransition + falseTransition + arc1 + arc2;
+            var rule6String = ps3 + trueTransition + falseTransition + arc1 + arc2 + arc3;
 
             CreatePageNodeByCountSubPage(countSubPage, pages, rule6String);
         }
