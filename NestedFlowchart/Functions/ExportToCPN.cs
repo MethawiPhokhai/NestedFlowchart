@@ -95,7 +95,7 @@ namespace NestedFlowchart.Functions
                     }
                     else
                     {
-                        countSubPage = Rule4(sortedFlowcharts, allTemplates, pages, previousNode, arrayName, page1Position, i);
+                        //countSubPage = Rule4(sortedFlowcharts, allTemplates, pages, previousNode, arrayName, page1Position, i);
                     }
                 }
                 //Rule 5 Connector
@@ -299,8 +299,8 @@ namespace NestedFlowchart.Functions
             //TODO: Replace Array with List.nth(arr,j)
 
             //TODO: Separate between true and false case by arrow[i+1]
-            var (rule6Place, rule6FalseTransition, rule6TrueTransition, rule6Arc1, rule6Arc2) = _rule6.ApplyRule(
-                previousNode.previousPlaceModel,
+            var (rule6Place, rule6Place2, rule6FalseTransition, rule6TrueTransition, rule6Arc1, rule6Arc2, rule6Arc3) = _rule6.ApplyRule(
+                previousNode,
                 trueCondition,
                 falseCondition,
                 arrayName,
@@ -316,7 +316,11 @@ namespace NestedFlowchart.Functions
             var falseTransition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule6FalseTransition);
             var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule6Arc1);
             var arc2 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule6Arc2);
-            var rule6String = trueTransition + falseTransition + arc1 + arc2;
+
+            var ps3 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule6Place2);
+            var arc3 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule6Arc3);
+
+            var rule6String = ps3 + trueTransition + falseTransition + arc1 + arc2;
 
             CreatePageNodeByCountSubPage(countSubPage, pages, rule6String);
         }

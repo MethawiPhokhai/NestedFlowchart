@@ -19,6 +19,7 @@ namespace NestedFlowchart.Rules.Tests
             // Arrange
             PositionManagements page1Position = new PositionManagements();
 
+            PreviousNode previousNode = new PreviousNode();
             PlaceModel previousPlace = new PlaceModel()
             {
                 Id1 = "ID1412948772",
@@ -37,10 +38,11 @@ namespace NestedFlowchart.Rules.Tests
             string falseCondition = "F";
             string arrayName = "array";
             int countSubPage = 0;
+            previousNode.previousPlaceModel = previousPlace;
 
             // Act
             Rule6 rule6 = new Rule6();
-            var (pl, falseTransition, trueTransition, a1, a2) = rule6.ApplyRule(previousPlace, trueCondition, falseCondition, arrayName, page1Position, countSubPage);
+            var (pl, _, falseTransition, trueTransition, a1, a2, _) = rule6.ApplyRule(previousNode, trueCondition, falseCondition, arrayName, page1Position, countSubPage);
 
             // Assert
             Assert.IsNotNull(pl);

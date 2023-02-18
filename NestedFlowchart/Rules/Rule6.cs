@@ -21,8 +21,8 @@ namespace NestedFlowchart.Rules
         /// <param name="trueCondition"></param>
         /// <param name="falseCondition"></param>
         /// <returns></returns>
-        public (PlaceModel, TransitionModel, TransitionModel, ArcModel, ArcModel) ApplyRule(
-            PlaceModel previousPlace, 
+        public (PlaceModel, PlaceModel, TransitionModel, TransitionModel, ArcModel, ArcModel, ArcModel) ApplyRule(
+            PreviousNode previousNode, 
             string trueCondition, 
             string falseCondition,
             string arrayName,
@@ -34,6 +34,7 @@ namespace NestedFlowchart.Rules
 
             var xPosArc = position.GetLastestxArcPos();
             var yPosArc = position.GetLastestyArcPos();
+
 
             //GF1 Transition
             TransitionModel falseTransition = new TransitionModel()
@@ -78,39 +79,111 @@ namespace NestedFlowchart.Rules
 
             string arcVariable = DeclareArcVariable(arrayName, countSubPage);
 
-            //Arc from CN1 to GF1
-            ArcModel a1 = new ArcModel()
+            PlaceModel ps3 = new PlaceModel();
+            ArcModel a1, a2;
+            ArcModel a3 = new ArcModel();
+            if (previousNode.Type == "transition")
             {
-                Id1 = IdManagements.GetlastestArcId(),
-                Id2 = IdManagements.GetlastestArcId(),
+                ps3 = new PlaceModel()
+                {
+                    Id1 = IdManagements.GetlastestPlaceId(),
+                    Id2 = IdManagements.GetlastestPlaceId(),
+                    Id3 = IdManagements.GetlastestPlaceId(),
 
-                TransEnd = falseTransition.Id1,
-                PlaceEnd = previousPlace.Id1,
+                    Name = IdManagements.GetlastestPlaceName(),
 
-                xPos = xPosArc - 84,
-                yPos = yPosArc,
+                    xPos1 = position.xPos1,
+                    yPos1 = position.GetLastestyPos1(),
 
-                Orientation = "PtoT", //Place to Transition
-                Type = arcVariable
-            };
+                    xPos2 = position.GetLastestxPos2(),
+                    yPos2 = position.GetLastestyPos2(),
 
-            //Arc from CN1 to GT1
-            ArcModel a2 = new ArcModel()
+                    Type = "loopj"
+                };
+
+                //Arc from CN1 to GF1
+                a1 = new ArcModel()
+                {
+                    Id1 = IdManagements.GetlastestArcId(),
+                    Id2 = IdManagements.GetlastestArcId(),
+
+                    TransEnd = falseTransition.Id1,
+                    PlaceEnd = ps3.Id1,
+
+                    xPos = xPosArc - 84,
+                    yPos = yPosArc,
+
+                    Orientation = "PtoT", //Place to Transition
+                    Type = arcVariable
+                };
+
+                //Arc from CN1 to GT1
+                a2 = new ArcModel()
+                {
+                    Id1 = IdManagements.GetlastestArcId(),
+                    Id2 = IdManagements.GetlastestArcId(),
+
+                    TransEnd = trueTransition.Id1,
+                    PlaceEnd = ps3.Id1,
+
+                    xPos = xPosArc + 34,
+                    yPos = yPosArc,
+
+                    Orientation = "PtoT", //Place to Transition
+                    Type = arcVariable
+                };
+
+                a3 = new ArcModel()
+                {
+                    Id1 = IdManagements.GetlastestArcId(),
+                    Id2 = IdManagements.GetlastestArcId(),
+
+                    TransEnd = previousNode.previousTransitionModel.Id1,
+                    PlaceEnd = ps3.Id1,
+
+                    xPos = xPosArc + 34,
+                    yPos = yPosArc,
+
+                    Orientation = "TtoP", //Transition to Place
+                    Type = arcVariable
+                };
+            }
+            else
             {
-                Id1 = IdManagements.GetlastestArcId(),
-                Id2 = IdManagements.GetlastestArcId(),
+                //Arc from CN1 to GF1
+                a1 = new ArcModel()
+                {
+                    Id1 = IdManagements.GetlastestArcId(),
+                    Id2 = IdManagements.GetlastestArcId(),
 
-                TransEnd = trueTransition.Id1,
-                PlaceEnd = previousPlace.Id1,
+                    TransEnd = falseTransition.Id1,
+                    PlaceEnd = previousNode.previousPlaceModel.Id1,
 
-                xPos = xPosArc + 34,
-                yPos = yPosArc,
+                    xPos = xPosArc - 84,
+                    yPos = yPosArc,
 
-                Orientation = "PtoT", //Place to Transition
-                Type = arcVariable
-            };
+                    Orientation = "PtoT", //Place to Transition
+                    Type = arcVariable
+                };
 
-            return (previousPlace, falseTransition, trueTransition, a1, a2);
+                //Arc from CN1 to GT1
+                a2 = new ArcModel()
+                {
+                    Id1 = IdManagements.GetlastestArcId(),
+                    Id2 = IdManagements.GetlastestArcId(),
+
+                    TransEnd = trueTransition.Id1,
+                    PlaceEnd = previousNode.previousPlaceModel.Id1,
+
+                    xPos = xPosArc + 34,
+                    yPos = yPosArc,
+
+                    Orientation = "PtoT", //Place to Transition
+                    Type = arcVariable
+                };
+            }
+
+            return (previousNode.previousPlaceModel, ps3, falseTransition, trueTransition, a1, a2, a3);
         }
 
         private string DeclareArcVariable(string arrayName, int countSubPage)
@@ -132,6 +205,17 @@ namespace NestedFlowchart.Rules
 
         public string CreateTrueCondition(string condition, string arrayName)
         {
+            if (condition.Contains("["))
+            {
+                var index = condition.IndexOf("[");
+
+                //Replace array[j with List.nth(array,j
+                condition = condition.Replace(arrayName + "[" + condition[index + 1], "List.nth(" + arrayName + "," + condition[index + 1]);
+                
+                //Replace ] with )
+                condition = condition.Replace("]", ")");
+            }
+
             return "[" + condition.Replace("N", $" length {arrayName}") + "]";
         }
 
