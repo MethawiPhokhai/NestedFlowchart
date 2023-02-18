@@ -26,7 +26,8 @@ namespace NestedFlowchart.Rules
             string trueCondition, 
             string falseCondition,
             string arrayName,
-            PositionManagements position)
+            PositionManagements position,
+            int countSubPage)
         {
             var xPos1 = position.xPos1;
             var yPos1 = position.GetLastestyPos1();
@@ -75,6 +76,8 @@ namespace NestedFlowchart.Rules
                 Condition = trueCondition
             };
 
+            string arcVariable = DeclareArcVariable(arrayName, countSubPage);
+
             //Arc from CN1 to GF1
             ArcModel a1 = new ArcModel()
             {
@@ -88,7 +91,7 @@ namespace NestedFlowchart.Rules
                 yPos = yPosArc,
 
                 Orientation = "PtoT", //Place to Transition
-                Type = $"(i,{arrayName})"
+                Type = arcVariable
             };
 
             //Arc from CN1 to GT1
@@ -104,10 +107,27 @@ namespace NestedFlowchart.Rules
                 yPos = yPosArc,
 
                 Orientation = "PtoT", //Place to Transition
-                Type = $"(i,{arrayName})"
+                Type = arcVariable
             };
 
             return (previousPlace, falseTransition, trueTransition, a1, a2);
+        }
+
+        private string DeclareArcVariable(string arrayName, int countSubPage)
+        {
+            //arc variable
+            string arcVariable = string.Empty;
+            switch (countSubPage)
+            {
+                case 0:
+                    arcVariable = $"(i,{arrayName})";
+                    break;
+                case 1:
+                    arcVariable = $"(i,j,{arrayName})";
+                    break;
+            }
+
+            return arcVariable;
         }
 
         public string CreateTrueCondition(string condition, string arrayName)

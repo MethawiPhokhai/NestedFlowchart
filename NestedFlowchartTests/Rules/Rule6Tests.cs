@@ -36,10 +36,11 @@ namespace NestedFlowchart.Rules.Tests
             string trueCondition = "T";
             string falseCondition = "F";
             string arrayName = "array";
+            int countSubPage = 0;
 
             // Act
             Rule6 rule6 = new Rule6();
-            var (pl, falseTransition, trueTransition, a1, a2) = rule6.ApplyRule(previousPlace, trueCondition, falseCondition, arrayName, page1Position);
+            var (pl, falseTransition, trueTransition, a1, a2) = rule6.ApplyRule(previousPlace, trueCondition, falseCondition, arrayName, page1Position, countSubPage);
 
             // Assert
             Assert.IsNotNull(pl);

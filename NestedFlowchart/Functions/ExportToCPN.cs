@@ -106,7 +106,8 @@ namespace NestedFlowchart.Functions
                 //Rule 6 Decision
                 else if (sortedFlowcharts[i].NodeType.ToLower() == "condition")
                 {
-                    Rule6(sortedFlowcharts, allTemplates, countSubPage, pages, previousNode, arrayName, page1Position, i);
+                    PositionManagements pagePosition = GetPagePositionByCountSubPage(countSubPage, page1Position, page2Position);
+                    Rule6(sortedFlowcharts, allTemplates, countSubPage, pages, previousNode, arrayName, pagePosition, i);
                 }
                 //Rule 7 End
                 else if (sortedFlowcharts[i].NodeType.ToLower() == "end")
@@ -129,8 +130,6 @@ namespace NestedFlowchart.Functions
             //Write to CPN File
             File.WriteAllText(ResultPath + "Result.cpn", firstCPN);
         }
-
-
 
 
         private PlaceModel Rule1(PositionManagements page1Position)
@@ -292,7 +291,7 @@ namespace NestedFlowchart.Functions
 
             CreatePageNodeByCountSubPage(countSubPage, pages, rule5String);
         }
-        private void Rule6(List<XMLCellNode> sortedFlowcharts, string[] allTemplates, int countSubPage, PageDeclare pages, PreviousNode previousNode, string arrayName, PositionManagements page1Position, int i)
+        private void Rule6(List<XMLCellNode> sortedFlowcharts, string[] allTemplates, int countSubPage, PageDeclare pages, PreviousNode previousNode, string arrayName, PositionManagements pagePosition, int i)
         {
             string trueCondition = _rule6.CreateTrueCondition(sortedFlowcharts[i].ValueText, arrayName);
             string falseCondition = _rule6.CreateFalseDecision(trueCondition);
@@ -300,13 +299,13 @@ namespace NestedFlowchart.Functions
             //TODO: Replace Array with List.nth(arr,j)
 
             //TODO: Separate between true and false case by arrow[i+1]
-
             var (rule6Place, rule6FalseTransition, rule6TrueTransition, rule6Arc1, rule6Arc2) = _rule6.ApplyRule(
                 previousNode.previousPlaceModel,
                 trueCondition,
                 falseCondition,
                 arrayName,
-                page1Position);
+                pagePosition,
+                countSubPage);
 
             previousNode.previousPlaceModel = rule6Place;
             previousNode.previousTransitionModel = rule6TrueTransition;
@@ -406,6 +405,22 @@ namespace NestedFlowchart.Functions
                     pages.subPageModel4.Node += rule;
                     break;
             }
+        }
+
+        private PositionManagements GetPagePositionByCountSubPage(int countSubPage, PositionManagements page1Position, PositionManagements page2Position)
+        {
+            PositionManagements pagePosition = new PositionManagements();
+            switch (countSubPage)
+            {
+                case 0:
+                    pagePosition = page1Position;
+                    break;
+                case 1:
+                    pagePosition = page2Position;
+                    break;
+            }
+
+            return pagePosition;
         }
     }
 }
