@@ -38,7 +38,7 @@ namespace NestedFlowchart.Rules
             var xPosArc = position.GetLastestxArcPos();
             var yPosArc = position.GetLastestyArcPos();
 
-            PlaceModel ps3 = new PlaceModel();
+            PlaceModel ps3 = null;
             ArcModel a1, a2;
             ArcModel a3 = null;
             if (previousNode.Type == "transition")
