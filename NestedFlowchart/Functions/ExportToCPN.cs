@@ -95,6 +95,11 @@ namespace NestedFlowchart.Functions
                     }
                     else
                     {
+                        if (sortedFlowcharts[i].ValueText.Contains("temp = array[ j+1]"))
+                        {
+                            PositionManagements pagePosition = GetPagePositionByCountSubPage(countSubPage, page1Position, page2Position);
+                            Rule4_2(sortedFlowcharts, allTemplates, pages, previousNode, arrayName, pagePosition, i, countSubPage);
+                        }
                         //countSubPage = Rule4(sortedFlowcharts, allTemplates, pages, previousNode, arrayName, page1Position, i);
                     }
                 }
@@ -271,6 +276,31 @@ namespace NestedFlowchart.Functions
             countSubPage = 1;
             return countSubPage;
         }
+
+        private void Rule4_2(List<XMLCellNode> sortedFlowcharts, string[] allTemplates, PageDeclare pages, PreviousNode previousNode, string arrayName, PositionManagements pagePosition, int i, int countSubPage)
+        {
+            //TODO: Send real process to code segment inscription
+            //TODO: Find solution to create arc
+            var (rule4Place, rule4Transition, rule4Arc) = _rule4.ApplyRuleWithCodeSegment(
+                allTemplates[(int)TemplateEnum.TransitionTemplate],
+                allTemplates[(int)TemplateEnum.PlaceTemplate],
+                allTemplates[(int)TemplateEnum.ArcTemplate],
+                arrayName,
+                previousNode,
+                pagePosition);
+
+            previousNode.previousPlaceModel = rule4Place;
+            previousNode.previousTransitionModel = rule4Transition;
+            previousNode.Type = "transition";
+
+            var place1 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule4Place);
+            var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule4Arc);
+            var transition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule4Transition);
+
+            var rule4String = place1 + transition + arc1;
+            CreatePageNodeByCountSubPage(countSubPage, pages, rule4String);
+        }
+
         private void Rule5(string[] allTemplates, int countSubPage, PageDeclare pages, PreviousNode previousNode, string arrayName, PositionManagements page1Position)
         {
             var (rule5Place, rule5Transition, rule5Arc1, rule5Arc2) = _rule5.ApplyRule(
