@@ -48,35 +48,45 @@ namespace NestedFlowchart.Functions
             //Find all if decision node
             if (target.Style.Contains("flowchart.decision") || target.Style.Contains("rhombus"))
             {
+                #region Get All 2 Arrow (True, False)
+                //! Need to sorted the element to make sure it going to the right direction
                 var arrows = allFlowChartElements.FindAll(x => x.Source == target?.ID);
                 XMLCellNode? lastElement;
+                #endregion
 
-                //First direction
-                tempDecisionElements.Add(allFlowChartElements.Find(x => x.ID == arrows.FirstOrDefault().Target));
-
-                //Second direction
+                #region First direction
                 sortedFlowcharts.Add(arrows.LastOrDefault());
-                lastElement = allFlowChartElements.Find(x => x.ID == arrows.LastOrDefault().Target);
-                sortedFlowcharts.Add(lastElement);
+				lastElement = allFlowChartElements.Find(x => x.ID == arrows.LastOrDefault().Target);
+				sortedFlowcharts.Add(lastElement);
+				#endregion
+
+				#region Second Direction
+				//Keep in temp after finish first direction pop this to the last of the list
+				tempDecisionElements.Add(allFlowChartElements.Find(x => x.ID == arrows.FirstOrDefault().Target));
+				#endregion
 
                 return lastElement;
             }
             else
             {
-                //Arrow from source to target
-                var arrow = allFlowChartElements.Find(x => x.Source == target?.ID);
+				#region Add Arrow to sortedFlowcharts
+				var arrow = allFlowChartElements.Find(x => x.Source == target?.ID);
+
+                //If end node
                 if (arrow == null && target.ValueText.ToLower() == "end") //Case End node
                 {
                     arrow = allFlowChartElements.Find(x => x.Target == target?.ID);
                 }
 
+                //Normal arrow
                 if (!sortedFlowcharts.Contains(arrow))
                 {
                     sortedFlowcharts.Add(arrow);
                 }
+				#endregion
 
-                //Next Element
-                var element = allFlowChartElements.Find(x => x.ID == arrow?.Target);
+                # region Next Element
+				var element = allFlowChartElements.Find(x => x.ID == arrow?.Target);
 
                 if (!sortedFlowcharts.Contains(element)) //If exist, not add and sent next temp element
                 {
@@ -92,13 +102,15 @@ namespace NestedFlowchart.Functions
                     tempDecisionElements.Remove(lastTemp);
                     return lastTemp;
                 }
+				#endregion
 
-                return element;
-            }
+				return element;
+			}
         }
 
-        public String CheckFCNodeType(XMLCellNode flowChart)
+        public string CheckFCNodeType(XMLCellNode flowChart)
         {
+
             if (flowChart.ValueText.ToLower().Contains("start"))
             {
                 return "Start";
