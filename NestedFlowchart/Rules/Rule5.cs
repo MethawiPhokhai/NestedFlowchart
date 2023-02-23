@@ -19,80 +19,143 @@ namespace NestedFlowchart.Rules
         /// <param name="arcTemplate"></param>
         /// <param name="previousPlace"></param>
         /// <returns></returns>
-        public (PlaceModel, TransitionModel, ArcModel, ArcModel) ApplyRule(
+        public (PlaceModel, TransitionModel?, ArcModel?, ArcModel?) ApplyRule(
             string arrayName,
-            PlaceModel previousPlace,
-            PositionManagements position)
+			PreviousNode previousNode,
+            PositionManagements position,
+			int countSubPage)
         {
-            //T3 Transition
-            TransitionModel tr = new TransitionModel()
+			var arcVariable = DeclareArcVariable(arrayName, countSubPage);
+			TransitionModel tr = null;
+			PlaceModel pl = null;
+			ArcModel a1 = null, a2 = null;
+
+			if (previousNode.Type == "place")
             {
-                Id1 = IdManagements.GetlastestTransitionId(),
-                Id2 = IdManagements.GetlastestTransitionId(),
-                Id3 = IdManagements.GetlastestTransitionId(),
-                Id4 = IdManagements.GetlastestTransitionId(),
-                Id5 = IdManagements.GetlastestTransitionId(),
+				//T3 Transition
+				tr = new TransitionModel()
+				{
+					Id1 = IdManagements.GetlastestTransitionId(),
+					Id2 = IdManagements.GetlastestTransitionId(),
+					Id3 = IdManagements.GetlastestTransitionId(),
+					Id4 = IdManagements.GetlastestTransitionId(),
+					Id5 = IdManagements.GetlastestTransitionId(),
 
-                Name = IdManagements.GetlastestTransitionName(),
+					Name = IdManagements.GetlastestTransitionName(),
 
-                xPos1 = position.xPos1,
-                yPos1 = position.GetLastestyPos1(),
+					xPos1 = position.xPos1,
+					yPos1 = position.GetLastestyPos1(),
 
-                xPos4 = position.GetLastestxPos4(),
-                yPos4 = position.GetLastestyPos4(),
-            };
+					xPos4 = position.GetLastestxPos4(),
+					yPos4 = position.GetLastestyPos4(),
+				};
 
-            //CN1 Place
-            PlaceModel pl = new PlaceModel()
-            {
-                Id1 = IdManagements.GetlastestPlaceId(),
-                Id2 = IdManagements.GetlastestPlaceId(),
-                Id3 = IdManagements.GetlastestPlaceId(),
+				//CN1 Place
+				pl = new PlaceModel()
+				{
+					Id1 = IdManagements.GetlastestPlaceId(),
+					Id2 = IdManagements.GetlastestPlaceId(),
+					Id3 = IdManagements.GetlastestPlaceId(),
 
-                Name = IdManagements.GetlastestPlaceConnectorName(),
+					Name = IdManagements.GetlastestPlaceConnectorName(),
 
-                xPos1 = position.xPos1,
-                yPos1 = position.GetLastestyPos1(),
+					xPos1 = position.xPos1,
+					yPos1 = position.GetLastestyPos1(),
 
-                xPos2 = position.GetLastestxPos2(),
-                yPos2 = position.GetLastestyPos2(),
+					xPos2 = position.GetLastestxPos2(),
+					yPos2 = position.GetLastestyPos2(),
 
-                Type = "loopi"
-            };
+					Type = "loopi"
+				};
 
-            //Arc from P2 to T3
-            ArcModel a1 = new ArcModel()
-            {
-                Id1 = IdManagements.GetlastestArcId(),
-                Id2 = IdManagements.GetlastestArcId(),
+				//Arc from P2 to T3
+				a1 = new ArcModel()
+				{
+					Id1 = IdManagements.GetlastestArcId(),
+					Id2 = IdManagements.GetlastestArcId(),
 
-                TransEnd = tr.Id1,
-                PlaceEnd = previousPlace.Id1,
+					TransEnd = tr.Id1,
+					PlaceEnd = previousNode.previousPlaceModel.Id1,
 
-                xPos = position.GetLastestxArcPos(),
-                yPos = position.GetLastestyArcPos(),
+					xPos = position.GetLastestxArcPos(),
+					yPos = position.GetLastestyArcPos(),
 
-                Orientation = "PtoT", //Place to Transition
-                Type = $"(i,{arrayName})"
-            };
+					Orientation = "PtoT", //Place to Transition
+					Type = arcVariable
+				};
 
-            //Arc from T3 to CN1
-            ArcModel a2 = new ArcModel()
-            {
-                Id1 = IdManagements.GetlastestArcId(),
-                Id2 = IdManagements.GetlastestArcId(),
+				//Arc from T3 to CN1
+				a2 = new ArcModel()
+				{
+					Id1 = IdManagements.GetlastestArcId(),
+					Id2 = IdManagements.GetlastestArcId(),
 
-                TransEnd = tr.Id1,
-                PlaceEnd = pl.Id1,
+					TransEnd = tr.Id1,
+					PlaceEnd = pl.Id1,
 
-                xPos = position.GetLastestxArcPos(),
-                yPos = position.GetLastestyArcPos(),
+					xPos = position.GetLastestxArcPos(),
+					yPos = position.GetLastestyArcPos(),
 
-                Orientation = "TtoP", //Transition to Place
-                Type = $"(i,{arrayName})"
-            };
+					Orientation = "TtoP", //Transition to Place
+					Type = arcVariable
+				};
+			}
+			else
+			{
+				//CN1 Place
+				pl = new PlaceModel()
+				{
+					Id1 = IdManagements.GetlastestPlaceId(),
+					Id2 = IdManagements.GetlastestPlaceId(),
+					Id3 = IdManagements.GetlastestPlaceId(),
 
-            return (pl, tr, a1, a2);
+					Name = IdManagements.GetlastestPlaceConnectorName(),
+
+					xPos1 = position.xPos1,
+					yPos1 = position.GetLastestyPos1(),
+
+					xPos2 = position.GetLastestxPos2(),
+					yPos2 = position.GetLastestyPos2(),
+
+					Type = "loopj"
+				};
+
+				//Arc from T3 to CN1
+				a1 = new ArcModel()
+				{
+					Id1 = IdManagements.GetlastestArcId(),
+					Id2 = IdManagements.GetlastestArcId(),
+
+					TransEnd = previousNode.previousTransitionModel.Id1,
+					PlaceEnd = pl.Id1,
+
+					xPos = position.GetLastestxArcPos(),
+					yPos = position.GetLastestyArcPos(),
+
+					Orientation = "TtoP", //Transition to Place
+					Type = arcVariable
+				};
+
+			}
+
+			return (pl, tr, a1, a2);
         }
-    }
+
+		private string DeclareArcVariable(string arrayName, int countSubPage)
+		{
+			//arc variable
+			string arcVariable = string.Empty;
+			switch (countSubPage)
+			{
+				case 0:
+					arcVariable = $"(i,{arrayName})";
+					break;
+				case 1:
+					arcVariable = $"(i,j,{arrayName})";
+					break;
+			}
+
+			return arcVariable;
+		}
+	}
 }

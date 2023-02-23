@@ -107,7 +107,8 @@ namespace NestedFlowchart.Functions
                 //Rule 5 Connector
                 else if (sortedFlowcharts[i].NodeType.ToLower() == "connector")
                 {
-                    Rule5(allTemplates, countSubPage, pages, previousNode, arrayName, page1Position);
+					PositionManagements pagePosition = GetPagePositionByCountSubPage(countSubPage, page1Position, page2Position);
+					Rule5(allTemplates, countSubPage, pages, previousNode, arrayName, pagePosition);
                 }
                 //Rule 6 Decision
                 else if (sortedFlowcharts[i].NodeType.ToLower() == "condition")
@@ -307,8 +308,9 @@ namespace NestedFlowchart.Functions
         {
             var (rule5Place, rule5Transition, rule5Arc1, rule5Arc2) = _rule5.ApplyRule(
                                     arrayName,
-                                    previousNode.previousPlaceModel,
-                                    page1Position);
+                                    previousNode,
+                                    page1Position,
+									countSubPage);
 
             previousNode.previousPlaceModel = rule5Place;
             previousNode.previousTransitionModel = rule5Transition;
@@ -318,8 +320,8 @@ namespace NestedFlowchart.Functions
             var place1 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule5Place);
             var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule5Arc1);
             var transition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule5Transition);
-            var arc2 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule5Arc2);
-            var rule5String = place1 + transition + arc1 + arc2;
+			var arc2 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule5Arc2);
+			var rule5String = place1 + transition + arc1 + arc2;
 
             CreatePageNodeByCountSubPage(countSubPage, pages, rule5String);
         }

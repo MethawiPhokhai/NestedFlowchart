@@ -96,7 +96,10 @@ namespace NestedFlowchart.Functions
                 {
                     var lastTemp = tempDecisionElements.LastOrDefault();
 
-                    sortedFlowcharts.Add(lastTemp);
+                    if (!sortedFlowcharts.Contains(lastTemp))
+                    {
+						sortedFlowcharts.Add(lastTemp);
+					}
 
                     //If used, remove it
                     tempDecisionElements.Remove(lastTemp);
@@ -119,7 +122,7 @@ namespace NestedFlowchart.Functions
             {
                 return "Process";
             }
-            else if (flowChart.Style.Contains("ellipse"))
+            else if (flowChart.Style.Contains("ellipse;whiteSpace=wrap;html=1;"))
             {
                 return "Connector";
             }

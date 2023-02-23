@@ -55,17 +55,22 @@ namespace NestedFlowchart.Functions
 
         public string CreateTransition(string transitionTemplate, TransitionModel model)
         {
-            string transition = string.Format("\n" + transitionTemplate, model.Id1, model.Id2, model.Id3, model.Id4, model.Id5,
-                model.Name, model.Condition,
-                model.xPos1, model.yPos1,
-                model.xPos2, model.yPos2,
-                model.xPos3, model.yPos3,
-                model.xPos4, model.yPos4,
-                model.xPos5, model.yPos5,
-                model.CodeSegment,
-                model.SubsitutetionTransition);
+            if(model != null)
+            {
+				string transition = string.Format("\n" + transitionTemplate, model.Id1, model.Id2, model.Id3, model.Id4, model.Id5,
+				model.Name, model.Condition,
+				model.xPos1, model.yPos1,
+				model.xPos2, model.yPos2,
+				model.xPos3, model.yPos3,
+				model.xPos4, model.yPos4,
+				model.xPos5, model.yPos5,
+				model.CodeSegment,
+				model.SubsitutetionTransition);
 
-            return transition;
+				return transition;
+			}
+
+            return string.Empty;
         }
 
         public string CreateArc(string arcTemplate, ArcModel? model)
