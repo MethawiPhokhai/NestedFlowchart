@@ -89,7 +89,7 @@ namespace NestedFlowchart.Rules
         }
 
 
-        public (PlaceModel, TransitionModel, ArcModel) ApplyRuleWithCodeSegment(
+        public (PlaceModel, TransitionModel, ArcModel, ArcModel) ApplyRuleWithCodeSegment(
             string transitionTemplate,
             string placeTemplate,
             string arcTemplate,
@@ -115,8 +115,30 @@ namespace NestedFlowchart.Rules
                 Type = "loopj"
             };
 
-            //TS2 Transition
-            TransitionModel tr = new TransitionModel()
+            var codeSeg = "input (array,j);\r\n" +
+				"output (array2);\r\n" +
+                "action\r\n" +
+                "let\r\n" +
+                " (* get j to temp*)\r\n " +
+				"val temp = List.nth(array,j)\r\n " +
+                "(* get j+1 to temp2 *)\r\n " +
+				"val temp2 = List.nth(array,j+1)\r\n " +
+				"(* return first j element of array *)\r\n " +
+				"val array2 = List.take(array,j)\r\n " +
+				"(* insert element temp2 after array2 *)\r\n " +
+				"val array2 = ins array2 temp2\r\n " +
+				"(* insert element temp after array2 *)\r\n " +
+				"val array2 = ins array2 temp\r\n " +
+				"(* removes all elements in list array2 from list array1 *)\r\n " +
+				"val array  = listsub array array2\r\n " +
+				"(* concat array2 with array1 *)\r\n " +
+				"val array2 = array2^^array\r\n\r\n" +
+                "in\r\n " +
+				"array2\r\n" +
+                "end";
+
+			//TS2 Transition
+			TransitionModel tr = new TransitionModel()
             {
                 Id1 = IdManagements.GetlastestTransitionId(),
                 Id2 = IdManagements.GetlastestTransitionId(),
@@ -129,9 +151,14 @@ namespace NestedFlowchart.Rules
                 xPos1 = position.xPos1,
                 yPos1 = position.GetLastestyPos1(),
 
-                xPos4 = position.GetLastestxPos4(),
-                yPos4 = position.GetLastestyPos4(),
-            };
+				xPos2 = position.xPos2,
+				yPos2 = position.GetLastestyPos2(),
+
+				xPos4 = position.GetLastestxPos4() + 180,
+                yPos4 = position.GetLastestyPos4() - 320,
+
+				CodeSegment = codeSeg
+			};
 
             //Arc from PS4 to TS2
             ArcModel a1 = new ArcModel()
@@ -139,18 +166,34 @@ namespace NestedFlowchart.Rules
                 Id1 = IdManagements.GetlastestArcId(),
                 Id2 = IdManagements.GetlastestArcId(),
 
-                TransEnd = tr.Id1,
+                TransEnd = previousNode.previousTransitionModel.Id1,
                 PlaceEnd = pl.Id1,
 
                 xPos = position.GetLastestxArcPos(),
                 yPos = position.GetLastestyArcPos(),
 
-                Orientation = "PtoT", //Place to Transition 
-                Type = $"(i,j,{arrayName})"
+                Orientation = "TtoP",// Transition to Place
+				Type = $"(i,j,{arrayName})"
             };
 
+			//Arc from PS4 to TS2
+			ArcModel a2 = new ArcModel()
+			{
+				Id1 = IdManagements.GetlastestArcId(),
+				Id2 = IdManagements.GetlastestArcId(),
 
-            return (pl, tr, a1);
+				TransEnd = tr.Id1,
+				PlaceEnd = pl.Id1,
+
+				xPos = position.GetLastestxArcPos(),
+				yPos = position.GetLastestyArcPos(),
+
+				Orientation = "PtoT", //Place to Transition 
+				Type = $"(i,j,{arrayName})"
+			};
+
+
+			return (pl, tr, a1, a2);
         }
     }
 }

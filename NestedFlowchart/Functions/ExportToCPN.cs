@@ -48,14 +48,15 @@ namespace NestedFlowchart.Functions
              * Declare Array name for arc
              */
             string arrayName = string.Empty;
-            #endregion
+			string arrayName2 = "array2";
+			#endregion
 
-            #region Rule1 Variable
-            /*
+			#region Rule1 Variable
+			/*
              * Need to declare these variable to temp the Rule1 because
              * It use on initialize marking on Rule2
              */
-            PlaceModel rule1Place = new PlaceModel();
+			PlaceModel rule1Place = new PlaceModel();
             #endregion
 
             //Declare page position
@@ -123,7 +124,7 @@ namespace NestedFlowchart.Functions
 
             #endregion AppleRules
 
-            string allVar = _approach.CreateAllVariables(_approach, allTemplates, arrayName);
+            string allVar = _approach.CreateAllVariables(_approach, allTemplates, arrayName, arrayName2);
 
             string allPage = _approach.CreateAllPages(_approach, allTemplates, pages);
 
@@ -281,7 +282,7 @@ namespace NestedFlowchart.Functions
         {
             //TODO: Send real process to code segment inscription
             //TODO: Find solution to create arc
-            var (rule4Place, rule4Transition, rule4Arc) = _rule4.ApplyRuleWithCodeSegment(
+            var (rule4Place, rule4Transition, rule4Arc, rule4Arc2) = _rule4.ApplyRuleWithCodeSegment(
                 allTemplates[(int)TemplateEnum.TransitionTemplate],
                 allTemplates[(int)TemplateEnum.PlaceTemplate],
                 allTemplates[(int)TemplateEnum.ArcTemplate],
@@ -295,9 +296,10 @@ namespace NestedFlowchart.Functions
 
             var place1 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule4Place);
             var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule4Arc);
-            var transition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule4Transition);
-
-            var rule4String = place1 + transition + arc1;
+			var transition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule4Transition);
+			var arc2 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule4Arc2);
+			
+            var rule4String = place1 + transition + arc1 + arc2;
             CreatePageNodeByCountSubPage(countSubPage, pages, rule4String);
         }
 
