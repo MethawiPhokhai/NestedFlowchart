@@ -145,22 +145,13 @@ namespace NestedFlowchart.Functions
         }
         private string Rule2(List<XMLCellNode> sortedFlowcharts, string[] allTemplates, int countSubPage, PageDeclare pages, PreviousNode previousNode, string arrayName, PlaceModel rule1Place, PositionManagements page1Position, int i)
         {
-            arrayName = _rule2.AssignInitialMarking(
-                                    sortedFlowcharts,
-                                    arrayName,
-                                    rule1Place,
-                                    i);
-
-            var (rule2Place, rule2Transition, rule2Arc1, rule2Arc2) = _rule2.ApplyRule(
-                rule1Place,
-                arrayName,
-                page1Position);
+            arrayName = _rule2.AssignInitialMarking(sortedFlowcharts, arrayName, rule1Place, i);
+            var (rule2Place, rule2Transition, rule2Arc1, rule2Arc2) = _rule2.ApplyRule(rule1Place, arrayName, page1Position);
 
             //Set previous node for create arc next rule
             previousNode.previousPlaceModel = rule2Place;
             previousNode.previousTransitionModel = rule2Transition;
             previousNode.Type = "place";
-
 
             //Rule2 need to create Rule1 here because initial marking
             var place1 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule1Place);
@@ -178,16 +169,9 @@ namespace NestedFlowchart.Functions
         {
             //TODO: Find solution to declare var
             //In case declare more than 1 line
-            sortedFlowcharts[i].ValueText = sortedFlowcharts[i].ValueText.Replace("<br>", "\n");
-            sortedFlowcharts[i].ValueText = sortedFlowcharts[i].ValueText.ToLower().Replace("int", "");
-            sortedFlowcharts[i].ValueText = sortedFlowcharts[i].ValueText.Replace(";", "");
+            var code = sortedFlowcharts[i].ValueText.Replace("<br>", "\n").ToLower().Replace("int", "").Replace(";", "");
 
-            var (rule3Place, rule3Transition, rule3Arc1, rule3Arc2) = _rule3.ApplyRuleWithoutHierarchy(
-                sortedFlowcharts[i].ValueText,
-                arrayName,
-                previousNode,
-                page1Position
-                );
+            var (rule3Place, rule3Transition, rule3Arc1, rule3Arc2) = _rule3.ApplyRuleWithoutHierarchy(code, arrayName, previousNode, page1Position);
 
             previousNode.previousPlaceModel = rule3Place;
             previousNode.Type = "place";
