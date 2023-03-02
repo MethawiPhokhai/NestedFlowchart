@@ -99,7 +99,12 @@ namespace NestedFlowchart.Functions
                         if (sortedFlowcharts[i].ValueText.Contains("temp = array[ j+1]"))
                         {
                             PositionManagements pagePosition = GetPagePositionByCountSubPage(countSubPage, page1Position, page2Position);
-                            Rule4_2(sortedFlowcharts, allTemplates, pages, previousNode, arrayName, pagePosition, i, countSubPage);
+                            Rule4_2(allTemplates, pages, previousNode, arrayName, pagePosition, countSubPage);
+                        }
+                        else if(sortedFlowcharts[i].ValueText.Contains("j ++"))
+                        {
+                            PositionManagements pagePosition = GetPagePositionByCountSubPage(countSubPage, page1Position, page2Position);
+                            Rule4_3(allTemplates, pages, previousNode, arrayName, pagePosition, countSubPage);
                         }
                         //countSubPage = Rule4(sortedFlowcharts, allTemplates, pages, previousNode, arrayName, page1Position, i);
                     }
@@ -263,14 +268,14 @@ namespace NestedFlowchart.Functions
             return countSubPage;
         }
 
-        private void Rule4_2(List<XMLCellNode> sortedFlowcharts, string[] allTemplates, PageDeclare pages, PreviousNode previousNode, string arrayName, PositionManagements pagePosition, int i, int countSubPage)
+        private void Rule4_2(string[] allTemplates, 
+            PageDeclare pages, 
+            PreviousNode previousNode, 
+            string arrayName, 
+            PositionManagements pagePosition,
+            int countSubPage)
         {
-            //TODO: Send real process to code segment inscription
-            //TODO: Find solution to create arc
             var (rule4Place, rule4Transition, rule4Arc, rule4Arc2) = _rule4.ApplyRuleWithCodeSegment(
-                allTemplates[(int)TemplateEnum.TransitionTemplate],
-                allTemplates[(int)TemplateEnum.PlaceTemplate],
-                allTemplates[(int)TemplateEnum.ArcTemplate],
                 arrayName,
                 previousNode,
                 pagePosition);
@@ -285,6 +290,28 @@ namespace NestedFlowchart.Functions
 			var arc2 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule4Arc2);
 			
             var rule4String = place1 + transition + arc1 + arc2;
+            CreatePageNodeByCountSubPage(countSubPage, pages, rule4String);
+        }
+
+        private void Rule4_3(string[] allTemplates, 
+            PageDeclare pages, 
+            PreviousNode previousNode, 
+            string arrayName, 
+            PositionManagements pagePosition,
+            int countSubPage)
+        {
+            var (rule4Transition, rule4Arc) = _rule4.ApplyRuleWithCodeSegment2(
+                arrayName,
+                previousNode,
+                pagePosition);
+
+            previousNode.previousTransitionModel = rule4Transition;
+            previousNode.Type = "transition";
+
+            var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule4Arc);
+            var transition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule4Transition);
+
+            var rule4String = transition + arc1;
             CreatePageNodeByCountSubPage(countSubPage, pages, rule4String);
         }
 

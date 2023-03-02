@@ -1311,7 +1311,7 @@ end</text>
         </initmark>
         
       </place>
-<arc id="ID1412949854"
+<arc id="ID1412949856"
            orientation="TtoP"
            order="1">
         <posattr x="0.000000"
@@ -1328,7 +1328,7 @@ end</text>
                    currentcyckle="2"/>
         <transend idref="ID1412848787"/>
         <placeend idref="ID1412948806"/>
-        <annot id="ID1412949855">
+        <annot id="ID1412949857">
           <posattr x="10"
                    y="-588"/>
           <fillattr colour="White"
@@ -2417,6 +2417,120 @@ end</text>
         <annot id="ID1412949853">
           <posattr x="10"
                    y="-420"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1">(i,j,array)</text>
+        </annot>
+      </arc>
+<trans id="ID1412848832"
+             explicit="false">
+        <posattr x="-15"
+                 y="-630"/>
+        <fillattr colour="White"
+                  pattern=""
+                  filled="false"/>
+        <lineattr colour="Black"
+                  thick="1"
+                  type="Solid"/>
+        <textattr colour="Black"
+                  bold="false"/>
+        <text>T5</text>
+        <box w="60.000000"
+             h="40.000000"/>
+        
+        <binding x="7.200000"
+                 y="-3.000000"/>
+        <cond id="ID1412848833">
+          <posattr x="24"
+                   y="-1067"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1"></text>
+        </cond>
+        <time id="ID1412848834">
+          <posattr x="0"
+                   y="0"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1"/>
+        </time>
+        <code id="ID1412848835">
+          <posattr x="115"
+                   y="-664"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1">input (j);
+output (j2);
+action
+let
+val j2 = j+1
+in
+ j2
+end</text>
+        </code>
+        <priority id="ID1412848836">
+          <posattr x="0"
+                   y="0"/>
+          <fillattr colour="White"
+                    pattern="Solid"
+                    filled="false"/>
+          <lineattr colour="Black"
+                    thick="0"
+                    type="Solid"/>
+          <textattr colour="Black"
+                    bold="false"/>
+          <text tool="CPN Tools"
+                version="4.0.1"/>
+        </priority>
+      </trans>
+<arc id="ID1412949854"
+           orientation="PtoT"
+           order="1">
+        <posattr x="0.000000"
+                 y="0.000000"/>
+        <fillattr colour="White"
+                  pattern=""
+                  filled="false"/>
+        <lineattr colour="Black"
+                  thick="1"
+                  type="Solid"/>
+        <textattr colour="Black"
+                  bold="false"/>
+        <arrowattr headsize="1.200000"
+                   currentcyckle="2"/>
+        <transend idref="ID1412848832"/>
+        <placeend idref="ID1412948803"/>
+        <annot id="ID1412949855">
+          <posattr x="10"
+                   y="-504"/>
           <fillattr colour="White"
                     pattern="Solid"
                     filled="false"/>

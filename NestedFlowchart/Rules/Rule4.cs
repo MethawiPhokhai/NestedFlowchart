@@ -90,9 +90,6 @@ namespace NestedFlowchart.Rules
 
 
         public (PlaceModel, TransitionModel, ArcModel, ArcModel) ApplyRuleWithCodeSegment(
-            string transitionTemplate,
-            string placeTemplate,
-            string arcTemplate,
             string arrayName,
             PreviousNode previousNode,
             PositionManagements position)
@@ -194,6 +191,61 @@ namespace NestedFlowchart.Rules
 
 
 			return (pl, tr, a1, a2);
+        }
+
+        public (TransitionModel, ArcModel) ApplyRuleWithCodeSegment2(
+        string arrayName,
+        PreviousNode previousNode,
+        PositionManagements position)
+        {
+            var codeSeg = "input (j);\r\n" +
+                "output (j2);\r\n" +
+                "action\r\n" +
+                "let\r\n" +
+                "val j2 = j+1\r\n" +
+                "in\r\n " +
+                "j2\r\n" +
+                "end";
+
+            TransitionModel tr = new TransitionModel()
+            {
+                Id1 = IdManagements.GetlastestTransitionId(),
+                Id2 = IdManagements.GetlastestTransitionId(),
+                Id3 = IdManagements.GetlastestTransitionId(),
+                Id4 = IdManagements.GetlastestTransitionId(),
+                Id5 = IdManagements.GetlastestTransitionId(),
+
+                Name = IdManagements.GetlastestTransitionName(),
+
+                xPos1 = position.xPos1,
+                yPos1 = position.GetLastestyPos1(),
+
+                xPos2 = position.xPos2,
+                yPos2 = position.GetLastestyPos2(),
+
+                xPos4 = position.xPos4 + 40,
+                yPos4 = position.GetLastestyPos4() - 290,
+
+                CodeSegment = codeSeg
+            };
+
+            ArcModel a1 = new ArcModel()
+            {
+                Id1 = IdManagements.GetlastestArcId(),
+                Id2 = IdManagements.GetlastestArcId(),
+
+                TransEnd = tr.Id1,
+                PlaceEnd = previousNode.previousPlaceModel.Id1,
+
+                xPos = position.GetLastestxArcPos(),
+                yPos = position.GetLastestyArcPos(),
+
+                Orientation = "PtoT", //Place to Transition 
+                Type = $"(i,j,{arrayName})"
+            };
+
+
+            return (tr, a1);
         }
     }
 }
