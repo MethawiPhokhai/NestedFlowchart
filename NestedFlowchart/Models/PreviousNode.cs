@@ -6,7 +6,7 @@
         public PlaceModel previousPlaceModel { get; set; } = new PlaceModel();
         public TransitionModel previousTransitionModel { get; set; } = new TransitionModel();
 
-        //Place, Transition
+        //place, transition
         public string Type { get; set; }
     }
 }

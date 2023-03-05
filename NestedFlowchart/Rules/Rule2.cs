@@ -13,7 +13,8 @@ namespace NestedFlowchart.Rules
             ApplyRule(
             PreviousNode previousNode,
             string arrayName,
-            PositionManagements position)
+            PositionManagements position,
+            TempArrow arrow)
         {
             TransitionModel tr = new TransitionModel()
             {
@@ -46,20 +47,7 @@ namespace NestedFlowchart.Rules
                 Type = "INTs"
             };
 
-            ArcModel a1 = new ArcModel()
-            {
-                Id1 = IdManagements.GetlastestArcId(),
-                Id2 = IdManagements.GetlastestArcId(),
-
-                TransEnd = tr.Id1,
-                PlaceEnd = previousNode.previousPlaceModel.Id1,
-
-                xPos = position.xArcPos,
-                yPos = position.yArcPos,
-
-                Orientation = "PtoT", //Place to Transition
-                Type = arrayName
-            };
+            var a1 = CreateArcWithPreviousNode(arrow, position, arrayName, tr, previousNode);
 
             ArcModel a2 = new ArcModel()
             {
@@ -107,6 +95,26 @@ namespace NestedFlowchart.Rules
         {
             int index = str.IndexOf(ch);
             return index >= 0 ? str.Substring(index + 1) : string.Empty;
+        }
+
+        private ArcModel CreateArcWithPreviousNode(TempArrow arrow, PositionManagements position, string arrayName, TransitionModel currentTransition, PreviousNode previousNode)
+        {
+            //Rule2 สามารถเอาไปต่อกับตัวก่อนหน้าได้เลย เพราะไม่มีทางแยก
+            return new ArcModel()
+            {
+                Id1 = IdManagements.GetlastestArcId(),
+                Id2 = IdManagements.GetlastestArcId(),
+
+                TransEnd = currentTransition.Id1,
+                PlaceEnd = previousNode.previousPlaceModel.Id1,
+
+                xPos = position.xArcPos,
+                yPos = position.yArcPos,
+
+                Orientation = "PtoT", //Place to Transition
+                Type = arrayName
+            };
+
         }
     }
 }

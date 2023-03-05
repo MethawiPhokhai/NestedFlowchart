@@ -41,7 +41,7 @@ namespace NestedFlowchart.Functions
 
             int countSubPage = 0;
             PageDeclare pages = new PageDeclare();
-            PreviousNode previousNode = new PreviousNode();
+            List<PreviousNode> previousNodes = new List<PreviousNode>();
 
             #region Array Name
             /*
@@ -67,10 +67,12 @@ namespace NestedFlowchart.Functions
                 //Rule1 : Start
                 if (flowchartType == "start")
                 {
-                    previousNode.previousPlaceModel = Rule1(page1Position);
+                    PreviousNode pv = new PreviousNode();
+                    pv.previousPlaceModel = Rule1(page1Position);
 
                     //keep element id for arrow can search
-                    previousNode.elementId = sortedFlowcharts[i].ID;
+                    pv.elementId = sortedFlowcharts[i].ID;
+                    previousNodes.Add(pv);
                 }
                 else if(flowchartType == "arrow")
                 {
@@ -84,7 +86,8 @@ namespace NestedFlowchart.Functions
                 //Rule2 : Initialize Process
                 else if (flowchartType == "process" && sortedFlowcharts[i - 2].NodeType.ToLower() == "start")
                 {
-                    arrayName = Rule2(sortedFlowcharts, allTemplates, countSubPage, pages, previousNode, arrayName, page1Position, i);
+                    arrayName = Rule2(sortedFlowcharts, allTemplates, countSubPage, pages, previousNodes, arrayName, page1Position, i, arrows.FirstOrDefault());
+
                 }
                 //Rule3 : I=0, J=1 , Rule4
                 else if (flowchartType == "process")
@@ -94,25 +97,25 @@ namespace NestedFlowchart.Functions
                     //Case Not Nested => Define i
                     if (flowchartValue.ToLower().Trim().Contains("i ="))
                     {
-                        Rule3_1(sortedFlowcharts, allTemplates, countSubPage, pages, previousNode, arrayName, page1Position, i);
+                        Rule3_1(sortedFlowcharts, allTemplates, countSubPage, pages, previousNodes, arrayName, page1Position, i);
                     }
                     //Case Nested => Create Hierachy Tool
                     else if (flowchartValue.ToLower().Trim().Contains("j =") || flowchartValue.ToLower().Trim().Contains("k =")
                         || flowchartValue.ToLower().Trim().Contains("l =") || flowchartValue.ToLower().Trim().Contains("m ="))
                     {
-                        definejTransition = Rule3_2(sortedFlowcharts, allTemplates, ref countSubPage, pages, previousNode, arrayName, page1Position, page2Position, i);
+                        definejTransition = Rule3_2(sortedFlowcharts, allTemplates, ref countSubPage, pages, previousNodes, arrayName, page1Position, page2Position, i);
                     }
                     else
                     {
                         if (flowchartValue.Contains("temp = array[ j+1]"))
                         {
                             PositionManagements pagePosition = GetPagePositionByCountSubPage(countSubPage, page1Position, page2Position);
-                            Rule4_2(allTemplates, pages, previousNode, arrayName, pagePosition, countSubPage);
+                            Rule4_2(sortedFlowcharts, allTemplates, pages, previousNodes, arrayName, pagePosition, countSubPage, i);
                         }
                         else if(flowchartValue.Contains("j ++"))
                         {
                             PositionManagements pagePosition = GetPagePositionByCountSubPage(countSubPage, page1Position, page2Position);
-                            Rule4_3(allTemplates, pages, previousNode, arrayName, pagePosition, countSubPage);
+                            Rule4_3(sortedFlowcharts, allTemplates, pages, previousNodes, arrayName, pagePosition, countSubPage, i);
                         }
                         //countSubPage = Rule4(sortedFlowcharts, allTemplates, pages, previousNode, arrayName, page1Position, i);
                     }
@@ -121,18 +124,18 @@ namespace NestedFlowchart.Functions
                 else if (flowchartType == "connector")
                 {
 					PositionManagements pagePosition = GetPagePositionByCountSubPage(countSubPage, page1Position, page2Position);
-					Rule5(allTemplates, countSubPage, pages, previousNode, arrayName, pagePosition);
+					Rule5(sortedFlowcharts, allTemplates, countSubPage, pages, previousNodes, arrayName, pagePosition, i);
                 }
                 //Rule 6 Decision
                 else if (flowchartType == "condition")
                 {
                     PositionManagements pagePosition = GetPagePositionByCountSubPage(countSubPage, page1Position, page2Position);
-                    Rule6(sortedFlowcharts, allTemplates, countSubPage, pages, previousNode, arrayName, pagePosition, i);
+                    Rule6(sortedFlowcharts, allTemplates, countSubPage, pages, previousNodes, arrayName, pagePosition, i);
                 }
                 //Rule 7 End
                 else if (flowchartType == "end")
                 {
-                    Rule7(allTemplates, out countSubPage, pages, out previousNode, arrayName, page1Position);
+                    Rule7(allTemplates, out countSubPage, pages, previousNodes.LastOrDefault(), arrayName, page1Position);
                 }
             }
 
@@ -156,18 +159,21 @@ namespace NestedFlowchart.Functions
         {
             return _rule1.ApplyRule(page1Position);
         }
-        private string Rule2(List<XMLCellNode> sortedFlowcharts, string[] allTemplates, int countSubPage, PageDeclare pages, PreviousNode previousNode, string arrayName, PositionManagements page1Position, int i)
+        private string Rule2(List<XMLCellNode> sortedFlowcharts, string[] allTemplates, int countSubPage, PageDeclare pages, List<PreviousNode> previousNodes, string arrayName, PositionManagements page1Position, int i, TempArrow arrow)
         {
-            arrayName = _rule2.AssignInitialMarking(sortedFlowcharts, arrayName, previousNode, i);
-            var (rule2Place, rule2Transition, rule2Arc1, rule2Arc2) = _rule2.ApplyRule(previousNode, arrayName, page1Position);
+            arrayName = _rule2.AssignInitialMarking(sortedFlowcharts, arrayName, previousNodes.LastOrDefault(), i);
+            var (rule2Place, rule2Transition, rule2Arc1, rule2Arc2) = _rule2.ApplyRule(previousNodes.LastOrDefault(), arrayName, page1Position, arrow);
 
             //Rule2 need to create Rule1 here because initial marking
-            var place1 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], previousNode.previousPlaceModel);
+            var place1 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], previousNodes.LastOrDefault().previousPlaceModel);
 
             //Set previous node for create arc next rule
-            previousNode.previousPlaceModel = rule2Place;
-            previousNode.previousTransitionModel = rule2Transition;
-            previousNode.Type = "place";
+            PreviousNode pv = new PreviousNode();
+            pv.elementId = sortedFlowcharts[i].ID;
+            pv.previousPlaceModel = rule2Place;
+            pv.previousTransitionModel = rule2Transition;
+            pv.Type = "place";
+            previousNodes.Add(pv);
 
             var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule2Arc1);
             var transition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule2Transition);
@@ -179,16 +185,20 @@ namespace NestedFlowchart.Functions
             return arrayName;
         }
         
-        private void Rule3_1(List<XMLCellNode> sortedFlowcharts, string[] allTemplates, int countSubPage, PageDeclare pages, PreviousNode previousNode, string arrayName, PositionManagements page1Position, int i)
+        private void Rule3_1(List<XMLCellNode> sortedFlowcharts, string[] allTemplates, int countSubPage, PageDeclare pages, List<PreviousNode> previousNodes, string arrayName, PositionManagements page1Position, int i)
         {
             //TODO: Find solution to declare var
             //In case declare more than 1 line
             var code = sortedFlowcharts[i].ValueText.Replace("<br>", "\n").ToLower().Replace("int", "").Replace(";", "");
 
-            var (rule3Place, rule3Transition, rule3Arc1, rule3Arc2) = _rule3.ApplyRuleWithoutHierarchy(code, arrayName, previousNode, page1Position);
+            var (rule3Place, rule3Transition, rule3Arc1, rule3Arc2) = _rule3.ApplyRuleWithoutHierarchy(code, arrayName, previousNodes.LastOrDefault(), page1Position);
 
-            previousNode.previousPlaceModel = rule3Place;
-            previousNode.Type = "place";
+            PreviousNode pv = new PreviousNode();
+            pv.elementId = sortedFlowcharts[i].ID;
+            pv.previousPlaceModel = rule3Place;
+            pv.Type = "place";
+            previousNodes.Add(pv);
+
 
             var place1 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule3Place);
             var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule3Arc1);
@@ -199,7 +209,7 @@ namespace NestedFlowchart.Functions
 
             CreatePageNodeByCountSubPage(countSubPage, pages, rule3OldString);
         }
-        private TransitionModel Rule3_2(List<XMLCellNode> sortedFlowcharts, string[] allTemplates, ref int countSubPage, PageDeclare pages, PreviousNode previousNode, string arrayName, PositionManagements page1Position, PositionManagements page2Position, int i)
+        private TransitionModel Rule3_2(List<XMLCellNode> sortedFlowcharts, string[] allTemplates, ref int countSubPage, PageDeclare pages, List<PreviousNode> previousNodes, string arrayName, PositionManagements page1Position, PositionManagements page2Position, int i)
         {
             TransitionModel definejTransition;
             var (rule3InputPlace, rule3OutputPlace, rule3InputPlace2, rule3OutputPlace2, rule3PS2,
@@ -210,15 +220,19 @@ namespace NestedFlowchart.Functions
                                         pages.subPageModel1.Id,
                                         sortedFlowcharts[i].ValueText,
                                         arrayName,
-                                        previousNode,
+                                        previousNodes.LastOrDefault(),
                                         page1Position,
                                         page2Position
                                         );
 
-            //Set previous in subpage first
-            previousNode.previousPlaceModel = rule3PS2;
+            //Going to subpage page first
+            PreviousNode pv = new PreviousNode();
+            pv.elementId = sortedFlowcharts[i].ID;
+            pv.previousPlaceModel = rule3PS2;
             definejTransition = rule3Transition;
-            previousNode.Type = "place";
+            pv.Type = "place";
+            previousNodes.Add(pv);
+
 
             //Main Page
             var inputPlace = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule3InputPlace);
@@ -249,7 +263,7 @@ namespace NestedFlowchart.Functions
             return definejTransition;
         }
         
-        private int Rule4(List<XMLCellNode> sortedFlowcharts, string[] allTemplates, PageDeclare pages, PreviousNode previousNode, string arrayName, PositionManagements page1Position, int i)
+        private int Rule4(List<XMLCellNode> sortedFlowcharts, string[] allTemplates, PageDeclare pages, List<PreviousNode> previousNodes, string arrayName, PositionManagements page1Position, int i)
         {
             int countSubPage;
             //countSubPage = 0,1 to test create on current page
@@ -257,18 +271,22 @@ namespace NestedFlowchart.Functions
             if (sortedFlowcharts[i].ValueText.ToLower().Trim().Contains("i ++"))
             {
                 //TODO: Send real process to code segment inscription
-                //TODO: Find solution to create arc
                 var (rule4Place, rule4Transition, _, rule4String) = _rule4.ApplyRule(
                     allTemplates[(int)TemplateEnum.TransitionTemplate],
                     allTemplates[(int)TemplateEnum.PlaceTemplate],
                     allTemplates[(int)TemplateEnum.ArcTemplate],
                     arrayName,
-                    previousNode,
+                    previousNodes.LastOrDefault(),
                     page1Position);
 
-                previousNode.previousPlaceModel = rule4Place;
-                previousNode.previousTransitionModel = rule4Transition;
-                previousNode.Type = "transition";
+                
+                PreviousNode pv = new PreviousNode();
+                pv.elementId = sortedFlowcharts[i].ID;
+                pv.previousPlaceModel = rule4Place;
+                pv.previousTransitionModel = rule4Transition;
+                pv.Type = "transition";
+                previousNodes.Add(pv);
+
 
                 countSubPage = 0;
                 CreatePageNodeByCountSubPage(countSubPage, pages, rule4String);
@@ -277,16 +295,19 @@ namespace NestedFlowchart.Functions
             countSubPage = 1;
             return countSubPage;
         }
-        private void Rule4_2(string[] allTemplates, PageDeclare pages, PreviousNode previousNode, string arrayName, PositionManagements pagePosition, int countSubPage)
+        private void Rule4_2(List<XMLCellNode> sortedFlowcharts, string[] allTemplates, PageDeclare pages, List<PreviousNode> previousNodes, string arrayName, PositionManagements pagePosition, int countSubPage, int i)
         {
             var (rule4Place, rule4Transition, rule4Arc, rule4Arc2) = _rule4.ApplyRuleWithCodeSegment(
                 arrayName,
-                previousNode,
+                previousNodes.LastOrDefault(),
                 pagePosition);
 
-            previousNode.previousPlaceModel = rule4Place;
-            previousNode.previousTransitionModel = rule4Transition;
-            previousNode.Type = "transition";
+            PreviousNode pv = new PreviousNode();
+            pv.elementId = sortedFlowcharts[i].ID;
+            pv.previousPlaceModel = rule4Place;
+            pv.previousTransitionModel = rule4Transition;
+            pv.Type = "transition";
+            previousNodes.Add(pv);
 
             var place1 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule4Place);
             var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule4Arc);
@@ -296,15 +317,19 @@ namespace NestedFlowchart.Functions
             var rule4String = place1 + transition + arc1 + arc2;
             CreatePageNodeByCountSubPage(countSubPage, pages, rule4String);
         }
-        private void Rule4_3(string[] allTemplates, PageDeclare pages, PreviousNode previousNode, string arrayName, PositionManagements pagePosition, int countSubPage)
+        private void Rule4_3(List<XMLCellNode> sortedFlowcharts, string[] allTemplates, PageDeclare pages, List<PreviousNode> previousNodes, string arrayName, PositionManagements pagePosition, int countSubPage, int i)
         {
             var (rule4Transition, rule4Arc) = _rule4.ApplyRuleWithCodeSegment2(
                 arrayName,
-                previousNode,
+                previousNodes.LastOrDefault(),
                 pagePosition);
 
-            previousNode.previousTransitionModel = rule4Transition;
-            previousNode.Type = "transition";
+            PreviousNode pv = new PreviousNode();
+            pv.elementId = sortedFlowcharts[i].ID;
+            pv.previousTransitionModel = rule4Transition;
+            pv.Type = "transition";
+            previousNodes.Add(pv);
+
 
             var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule4Arc);
             var transition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule4Transition);
@@ -313,17 +338,21 @@ namespace NestedFlowchart.Functions
             CreatePageNodeByCountSubPage(countSubPage, pages, rule4String);
         }
 
-        private void Rule5(string[] allTemplates, int countSubPage, PageDeclare pages, PreviousNode previousNode, string arrayName, PositionManagements page1Position)
+        private void Rule5(List<XMLCellNode> sortedFlowcharts, string[] allTemplates, int countSubPage, PageDeclare pages, List<PreviousNode> previousNodes, string arrayName, PositionManagements page1Position, int i)
         {
             var (rule5Place, rule5Transition, rule5Arc1, rule5Arc2) = _rule5.ApplyRule(
                                     arrayName,
-                                    previousNode,
+                                    previousNodes.LastOrDefault(),
                                     page1Position,
 									countSubPage);
 
-            previousNode.previousPlaceModel = rule5Place;
-            previousNode.previousTransitionModel = rule5Transition;
-            previousNode.Type = "place";
+
+            PreviousNode pv = new PreviousNode();
+            pv.elementId = sortedFlowcharts[i].ID;
+            pv.previousPlaceModel = rule5Place;
+            pv.previousTransitionModel = rule5Transition;
+            pv.Type = "place";
+            previousNodes.Add(pv);
 
 
             var place1 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule5Place);
@@ -334,23 +363,27 @@ namespace NestedFlowchart.Functions
 
             CreatePageNodeByCountSubPage(countSubPage, pages, rule5String);
         }
-        private void Rule6(List<XMLCellNode> sortedFlowcharts, string[] allTemplates, int countSubPage, PageDeclare pages, PreviousNode previousNode, string arrayName, PositionManagements pagePosition, int i)
+        private void Rule6(List<XMLCellNode> sortedFlowcharts, string[] allTemplates, int countSubPage, PageDeclare pages, List<PreviousNode> previousNodes, string arrayName, PositionManagements pagePosition, int i)
         {
             string trueCondition = _rule6.CreateTrueCondition(sortedFlowcharts[i].ValueText, arrayName);
             string falseCondition = _rule6.CreateFalseDecision(trueCondition);
 
             //TODO: Separate between true and false case by arrow[i+1]
             var (rule6Place, rule6Place2, rule6FalseTransition, rule6TrueTransition, rule6Arc1, rule6Arc2, rule6Arc3) = _rule6.ApplyRule(
-                previousNode,
+                previousNodes.LastOrDefault(),
                 trueCondition,
                 falseCondition,
                 arrayName,
                 pagePosition,
                 countSubPage);
 
-            previousNode.previousPlaceModel = rule6Place;
-            previousNode.previousTransitionModel = rule6TrueTransition;
-            previousNode.Type = "transition";
+
+            PreviousNode pv = new PreviousNode();
+            pv.elementId = sortedFlowcharts[i].ID;
+            pv.previousPlaceModel = rule6Place;
+            pv.previousTransitionModel = rule6TrueTransition;
+            pv.Type = "transition";
+            previousNodes.Add(pv);
 
             var ps3 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule6Place2);
             var trueTransition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule6TrueTransition);
@@ -363,7 +396,7 @@ namespace NestedFlowchart.Functions
 
             CreatePageNodeByCountSubPage(countSubPage, pages, rule6String);
         }
-        private void Rule7(string[] allTemplates, out int countSubPage, PageDeclare pages, out PreviousNode previousNode, string arrayName, PositionManagements page1Position)
+        private void Rule7(string[] allTemplates, out int countSubPage, PageDeclare pages, PreviousNode previousNode, string arrayName, PositionManagements page1Position)
         {
             //TODO: Previous transition need to check (in subpage)
 
