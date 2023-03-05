@@ -11,7 +11,7 @@ namespace NestedFlowchart.Rules
     {
         public (PlaceModel, TransitionModel, ArcModel, ArcModel)
             ApplyRule(
-            PlaceModel placeRule1,
+            PreviousNode previousNode,
             string arrayName,
             PositionManagements position)
         {
@@ -52,7 +52,7 @@ namespace NestedFlowchart.Rules
                 Id2 = IdManagements.GetlastestArcId(),
 
                 TransEnd = tr.Id1,
-                PlaceEnd = placeRule1.Id1,
+                PlaceEnd = previousNode.previousPlaceModel.Id1,
 
                 xPos = position.xArcPos,
                 yPos = position.yArcPos,
@@ -81,8 +81,8 @@ namespace NestedFlowchart.Rules
 
         public string AssignInitialMarking(
             List<XMLCellNode> sortedFlowcharts, 
-            string arrayName, 
-            PlaceModel rule1Place, 
+            string arrayName,
+            PreviousNode previousNode, 
             int i)
         {
             if (sortedFlowcharts[i].ValueText.Contains('['))
@@ -90,8 +90,8 @@ namespace NestedFlowchart.Rules
                 arrayName = SubstringBefore(sortedFlowcharts[i].ValueText.Trim(), '=').Trim();
                 var arrayValue = SubstringAfter(sortedFlowcharts[i].ValueText.Trim(), '=');
 
-                rule1Place.Type = "INTs";
-                rule1Place.InitialMarking = arrayValue;
+                previousNode.previousPlaceModel.Type = "INTs";
+                previousNode.previousPlaceModel.InitialMarking = arrayValue;
             }
 
             return arrayName;

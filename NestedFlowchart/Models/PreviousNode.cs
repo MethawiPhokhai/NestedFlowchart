@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace NestedFlowchart.Models
+﻿namespace NestedFlowchart.Models
 {
     public class PreviousNode
     {
-        public PlaceModel previousPlaceModel = new PlaceModel();
-        public TransitionModel previousTransitionModel = new TransitionModel();
+        public string elementId { get; set; }
+        public PlaceModel previousPlaceModel { get; set; } = new PlaceModel();
+        public TransitionModel previousTransitionModel { get; set; } = new TransitionModel();
 
         //Place, Transition
-        public string Type{ get; set; }
+        public string Type { get; set; }
     }
 }

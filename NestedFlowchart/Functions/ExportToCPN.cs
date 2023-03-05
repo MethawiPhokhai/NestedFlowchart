@@ -51,19 +51,13 @@ namespace NestedFlowchart.Functions
 			string arrayName2 = "array2";
 			#endregion
 
-			#region Rule1 Variable
-			/*
-             * Need to declare these variable to temp the Rule1 because
-             * It use on initialize marking on Rule2
-             */
-			PlaceModel rule1Place = new PlaceModel();
-            #endregion
-
             //Declare page position
             PositionManagements page1Position = new PositionManagements();
             PositionManagements page2Position = new PositionManagements();
 
             TransitionModel definejTransition = new TransitionModel();
+
+            List<TempArrow> arrows = new List<TempArrow>();
 
             for (int i = 0; i < sortedFlowcharts.Count; i++)
             {
@@ -73,12 +67,24 @@ namespace NestedFlowchart.Functions
                 //Rule1 : Start
                 if (flowchartType == "start")
                 {
-                    rule1Place = Rule1(page1Position);
+                    previousNode.previousPlaceModel = Rule1(page1Position);
+
+                    //keep element id for arrow can search
+                    previousNode.elementId = sortedFlowcharts[i].ID;
+                }
+                else if(flowchartType == "arrow")
+                {
+                    //Keep arrow into temp for next element can use
+                    TempArrow arrow = new TempArrow();
+                    arrow.Id = sortedFlowcharts[i].ID;
+                    arrow.Source = sortedFlowcharts[i].Source;
+                    arrow.Destination = sortedFlowcharts[i].Target;
+                    arrows.Add(arrow);
                 }
                 //Rule2 : Initialize Process
                 else if (flowchartType == "process" && sortedFlowcharts[i - 2].NodeType.ToLower() == "start")
                 {
-                    arrayName = Rule2(sortedFlowcharts, allTemplates, countSubPage, pages, previousNode, arrayName, rule1Place, page1Position, i);
+                    arrayName = Rule2(sortedFlowcharts, allTemplates, countSubPage, pages, previousNode, arrayName, page1Position, i);
                 }
                 //Rule3 : I=0, J=1 , Rule4
                 else if (flowchartType == "process")
@@ -150,18 +156,18 @@ namespace NestedFlowchart.Functions
         {
             return _rule1.ApplyRule(page1Position);
         }
-        private string Rule2(List<XMLCellNode> sortedFlowcharts, string[] allTemplates, int countSubPage, PageDeclare pages, PreviousNode previousNode, string arrayName, PlaceModel rule1Place, PositionManagements page1Position, int i)
+        private string Rule2(List<XMLCellNode> sortedFlowcharts, string[] allTemplates, int countSubPage, PageDeclare pages, PreviousNode previousNode, string arrayName, PositionManagements page1Position, int i)
         {
-            arrayName = _rule2.AssignInitialMarking(sortedFlowcharts, arrayName, rule1Place, i);
-            var (rule2Place, rule2Transition, rule2Arc1, rule2Arc2) = _rule2.ApplyRule(rule1Place, arrayName, page1Position);
+            arrayName = _rule2.AssignInitialMarking(sortedFlowcharts, arrayName, previousNode, i);
+            var (rule2Place, rule2Transition, rule2Arc1, rule2Arc2) = _rule2.ApplyRule(previousNode, arrayName, page1Position);
+
+            //Rule2 need to create Rule1 here because initial marking
+            var place1 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], previousNode.previousPlaceModel);
 
             //Set previous node for create arc next rule
             previousNode.previousPlaceModel = rule2Place;
             previousNode.previousTransitionModel = rule2Transition;
             previousNode.Type = "place";
-
-            //Rule2 need to create Rule1 here because initial marking
-            var place1 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule1Place);
 
             var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule2Arc1);
             var transition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule2Transition);
