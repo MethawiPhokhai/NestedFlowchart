@@ -67,41 +67,43 @@ namespace NestedFlowchart.Functions
 
             for (int i = 0; i < sortedFlowcharts.Count; i++)
             {
+                var flowchartType = sortedFlowcharts[i].NodeType.ToLower();
+                var flowchartValue = sortedFlowcharts[i].ValueText;
+
                 //Rule1 : Start
-                if (sortedFlowcharts[i].NodeType.ToLower() == "start")
+                if (flowchartType == "start")
                 {
                     rule1Place = Rule1(page1Position);
                 }
                 //Rule2 : Initialize Process
-                else if (sortedFlowcharts[i].NodeType.ToLower() == "process"
-                    && sortedFlowcharts[i - 2].NodeType.ToLower() == "start")
+                else if (flowchartType == "process" && sortedFlowcharts[i - 2].NodeType.ToLower() == "start")
                 {
                     arrayName = Rule2(sortedFlowcharts, allTemplates, countSubPage, pages, previousNode, arrayName, rule1Place, page1Position, i);
                 }
                 //Rule3 : I=0, J=1 , Rule4
-                else if (sortedFlowcharts[i].NodeType.ToLower() == "process")
+                else if (flowchartType == "process")
                 {
                     //TODO: Check in case define more than i
 
                     //Case Not Nested => Define i
-                    if (sortedFlowcharts[i].ValueText.ToLower().Trim().Contains("i ="))
+                    if (flowchartValue.ToLower().Trim().Contains("i ="))
                     {
                         Rule3_1(sortedFlowcharts, allTemplates, countSubPage, pages, previousNode, arrayName, page1Position, i);
                     }
                     //Case Nested => Create Hierachy Tool
-                    else if (sortedFlowcharts[i].ValueText.ToLower().Trim().Contains("j =") || sortedFlowcharts[i].ValueText.ToLower().Trim().Contains("k =")
-                        || sortedFlowcharts[i].ValueText.ToLower().Trim().Contains("l =") || sortedFlowcharts[i].ValueText.ToLower().Trim().Contains("m ="))
+                    else if (flowchartValue.ToLower().Trim().Contains("j =") || flowchartValue.ToLower().Trim().Contains("k =")
+                        || flowchartValue.ToLower().Trim().Contains("l =") || flowchartValue.ToLower().Trim().Contains("m ="))
                     {
                         definejTransition = Rule3_2(sortedFlowcharts, allTemplates, ref countSubPage, pages, previousNode, arrayName, page1Position, page2Position, i);
                     }
                     else
                     {
-                        if (sortedFlowcharts[i].ValueText.Contains("temp = array[ j+1]"))
+                        if (flowchartValue.Contains("temp = array[ j+1]"))
                         {
                             PositionManagements pagePosition = GetPagePositionByCountSubPage(countSubPage, page1Position, page2Position);
                             Rule4_2(allTemplates, pages, previousNode, arrayName, pagePosition, countSubPage);
                         }
-                        else if(sortedFlowcharts[i].ValueText.Contains("j ++"))
+                        else if(flowchartValue.Contains("j ++"))
                         {
                             PositionManagements pagePosition = GetPagePositionByCountSubPage(countSubPage, page1Position, page2Position);
                             Rule4_3(allTemplates, pages, previousNode, arrayName, pagePosition, countSubPage);
@@ -110,19 +112,19 @@ namespace NestedFlowchart.Functions
                     }
                 }
                 //Rule 5 Connector
-                else if (sortedFlowcharts[i].NodeType.ToLower() == "connector")
+                else if (flowchartType == "connector")
                 {
 					PositionManagements pagePosition = GetPagePositionByCountSubPage(countSubPage, page1Position, page2Position);
 					Rule5(allTemplates, countSubPage, pages, previousNode, arrayName, pagePosition);
                 }
                 //Rule 6 Decision
-                else if (sortedFlowcharts[i].NodeType.ToLower() == "condition")
+                else if (flowchartType == "condition")
                 {
                     PositionManagements pagePosition = GetPagePositionByCountSubPage(countSubPage, page1Position, page2Position);
                     Rule6(sortedFlowcharts, allTemplates, countSubPage, pages, previousNode, arrayName, pagePosition, i);
                 }
                 //Rule 7 End
-                else if (sortedFlowcharts[i].NodeType.ToLower() == "end")
+                else if (flowchartType == "end")
                 {
                     Rule7(allTemplates, out countSubPage, pages, out previousNode, arrayName, page1Position);
                 }
@@ -170,6 +172,7 @@ namespace NestedFlowchart.Functions
             CreatePageNodeByCountSubPage(countSubPage, pages, rule2String);
             return arrayName;
         }
+        
         private void Rule3_1(List<XMLCellNode> sortedFlowcharts, string[] allTemplates, int countSubPage, PageDeclare pages, PreviousNode previousNode, string arrayName, PositionManagements page1Position, int i)
         {
             //TODO: Find solution to declare var
@@ -239,6 +242,7 @@ namespace NestedFlowchart.Functions
             CreatePageNodeByCountSubPage(countSubPage, pages, rule3NewString);
             return definejTransition;
         }
+        
         private int Rule4(List<XMLCellNode> sortedFlowcharts, string[] allTemplates, PageDeclare pages, PreviousNode previousNode, string arrayName, PositionManagements page1Position, int i)
         {
             int countSubPage;
@@ -267,13 +271,7 @@ namespace NestedFlowchart.Functions
             countSubPage = 1;
             return countSubPage;
         }
-
-        private void Rule4_2(string[] allTemplates, 
-            PageDeclare pages, 
-            PreviousNode previousNode, 
-            string arrayName, 
-            PositionManagements pagePosition,
-            int countSubPage)
+        private void Rule4_2(string[] allTemplates, PageDeclare pages, PreviousNode previousNode, string arrayName, PositionManagements pagePosition, int countSubPage)
         {
             var (rule4Place, rule4Transition, rule4Arc, rule4Arc2) = _rule4.ApplyRuleWithCodeSegment(
                 arrayName,
@@ -292,13 +290,7 @@ namespace NestedFlowchart.Functions
             var rule4String = place1 + transition + arc1 + arc2;
             CreatePageNodeByCountSubPage(countSubPage, pages, rule4String);
         }
-
-        private void Rule4_3(string[] allTemplates, 
-            PageDeclare pages, 
-            PreviousNode previousNode, 
-            string arrayName, 
-            PositionManagements pagePosition,
-            int countSubPage)
+        private void Rule4_3(string[] allTemplates, PageDeclare pages, PreviousNode previousNode, string arrayName, PositionManagements pagePosition, int countSubPage)
         {
             var (rule4Transition, rule4Arc) = _rule4.ApplyRuleWithCodeSegment2(
                 arrayName,
@@ -405,7 +397,6 @@ namespace NestedFlowchart.Functions
             countSubPage = 0;
             CreatePageNodeByCountSubPage(countSubPage, pages, rule7String);
         }
-
 
         private string[] ReadAllTemplate(string? TemplatePath)
         {
