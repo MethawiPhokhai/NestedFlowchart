@@ -86,7 +86,7 @@ namespace NestedFlowchart.Functions
                 //Rule2 : Initialize Process
                 else if (flowchartType == "process" && sortedFlowcharts[i - 2].NodeType.ToLower() == "start")
                 {
-                    arrayName = Rule2(sortedFlowcharts, allTemplates, countSubPage, pages, previousNodes, arrayName, page1Position, i, arrows.FirstOrDefault());
+                    arrayName = Rule2(sortedFlowcharts, allTemplates, countSubPage, pages, previousNodes, arrayName, page1Position, i, arrows.LastOrDefault());
 
                 }
                 //Rule3 : I=0, J=1 , Rule4
@@ -97,7 +97,7 @@ namespace NestedFlowchart.Functions
                     //Case Not Nested => Define i
                     if (flowchartValue.ToLower().Trim().Contains("i ="))
                     {
-                        Rule3_1(sortedFlowcharts, allTemplates, countSubPage, pages, previousNodes, arrayName, page1Position, i);
+                        Rule3_1(sortedFlowcharts, allTemplates, countSubPage, pages, previousNodes, arrayName, page1Position, i, arrows.LastOrDefault());
                     }
                     //Case Nested => Create Hierachy Tool
                     else if (flowchartValue.ToLower().Trim().Contains("j =") || flowchartValue.ToLower().Trim().Contains("k =")
@@ -185,13 +185,13 @@ namespace NestedFlowchart.Functions
             return arrayName;
         }
         
-        private void Rule3_1(List<XMLCellNode> sortedFlowcharts, string[] allTemplates, int countSubPage, PageDeclare pages, List<PreviousNode> previousNodes, string arrayName, PositionManagements page1Position, int i)
+        private void Rule3_1(List<XMLCellNode> sortedFlowcharts, string[] allTemplates, int countSubPage, PageDeclare pages, List<PreviousNode> previousNodes, string arrayName, PositionManagements page1Position, int i, TempArrow arrow)
         {
             //TODO: Find solution to declare var
             //In case declare more than 1 line
             var code = sortedFlowcharts[i].ValueText.Replace("<br>", "\n").ToLower().Replace("int", "").Replace(";", "");
 
-            var (rule3Place, rule3Transition, rule3Arc1, rule3Arc2) = _rule3.ApplyRuleWithoutHierarchy(code, arrayName, previousNodes.LastOrDefault(), page1Position);
+            var (rule3Place, rule3Transition, rule3Arc1, rule3Arc2) = _rule3.ApplyRuleWithoutHierarchy(code, arrayName, previousNodes, page1Position, arrow);
 
             PreviousNode pv = new PreviousNode();
             pv.elementId = sortedFlowcharts[i].ID;

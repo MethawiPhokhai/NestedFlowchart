@@ -4,7 +4,7 @@ using NestedFlowchart.Position;
 
 namespace NestedFlowchart.Rules
 {
-    public class Rule3
+    public class Rule3 : BaseRule
     {
         /// <summary>
         /// Transform process into place and transition connected by arc
@@ -339,8 +339,9 @@ namespace NestedFlowchart.Rules
         public (PlaceModel, TransitionModel, ArcModel, ArcModel) ApplyRuleWithoutHierarchy(
             string CodeSegmentValue,
             string arrayName,
-            PreviousNode previousNode,
-            PositionManagements position
+            List<PreviousNode> previousNodes,
+            PositionManagements position,
+            TempArrow arrow
             )
         {
             //T2 Code Segment Inscription
@@ -393,20 +394,8 @@ namespace NestedFlowchart.Rules
             };
 
             //Arc from P1 to T2
-            ArcModel a1 = new ArcModel()
-            {
-                Id1 = IdManagements.GetlastestArcId(),
-                Id2 = IdManagements.GetlastestArcId(),
+            var a1 = CreateArcWithPreviousNode(arrow, position, arrayName, tr, previousNodes);
 
-                TransEnd = tr.Id1,
-                PlaceEnd = previousNode.previousPlaceModel.Id1,
-
-                xPos = position.GetLastestxArcPos(),
-                yPos = position.GetLastestyArcPos(),
-
-                Orientation = "PtoT", //Place to Transition
-                Type = arrayName
-            };
 
             //Arc from T2 to P2
             ArcModel a2 = new ArcModel()

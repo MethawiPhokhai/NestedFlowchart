@@ -23,7 +23,7 @@ namespace NestedFlowchart.Rules
                     PlaceEnd = found.previousPlaceModel.Id1,
 
                     xPos = position.xArcPos,
-                    yPos = position.yArcPos,
+                    yPos = position.yArcPos == 84 ? position.yArcPos : position.GetLastestyArcPos(),
 
                     Orientation = "PtoT", //Place to Transition
                     Type = arrayName
