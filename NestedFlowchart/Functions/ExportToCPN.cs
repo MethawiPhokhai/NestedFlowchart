@@ -162,7 +162,7 @@ namespace NestedFlowchart.Functions
         private string Rule2(List<XMLCellNode> sortedFlowcharts, string[] allTemplates, int countSubPage, PageDeclare pages, List<PreviousNode> previousNodes, string arrayName, PositionManagements page1Position, int i, TempArrow arrow)
         {
             arrayName = _rule2.AssignInitialMarking(sortedFlowcharts, arrayName, previousNodes.LastOrDefault(), i);
-            var (rule2Place, rule2Transition, rule2Arc1, rule2Arc2) = _rule2.ApplyRule(previousNodes.LastOrDefault(), arrayName, page1Position, arrow);
+            var (rule2Place, rule2Transition, rule2Arc1, rule2Arc2) = _rule2.ApplyRule(previousNodes, arrayName, page1Position, arrow);
 
             //Rule2 need to create Rule1 here because initial marking
             var place1 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], previousNodes.LastOrDefault().previousPlaceModel);

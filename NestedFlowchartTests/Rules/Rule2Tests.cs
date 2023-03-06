@@ -20,6 +20,7 @@ namespace NestedFlowchart.Rules.Tests
             // Arrange
             PositionManagements page1Position = new PositionManagements();
 
+            List<PreviousNode> previousNodes = new List<PreviousNode>();
             PreviousNode previousNode = new PreviousNode
             {
                 previousPlaceModel = new PlaceModel()
@@ -37,6 +38,7 @@ namespace NestedFlowchart.Rules.Tests
                     yPos3 = page1Position.yPos3
                 }
             };
+            previousNodes.Add(previousNode);
 
             var arrayName = "array";
 
@@ -44,7 +46,7 @@ namespace NestedFlowchart.Rules.Tests
 
             // Act
             Rule2 rule2 = new Rule2();
-            var (pl, tr, a1, a2) = rule2.ApplyRule(previousNode, arrayName, page1Position, arrow);
+            var (pl, tr, a1, a2) = rule2.ApplyRule(previousNodes, arrayName, page1Position, arrow);
 
             // Assert
             Assert.IsNotNull(pl);
