@@ -60,20 +60,20 @@ namespace NestedFlowchart.Rules
                     Type = "loopj"
                 };
 
-                a3 = new ArcModel()
-                {
-                    Id1 = IdManagements.GetlastestArcId(),
-                    Id2 = IdManagements.GetlastestArcId(),
+                //a3 = new ArcModel()
+                //{
+                //    Id1 = IdManagements.GetlastestArcId(),
+                //    Id2 = IdManagements.GetlastestArcId(),
 
-                    TransEnd = previousNode.previousTransitionModel.Id1,
-                    PlaceEnd = ps3.Id1,
+                //    TransEnd = previousNode.currentTransitionModel.Id1,
+                //    PlaceEnd = ps3.Id1,
 
-                    xPos = xPosArc - 84,
-                    yPos = yPosArc,
+                //    xPos = xPosArc - 84,
+                //    yPos = yPosArc,
 
-                    Orientation = "TtoP", //Transition to Place
-                    Type = arcVariable
-                };
+                //    Orientation = "TtoP", //Transition to Place
+                //    Type = arcVariable
+                //};
 
                 //Move more because it add on place above
                 yPos1 -= 80;
@@ -81,26 +81,26 @@ namespace NestedFlowchart.Rules
             }
 
 
-            //GF1 Transition
-            TransitionModel falseTransition = new TransitionModel()
-            {
-                Id1 = IdManagements.GetlastestTransitionId(),
-                Id2 = IdManagements.GetlastestTransitionId(),
-                Id3 = IdManagements.GetlastestTransitionId(),
-                Id4 = IdManagements.GetlastestTransitionId(),
-                Id5 = IdManagements.GetlastestTransitionId(),
+            ////GF1 Transition
+            //TransitionModel falseTransition = new TransitionModel()
+            //{
+            //    Id1 = IdManagements.GetlastestTransitionId(),
+            //    Id2 = IdManagements.GetlastestTransitionId(),
+            //    Id3 = IdManagements.GetlastestTransitionId(),
+            //    Id4 = IdManagements.GetlastestTransitionId(),
+            //    Id5 = IdManagements.GetlastestTransitionId(),
 
-                Name = IdManagements.GetlastestFalseGuardTransitionName(),
+            //    Name = IdManagements.GetlastestFalseGuardTransitionName(),
 
-                xPos1 = xPos1 - 39,
-                yPos1 = yPos1,
+            //    xPos1 = xPos1 - 39,
+            //    yPos1 = yPos1,
 
-                xPos2 = xPos1 - 80,
-                yPos2 = yPos1 + 30,
+            //    xPos2 = xPos1 - 80,
+            //    yPos2 = yPos1 + 30,
 
-                Condition = falseCondition
+            //    Condition = falseCondition
 
-            };
+            //};
 
             //GT1 Transition
             TransitionModel trueTransition = new TransitionModel()
@@ -125,20 +125,20 @@ namespace NestedFlowchart.Rules
             if(previousNode.Type == "transition")
             {
                 //Arc from CN1 to GF1
-                a1 = new ArcModel()
-                {
-                    Id1 = IdManagements.GetlastestArcId(),
-                    Id2 = IdManagements.GetlastestArcId(),
+                //a1 = new ArcModel()
+                //{
+                //    Id1 = IdManagements.GetlastestArcId(),
+                //    Id2 = IdManagements.GetlastestArcId(),
 
-                    TransEnd = falseTransition.Id1,
-                    PlaceEnd = ps3.Id1,
+                //    TransEnd = falseTransition.Id1,
+                //    PlaceEnd = ps3.Id1,
 
-                    xPos = xPosArc - 84,
-                    yPos = yPosArc,
+                //    xPos = xPosArc - 84,
+                //    yPos = yPosArc,
 
-                    Orientation = "PtoT", //Place to Transition
-                    Type = arcVariable
-                };
+                //    Orientation = "PtoT", //Place to Transition
+                //    Type = arcVariable
+                //};
 
                 //Arc from CN1 to GT1
                 a2 = new ArcModel()
@@ -158,40 +158,40 @@ namespace NestedFlowchart.Rules
             }
             else
             {
-                //Arc from CN1 to GF1
-                a1 = new ArcModel()
-                {
-                    Id1 = IdManagements.GetlastestArcId(),
-                    Id2 = IdManagements.GetlastestArcId(),
+                ////Arc from CN1 to GF1
+                //a1 = new ArcModel()
+                //{
+                //    Id1 = IdManagements.GetlastestArcId(),
+                //    Id2 = IdManagements.GetlastestArcId(),
 
-                    TransEnd = falseTransition.Id1,
-                    PlaceEnd = previousNode.previousPlaceModel.Id1,
+                //    TransEnd = falseTransition.Id1,
+                //    PlaceEnd = previousNode.currentPlaceModel.Id1,
 
-                    xPos = xPosArc - 84,
-                    yPos = yPosArc,
+                //    xPos = xPosArc - 84,
+                //    yPos = yPosArc,
 
-                    Orientation = "PtoT", //Place to Transition
-                    Type = arcVariable
-                };
+                //    Orientation = "PtoT", //Place to Transition
+                //    Type = arcVariable
+                //};
 
-                //Arc from CN1 to GT1
-                a2 = new ArcModel()
-                {
-                    Id1 = IdManagements.GetlastestArcId(),
-                    Id2 = IdManagements.GetlastestArcId(),
+                ////Arc from CN1 to GT1
+                //a2 = new ArcModel()
+                //{
+                //    Id1 = IdManagements.GetlastestArcId(),
+                //    Id2 = IdManagements.GetlastestArcId(),
 
-                    TransEnd = trueTransition.Id1,
-                    PlaceEnd = previousNode.previousPlaceModel.Id1,
+                //    TransEnd = trueTransition.Id1,
+                //    PlaceEnd = previousNode.currentPlaceModel.Id1,
 
-                    xPos = xPosArc + 34,
-                    yPos = yPosArc,
+                //    xPos = xPosArc + 34,
+                //    yPos = yPosArc,
 
-                    Orientation = "PtoT", //Place to Transition
-                    Type = arcVariable
-                };
+                //    Orientation = "PtoT", //Place to Transition
+                //    Type = arcVariable
+                //};
             }
 
-            return (previousNode.previousPlaceModel, ps3, falseTransition, trueTransition, a1, a2, a3);
+            return (previousNode.currentPlaceModel, ps3, null, trueTransition, null, null, null);
         }
 
         private string DeclareArcVariable(string arrayName, int countSubPage)

@@ -38,7 +38,7 @@ namespace NestedFlowchart.Rules.Tests
             string falseCondition = "F";
             string arrayName = "array";
             int countSubPage = 0;
-            previousNode.previousPlaceModel = previousPlace;
+            previousNode.currentPlaceModel = previousPlace;
 
             // Act
             Rule6 rule6 = new Rule6();

@@ -23,7 +23,7 @@ namespace NestedFlowchart.Rules.Tests
             List<PreviousNode> previousNodes = new List<PreviousNode>();
             PreviousNode previousNode = new PreviousNode
             {
-                previousPlaceModel = new PlaceModel()
+                currentPlaceModel = new PlaceModel()
                 {
                     Id1 = "ID1412948772",
                     Id2 = "ID1412948773",
@@ -42,20 +42,16 @@ namespace NestedFlowchart.Rules.Tests
 
             var arrayName = "array";
 
-            TempArrow arrow = new TempArrow();
-
             // Act
             Rule2 rule2 = new Rule2();
-            var (pl, tr, a1, a2) = rule2.ApplyRule(previousNodes, arrayName, page1Position, arrow);
+            var (pl, tr, a1) = rule2.ApplyRule(arrayName, page1Position);
 
             // Assert
             Assert.IsNotNull(pl);
             Assert.IsNotNull(tr);
             Assert.IsNotNull(a1);
-            Assert.IsNotNull(a2);
-            Assert.AreEqual(previousNode.previousPlaceModel.Id1, a1.PlaceEnd);
+            Assert.AreEqual(previousNode.currentPlaceModel.Id1, a1.PlaceEnd);
             Assert.IsTrue(a1.Type.Contains(arrayName));
-            Assert.IsTrue(a2.Type.Contains(arrayName));
         }
     }
 }

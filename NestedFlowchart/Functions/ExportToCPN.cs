@@ -47,6 +47,7 @@ namespace NestedFlowchart.Functions
             /*
              * Declare Array name for arc
              */
+            bool notUseArrayName = false;
             string arrayName = string.Empty;
 			string arrayName2 = "array2";
 			#endregion
@@ -64,18 +65,22 @@ namespace NestedFlowchart.Functions
                 var flowchartType = sortedFlowcharts[i].NodeType.ToLower();
                 var flowchartValue = sortedFlowcharts[i].ValueText;
 
-                //Rule1 : Start
-                if (flowchartType == "start")
+                //Arrow
+                if (flowchartType == "arrow")
                 {
-                    PreviousNode pv = new PreviousNode();
-                    pv.previousPlaceModel = Rule1(page1Position);
+                    if (arrows.Any())
+                    {
+                        var (arc, pv) = CreateArcWithPreviousNode(arrows.LastOrDefault(), page1Position, arrayName, previousNodes, notUseArrayName);
+                        var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], arc);
+                        CreatePageNodeByCountSubPage(pv.CurrentMainPage, pages, arc1);
 
-                    //keep element id for arrow can search
-                    pv.elementId = sortedFlowcharts[i].ID;
-                    previousNodes.Add(pv);
-                }
-                else if(flowchartType == "arrow")
-                {
+                        //หลังจากสร้าง Arc เสร็จ ถ้ามีการสร้าง Subpage ให้ย้ายไปทำต่อใน Subpage
+                        if (pv.IsCreateSubPage)
+                        {
+                            pv.CurrentMainPage = pv.CurrentSubPage;
+                        }
+                    }
+
                     //Keep arrow into temp for next element can use
                     TempArrow arrow = new TempArrow();
                     arrow.Id = sortedFlowcharts[i].ID;
@@ -83,39 +88,191 @@ namespace NestedFlowchart.Functions
                     arrow.Destination = sortedFlowcharts[i].Target;
                     arrows.Add(arrow);
                 }
+                //Rule1 : Start
+                else if (flowchartType == "start")
+                {
+                    #region Rule1
+                    PreviousNode pv = new PreviousNode();
+                    pv.currentPlaceModel = _rule1.ApplyRule(page1Position);
+
+                    //keep element id for arrow can search
+                    pv.elementId = sortedFlowcharts[i].ID;
+                    previousNodes.Add(pv);
+                    #endregion
+                }
                 //Rule2 : Initialize Process
                 else if (flowchartType == "process" && sortedFlowcharts[i - 2].NodeType.ToLower() == "start")
                 {
-                    arrayName = Rule2(sortedFlowcharts, allTemplates, countSubPage, pages, previousNodes, arrayName, page1Position, i, arrows.LastOrDefault());
+                    #region Rule2
+                    //Set Initial Marking
+                    arrayName = _rule2.AssignInitialMarking(sortedFlowcharts, arrayName, previousNodes.LastOrDefault(), i);
+
+                    //Apply Rule
+                    var (rule2Place, rule2Transition, rule2Arc1) = _rule2.ApplyRule(arrayName, page1Position);
+
+                    //Rule2 need to create Rule1 here because initial marking
+                    var place1 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], previousNodes.LastOrDefault().currentPlaceModel);
+
+                    //Set previous node for create arc next rule
+                    PreviousNode pv = new PreviousNode();
+                    pv.elementId = sortedFlowcharts[i].ID;
+                    pv.previousPlaceModel = previousNodes?.LastOrDefault()?.currentPlaceModel;
+                    pv.previousTransitionModel = previousNodes?.LastOrDefault()?.currentTransitionModel;
+                    pv.currentPlaceModel = rule2Place;
+                    pv.currentTransitionModel = rule2Transition;
+                    pv.Type = "place";
+                    previousNodes.Add(pv);
+
+                    var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule2Arc1);
+                    var transition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule2Transition);
+                    var place2 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule2Place);
+                    var rule2String = place1 + place2 + transition + arc1;
+
+                    CreatePageNodeByCountSubPage(pv.CurrentSubPage, pages, rule2String);
+                    #endregion
 
                 }
                 //Rule3 : I=0, J=1 , Rule4
                 else if (flowchartType == "process")
                 {
-                    //TODO: Check in case define more than i
-
                     //Case Not Nested => Define i
                     if (flowchartValue.ToLower().Trim().Contains("i ="))
                     {
-                        Rule3_1(sortedFlowcharts, allTemplates, countSubPage, pages, previousNodes, arrayName, page1Position, i, arrows.LastOrDefault());
+                        #region rule3_1
+                        //TODO: Find solution to declare var
+                        //In case declare more than 1 line
+                        var code = sortedFlowcharts[i].ValueText.Replace("<br>", "\n").ToLower().Replace("int", "").Replace(";", "");
+
+                        var (rule3Place, rule3Transition, rule3Arc1) = _rule3.ApplyRuleWithoutHierarchy(code, arrayName, page1Position);
+
+                        PreviousNode pv = new PreviousNode();
+                        pv.previousPlaceModel = previousNodes?.LastOrDefault()?.currentPlaceModel;
+                        pv.previousTransitionModel = previousNodes?.LastOrDefault()?.currentTransitionModel;
+                        pv.elementId = sortedFlowcharts[i].ID;
+                        pv.currentPlaceModel = rule3Place;
+                        pv.currentTransitionModel = rule3Transition;
+                        pv.Type = "place";
+                        previousNodes.Add(pv);
+
+                        var place1 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule3Place);
+                        var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule3Arc1);
+                        var transition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule3Transition);
+
+                        var rule3OldString = place1 + transition + arc1;
+
+                        CreatePageNodeByCountSubPage(pv.CurrentSubPage, pages, rule3OldString);
+                        #endregion
                     }
                     //Case Nested => Create Hierachy Tool
                     else if (flowchartValue.ToLower().Trim().Contains("j =") || flowchartValue.ToLower().Trim().Contains("k =")
                         || flowchartValue.ToLower().Trim().Contains("l =") || flowchartValue.ToLower().Trim().Contains("m ="))
                     {
-                        definejTransition = Rule3_2(sortedFlowcharts, allTemplates, ref countSubPage, pages, previousNodes, arrayName, page1Position, page2Position, i);
+                        #region Rule3_2
+                        var (rule3InputPlace, rule3OutputPlace, rule3InputPlace2, rule3OutputPlace2, rule3PS2,
+                                                    rule3Transition, rule3Transition2,
+                                                    rule3Arc1, rule3Arc2, rule3Arc3, rule3Arc4, rule3Arc5) = _rule3.ApplyRuleWithHierarchy(
+                                                    allTemplates[(int)TemplateEnum.SubStrTemplate],
+                                                    allTemplates[(int)TemplateEnum.PortTemplate],
+                                                    pages.subPageModel1.Id,
+                                                    sortedFlowcharts[i].ValueText,
+                                                    arrayName,
+                                                    previousNodes.LastOrDefault(),
+                                                    page1Position,
+                                                    page2Position
+                                                    );
+
+                        //Going to subpage page first
+                        PreviousNode pv = new PreviousNode();
+                        pv.elementId = sortedFlowcharts[i].ID;
+                        pv.previousTransitionModel = previousNodes?.LastOrDefault()?.currentTransitionModel;
+                        pv.currentPlaceModel = rule3InputPlace;
+                        definejTransition = rule3Transition;
+                        pv.Type = "transition";
+                        previousNodes.Add(pv);
+
+
+                        //Main Page
+                        var inputPlace = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule3InputPlace);
+                        var subPageTransition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule3Transition);
+                        var outputPlace = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule3OutputPlace);
+                        var arc0 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule3Arc1);
+                        var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule3Arc2);
+                        var arc2 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule3Arc3);
+
+                        var rule3OldString = inputPlace + subPageTransition + outputPlace + arc0 + arc1 + arc2;
+
+                        //Sub Page
+                        var inputPlace2 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule3InputPlace2);
+                        var outputPlace2 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule3OutputPlace2);
+                        var afterInputTransition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule3Transition2);
+                        var arc3 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule3Arc4);
+                        var ps2 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule3PS2);
+                        var arc4 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule3Arc5);
+
+                        var rule3NewString = inputPlace2 + outputPlace2 + afterInputTransition + arc3 + ps2 + arc4;
+
+                        //Add to main page 
+                        CreatePageNodeByCountSubPage(pv.CurrentSubPage, pages, rule3OldString);
+
+                        //Add to sub page
+                        pv.CurrentSubPage++;
+                        pv.IsCreateSubPage = true;
+                        CreatePageNodeByCountSubPage(pv.CurrentSubPage, pages, rule3NewString);
+                        #endregion
                     }
                     else
                     {
                         if (flowchartValue.Contains("temp = array[ j+1]"))
                         {
+                            #region Rule4_2
                             PositionManagements pagePosition = GetPagePositionByCountSubPage(countSubPage, page1Position, page2Position);
-                            Rule4_2(sortedFlowcharts, allTemplates, pages, previousNodes, arrayName, pagePosition, countSubPage, i);
+                            var (rule4Place, rule4Transition, rule4Arc, rule4Arc2) = _rule4.ApplyRuleWithCodeSegment(
+                                                                                            arrayName,
+                                                                                            previousNodes.LastOrDefault(),
+                                                                                            pagePosition);
+
+                            PreviousNode pv = new PreviousNode();
+                            pv.elementId = sortedFlowcharts[i].ID;
+                            pv.previousPlaceModel = previousNodes?.LastOrDefault()?.currentPlaceModel;
+                            pv.previousTransitionModel = previousNodes?.LastOrDefault()?.currentTransitionModel;
+                            pv.currentPlaceModel = rule4Place;
+                            pv.currentTransitionModel = rule4Transition;
+                            pv.Type = "transition";
+                            previousNodes.Add(pv);
+
+                            var place1 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule4Place);
+                            var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule4Arc);
+                            var transition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule4Transition);
+                            var arc2 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule4Arc2);
+
+                            var rule4String = place1 + transition + arc1 + arc2;
+                            CreatePageNodeByCountSubPage(countSubPage, pages, rule4String);
+                            #endregion
                         }
                         else if(flowchartValue.Contains("j ++"))
                         {
+                            #region Rule4_3
                             PositionManagements pagePosition = GetPagePositionByCountSubPage(countSubPage, page1Position, page2Position);
-                            Rule4_3(sortedFlowcharts, allTemplates, pages, previousNodes, arrayName, pagePosition, countSubPage, i);
+                            var (rule4Transition, rule4Arc) = _rule4.ApplyRuleWithCodeSegment2(
+                                                                    arrayName,
+                                                                    previousNodes.LastOrDefault(),
+                                                                    pagePosition);
+
+                            PreviousNode pv = new PreviousNode();
+                            pv.elementId = sortedFlowcharts[i].ID;
+                            pv.previousPlaceModel = previousNodes?.LastOrDefault()?.currentPlaceModel;
+                            pv.previousTransitionModel = previousNodes?.LastOrDefault()?.currentTransitionModel;
+                            pv.currentTransitionModel = rule4Transition;
+                            pv.Type = "transition";
+                            previousNodes.Add(pv);
+
+
+                            var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule4Arc);
+                            var transition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule4Transition);
+
+                            var rule4String = transition + arc1;
+                            CreatePageNodeByCountSubPage(countSubPage, pages, rule4String);
+                            #endregion
                         }
                         //countSubPage = Rule4(sortedFlowcharts, allTemplates, pages, previousNode, arrayName, page1Position, i);
                     }
@@ -123,19 +280,114 @@ namespace NestedFlowchart.Functions
                 //Rule 5 Connector
                 else if (flowchartType == "connector")
                 {
-					PositionManagements pagePosition = GetPagePositionByCountSubPage(countSubPage, page1Position, page2Position);
-					Rule5(sortedFlowcharts, allTemplates, countSubPage, pages, previousNodes, arrayName, pagePosition, i);
+                    #region Rule5
+                    PositionManagements pagePosition = GetPagePositionByCountSubPage(countSubPage, page1Position, page2Position);
+                    var (rule5Place, rule5Transition, rule5Arc1) = _rule5.ApplyRule(
+                                    arrayName,
+                                    previousNodes.LastOrDefault(),
+                                    pagePosition,
+                                    countSubPage);
+
+
+                    PreviousNode pv = new PreviousNode();
+                    pv.elementId = sortedFlowcharts[i].ID;
+                    pv.previousPlaceModel = previousNodes?.LastOrDefault()?.currentPlaceModel;
+                    pv.previousTransitionModel = previousNodes?.LastOrDefault()?.currentTransitionModel;
+                    pv.currentPlaceModel = rule5Place;
+                    pv.currentTransitionModel = rule5Transition;
+                    pv.Type = "place";
+                    previousNodes.Add(pv);
+
+                    //Set to use (i,arr)
+                    notUseArrayName = true;
+
+                    var place1 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule5Place);
+                    var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule5Arc1);
+                    var transition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule5Transition);
+                    var rule5String = place1 + transition + arc1;
+
+                    CreatePageNodeByCountSubPage(countSubPage, pages, rule5String);
+                    #endregion
                 }
                 //Rule 6 Decision
                 else if (flowchartType == "condition")
                 {
+                    #region Rule6
                     PositionManagements pagePosition = GetPagePositionByCountSubPage(countSubPage, page1Position, page2Position);
-                    Rule6(sortedFlowcharts, allTemplates, countSubPage, pages, previousNodes, arrayName, pagePosition, i);
+                    string trueCondition = _rule6.CreateTrueCondition(sortedFlowcharts[i].ValueText, arrayName);
+                    string falseCondition = _rule6.CreateFalseDecision(trueCondition);
+
+                    //TODO: Separate between true and false case by arrow[i+1]
+                    var (rule6Place, rule6Place2, rule6FalseTransition, rule6TrueTransition, rule6Arc1, rule6Arc2, rule6Arc3) = _rule6.ApplyRule(
+                        previousNodes.LastOrDefault(),
+                        trueCondition,
+                        falseCondition,
+                        arrayName,
+                        pagePosition,
+                        countSubPage);
+
+
+                    PreviousNode pv = new PreviousNode();
+                    pv.elementId = sortedFlowcharts[i].ID;
+                    pv.previousPlaceModel = rule6Place;
+                    pv.currentTransitionModel = rule6TrueTransition;
+                    pv.Type = "place";
+                    previousNodes.Add(pv);
+
+                    var ps3 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule6Place2);
+                    var trueTransition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule6TrueTransition);
+                    var falseTransition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule6FalseTransition);
+                    var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule6Arc1);
+                    var arc2 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule6Arc2);
+                    var arc3 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule6Arc3);
+
+                    var rule6String = ps3 + trueTransition + falseTransition + arc1 + arc2 + arc3;
+
+                    CreatePageNodeByCountSubPage(countSubPage, pages, rule6String);
+                    #endregion
                 }
                 //Rule 7 End
                 else if (flowchartType == "end")
                 {
-                    Rule7(allTemplates, out countSubPage, pages, previousNodes.LastOrDefault(), arrayName, page1Position);
+                    //#region Rule7
+                    ////TODO: Previous transition need to check (in subpage)
+
+                    ///*
+                    // * For Test (force set GF to end)
+                    // */
+                    //var previousNode = new PreviousNode
+                    //{
+                    //    currentTransitionModel = new TransitionModel
+                    //    {
+                    //        Id1 = "ID1412848787"
+                    //    },
+                    //    Type = "transition",
+                    //};
+
+
+
+
+
+                    //var (rule7Place, rule7Transition, rule7Arc1) = _rule7.ApplyRule(
+                    //    arrayName,
+                    //    previousNode,
+                    //    page1Position);
+
+                    //previousNode.currentPlaceModel = rule7Place;
+
+                    //var place1 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule7Place);
+
+                    //var transition = rule7Transition != null ?
+                    //    _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule7Transition) :
+                    //    string.Empty;
+
+                    //var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule7Arc1);
+                    //var rule7String = place1 + transition + arc1;
+
+                    ////Reset because it's need to end at main page
+                    //countSubPage = 0;
+                    //CreatePageNodeByCountSubPage(countSubPage, pages, rule7String);
+                    //#endregion
                 }
             }
 
@@ -154,115 +406,6 @@ namespace NestedFlowchart.Functions
             File.WriteAllText(ResultPath + "Result.cpn", firstCPN);
         }
 
-
-        private PlaceModel Rule1(PositionManagements page1Position)
-        {
-            return _rule1.ApplyRule(page1Position);
-        }
-        private string Rule2(List<XMLCellNode> sortedFlowcharts, string[] allTemplates, int countSubPage, PageDeclare pages, List<PreviousNode> previousNodes, string arrayName, PositionManagements page1Position, int i, TempArrow arrow)
-        {
-            arrayName = _rule2.AssignInitialMarking(sortedFlowcharts, arrayName, previousNodes.LastOrDefault(), i);
-            var (rule2Place, rule2Transition, rule2Arc1, rule2Arc2) = _rule2.ApplyRule(previousNodes, arrayName, page1Position, arrow);
-
-            //Rule2 need to create Rule1 here because initial marking
-            var place1 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], previousNodes.LastOrDefault().previousPlaceModel);
-
-            //Set previous node for create arc next rule
-            PreviousNode pv = new PreviousNode();
-            pv.elementId = sortedFlowcharts[i].ID;
-            pv.previousPlaceModel = rule2Place;
-            pv.previousTransitionModel = rule2Transition;
-            pv.Type = "place";
-            previousNodes.Add(pv);
-
-            var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule2Arc1);
-            var transition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule2Transition);
-            var arc2 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule2Arc2);
-            var place2 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule2Place);
-            var rule2String = place1 + place2 + transition + arc1 + arc2;
-
-            CreatePageNodeByCountSubPage(countSubPage, pages, rule2String);
-            return arrayName;
-        }
-        
-        private void Rule3_1(List<XMLCellNode> sortedFlowcharts, string[] allTemplates, int countSubPage, PageDeclare pages, List<PreviousNode> previousNodes, string arrayName, PositionManagements page1Position, int i, TempArrow arrow)
-        {
-            //TODO: Find solution to declare var
-            //In case declare more than 1 line
-            var code = sortedFlowcharts[i].ValueText.Replace("<br>", "\n").ToLower().Replace("int", "").Replace(";", "");
-
-            var (rule3Place, rule3Transition, rule3Arc1, rule3Arc2) = _rule3.ApplyRuleWithoutHierarchy(code, arrayName, previousNodes, page1Position, arrow);
-
-            PreviousNode pv = new PreviousNode();
-            pv.elementId = sortedFlowcharts[i].ID;
-            pv.previousPlaceModel = rule3Place;
-            pv.Type = "place";
-            previousNodes.Add(pv);
-
-
-            var place1 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule3Place);
-            var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule3Arc1);
-            var transition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule3Transition);
-            var arc2 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule3Arc2);
-
-            var rule3OldString = place1 + transition + arc1 + arc2;
-
-            CreatePageNodeByCountSubPage(countSubPage, pages, rule3OldString);
-        }
-        private TransitionModel Rule3_2(List<XMLCellNode> sortedFlowcharts, string[] allTemplates, ref int countSubPage, PageDeclare pages, List<PreviousNode> previousNodes, string arrayName, PositionManagements page1Position, PositionManagements page2Position, int i)
-        {
-            TransitionModel definejTransition;
-            var (rule3InputPlace, rule3OutputPlace, rule3InputPlace2, rule3OutputPlace2, rule3PS2,
-                                        rule3Transition, rule3Transition2,
-                                        rule3Arc1, rule3Arc2, rule3Arc3, rule3Arc4, rule3Arc5) = _rule3.ApplyRuleWithHierarchy(
-                                        allTemplates[(int)TemplateEnum.SubStrTemplate],
-                                        allTemplates[(int)TemplateEnum.PortTemplate],
-                                        pages.subPageModel1.Id,
-                                        sortedFlowcharts[i].ValueText,
-                                        arrayName,
-                                        previousNodes.LastOrDefault(),
-                                        page1Position,
-                                        page2Position
-                                        );
-
-            //Going to subpage page first
-            PreviousNode pv = new PreviousNode();
-            pv.elementId = sortedFlowcharts[i].ID;
-            pv.previousPlaceModel = rule3PS2;
-            definejTransition = rule3Transition;
-            pv.Type = "place";
-            previousNodes.Add(pv);
-
-
-            //Main Page
-            var inputPlace = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule3InputPlace);
-            var subPageTransition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule3Transition);
-            var outputPlace = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule3OutputPlace);
-            var arc0 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule3Arc1);
-            var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule3Arc2);
-            var arc2 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule3Arc3);
-
-            var rule3OldString = inputPlace + subPageTransition + outputPlace + arc0 + arc1 + arc2;
-
-            //Sub Page
-            var inputPlace2 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule3InputPlace2);
-            var outputPlace2 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule3OutputPlace2);
-            var afterInputTransition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule3Transition2);
-            var arc3 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule3Arc4);
-            var ps2 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule3PS2);
-            var arc4 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule3Arc5);
-
-            var rule3NewString = inputPlace2 + outputPlace2 + afterInputTransition + arc3 + ps2 + arc4;
-
-            //Add to main page 
-            CreatePageNodeByCountSubPage(countSubPage, pages, rule3OldString);
-
-            //Add to sub page
-            countSubPage++;
-            CreatePageNodeByCountSubPage(countSubPage, pages, rule3NewString);
-            return definejTransition;
-        }
-        
         private int Rule4(List<XMLCellNode> sortedFlowcharts, string[] allTemplates, PageDeclare pages, List<PreviousNode> previousNodes, string arrayName, PositionManagements page1Position, int i)
         {
             int countSubPage;
@@ -282,8 +425,10 @@ namespace NestedFlowchart.Functions
                 
                 PreviousNode pv = new PreviousNode();
                 pv.elementId = sortedFlowcharts[i].ID;
-                pv.previousPlaceModel = rule4Place;
-                pv.previousTransitionModel = rule4Transition;
+                pv.previousPlaceModel = previousNodes?.LastOrDefault()?.currentPlaceModel;
+                pv.previousTransitionModel = previousNodes?.LastOrDefault()?.currentTransitionModel;
+                pv.currentPlaceModel = rule4Place;
+                pv.currentTransitionModel = rule4Transition;
                 pv.Type = "transition";
                 previousNodes.Add(pv);
 
@@ -294,147 +439,6 @@ namespace NestedFlowchart.Functions
 
             countSubPage = 1;
             return countSubPage;
-        }
-        private void Rule4_2(List<XMLCellNode> sortedFlowcharts, string[] allTemplates, PageDeclare pages, List<PreviousNode> previousNodes, string arrayName, PositionManagements pagePosition, int countSubPage, int i)
-        {
-            var (rule4Place, rule4Transition, rule4Arc, rule4Arc2) = _rule4.ApplyRuleWithCodeSegment(
-                arrayName,
-                previousNodes.LastOrDefault(),
-                pagePosition);
-
-            PreviousNode pv = new PreviousNode();
-            pv.elementId = sortedFlowcharts[i].ID;
-            pv.previousPlaceModel = rule4Place;
-            pv.previousTransitionModel = rule4Transition;
-            pv.Type = "transition";
-            previousNodes.Add(pv);
-
-            var place1 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule4Place);
-            var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule4Arc);
-			var transition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule4Transition);
-			var arc2 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule4Arc2);
-			
-            var rule4String = place1 + transition + arc1 + arc2;
-            CreatePageNodeByCountSubPage(countSubPage, pages, rule4String);
-        }
-        private void Rule4_3(List<XMLCellNode> sortedFlowcharts, string[] allTemplates, PageDeclare pages, List<PreviousNode> previousNodes, string arrayName, PositionManagements pagePosition, int countSubPage, int i)
-        {
-            var (rule4Transition, rule4Arc) = _rule4.ApplyRuleWithCodeSegment2(
-                arrayName,
-                previousNodes.LastOrDefault(),
-                pagePosition);
-
-            PreviousNode pv = new PreviousNode();
-            pv.elementId = sortedFlowcharts[i].ID;
-            pv.previousTransitionModel = rule4Transition;
-            pv.Type = "transition";
-            previousNodes.Add(pv);
-
-
-            var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule4Arc);
-            var transition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule4Transition);
-
-            var rule4String = transition + arc1;
-            CreatePageNodeByCountSubPage(countSubPage, pages, rule4String);
-        }
-
-        private void Rule5(List<XMLCellNode> sortedFlowcharts, string[] allTemplates, int countSubPage, PageDeclare pages, List<PreviousNode> previousNodes, string arrayName, PositionManagements page1Position, int i)
-        {
-            var (rule5Place, rule5Transition, rule5Arc1, rule5Arc2) = _rule5.ApplyRule(
-                                    arrayName,
-                                    previousNodes.LastOrDefault(),
-                                    page1Position,
-									countSubPage);
-
-
-            PreviousNode pv = new PreviousNode();
-            pv.elementId = sortedFlowcharts[i].ID;
-            pv.previousPlaceModel = rule5Place;
-            pv.previousTransitionModel = rule5Transition;
-            pv.Type = "place";
-            previousNodes.Add(pv);
-
-
-            var place1 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule5Place);
-            var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule5Arc1);
-            var transition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule5Transition);
-			var arc2 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule5Arc2);
-			var rule5String = place1 + transition + arc1 + arc2;
-
-            CreatePageNodeByCountSubPage(countSubPage, pages, rule5String);
-        }
-        private void Rule6(List<XMLCellNode> sortedFlowcharts, string[] allTemplates, int countSubPage, PageDeclare pages, List<PreviousNode> previousNodes, string arrayName, PositionManagements pagePosition, int i)
-        {
-            string trueCondition = _rule6.CreateTrueCondition(sortedFlowcharts[i].ValueText, arrayName);
-            string falseCondition = _rule6.CreateFalseDecision(trueCondition);
-
-            //TODO: Separate between true and false case by arrow[i+1]
-            var (rule6Place, rule6Place2, rule6FalseTransition, rule6TrueTransition, rule6Arc1, rule6Arc2, rule6Arc3) = _rule6.ApplyRule(
-                previousNodes.LastOrDefault(),
-                trueCondition,
-                falseCondition,
-                arrayName,
-                pagePosition,
-                countSubPage);
-
-
-            PreviousNode pv = new PreviousNode();
-            pv.elementId = sortedFlowcharts[i].ID;
-            pv.previousPlaceModel = rule6Place;
-            pv.previousTransitionModel = rule6TrueTransition;
-            pv.Type = "transition";
-            previousNodes.Add(pv);
-
-            var ps3 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule6Place2);
-            var trueTransition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule6TrueTransition);
-            var falseTransition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule6FalseTransition);
-            var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule6Arc1);
-            var arc2 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule6Arc2);
-            var arc3 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule6Arc3);
-
-            var rule6String = ps3 + trueTransition + falseTransition + arc1 + arc2 + arc3;
-
-            CreatePageNodeByCountSubPage(countSubPage, pages, rule6String);
-        }
-        private void Rule7(string[] allTemplates, out int countSubPage, PageDeclare pages, PreviousNode previousNode, string arrayName, PositionManagements page1Position)
-        {
-            //TODO: Previous transition need to check (in subpage)
-
-            /*
-             * For Test (force set GF to end)
-             */
-            previousNode = new PreviousNode
-            {
-                previousTransitionModel = new TransitionModel
-                {
-                    Id1 = "ID1412848787"
-                },
-                Type = "transition",
-            };
-
-
-
-
-
-            var (rule7Place, rule7Transition, rule7Arc1) = _rule7.ApplyRule(
-                arrayName,
-                previousNode,
-                page1Position);
-
-            previousNode.previousPlaceModel = rule7Place;
-
-            var place1 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule7Place);
-
-            var transition = rule7Transition != null ?
-                _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule7Transition) :
-                string.Empty;
-
-            var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule7Arc1);
-            var rule7String = place1 + transition + arc1;
-
-            //Reset because it's need to end at main page
-            countSubPage = 0;
-            CreatePageNodeByCountSubPage(countSubPage, pages, rule7String);
         }
 
         private string[] ReadAllTemplate(string? TemplatePath)
@@ -496,6 +500,71 @@ namespace NestedFlowchart.Functions
             }
 
             return pagePosition;
+        }
+
+        public (ArcModel?, PreviousNode) CreateArcWithPreviousNode(TempArrow arrow, PositionManagements position, string arrayName, List<PreviousNode> previousNodes, bool notUseArrayName)
+        {
+            //Search on previous node that source is the same id
+            var found = previousNodes.FirstOrDefault(x => x.elementId == arrow.Destination);
+
+            if (found != null)
+            {
+                string arcVariable = notUseArrayName ? DeclareArcVariable(arrayName, found.CurrentMainPage) : arrayName;
+
+                if (found.Type == "place")
+                {
+                    return (new ArcModel()
+                    {
+                        Id1 = IdManagements.GetlastestArcId(),
+                        Id2 = IdManagements.GetlastestArcId(),
+
+                        PlaceEnd = found?.previousPlaceModel?.Id1,
+                        TransEnd = found?.currentTransitionModel?.Id1,
+
+                        xPos = position.xArcPos,
+                        yPos = position.yArcPos == 84 ? position.yArcPos : position.GetLastestyArcPos(),
+
+                        Orientation = "PtoT", //Place to Transition
+                        Type = arcVariable
+                    }, found);
+                }
+                else
+                {
+                    return (new ArcModel()
+                    {
+                        Id1 = IdManagements.GetlastestArcId(),
+                        Id2 = IdManagements.GetlastestArcId(),
+
+                        TransEnd = found?.previousTransitionModel?.Id1,
+                        PlaceEnd = found?.currentPlaceModel?.Id1,
+
+                        xPos = position.xArcPos,
+                        yPos = position.yArcPos == 84 ? position.yArcPos : position.GetLastestyArcPos(),
+
+                        Orientation = "TtoP", //Transition to Place
+                        Type = arcVariable
+                    }, found);
+                }
+            }
+
+            return (null, null);
+        }
+
+        private string DeclareArcVariable(string arrayName, int countSubPage)
+        {
+            //arc variable
+            string arcVariable = string.Empty;
+            switch (countSubPage)
+            {
+                case 0:
+                    arcVariable = $"(i,{arrayName})";
+                    break;
+                case 1:
+                    arcVariable = $"(i,j,{arrayName})";
+                    break;
+            }
+
+            return arcVariable;
         }
     }
 }

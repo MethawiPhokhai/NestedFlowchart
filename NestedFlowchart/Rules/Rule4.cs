@@ -163,7 +163,7 @@ namespace NestedFlowchart.Rules
                 Id1 = IdManagements.GetlastestArcId(),
                 Id2 = IdManagements.GetlastestArcId(),
 
-                TransEnd = previousNode.previousTransitionModel.Id1,
+                TransEnd = previousNode.currentTransitionModel.Id1,
                 PlaceEnd = pl.Id1,
 
                 xPos = position.GetLastestxArcPos(),
@@ -235,7 +235,7 @@ namespace NestedFlowchart.Rules
                 Id2 = IdManagements.GetlastestArcId(),
 
                 TransEnd = tr.Id1,
-                PlaceEnd = previousNode.previousPlaceModel.Id1,
+                PlaceEnd = previousNode.currentPlaceModel.Id1,
 
                 xPos = position.GetLastestxArcPos(),
                 yPos = position.GetLastestyArcPos(),

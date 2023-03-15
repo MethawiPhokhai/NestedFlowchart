@@ -20,7 +20,7 @@ namespace NestedFlowchart.Rules
                     Id2 = IdManagements.GetlastestArcId(),
 
                     TransEnd = currentTransition.Id1,
-                    PlaceEnd = found.previousPlaceModel.Id1,
+                    PlaceEnd = found.currentPlaceModel.Id1,
 
                     xPos = position.xArcPos,
                     yPos = position.yArcPos == 84 ? position.yArcPos : position.GetLastestyArcPos(),

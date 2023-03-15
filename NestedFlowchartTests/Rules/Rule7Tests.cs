@@ -17,7 +17,7 @@ namespace NestedFlowchart.Rules.Tests
             var previousNode = new PreviousNode
             {
                 Type = "transition",
-                previousTransitionModel = new TransitionModel
+                currentTransitionModel = new TransitionModel
                 {
                     Id1 = "ID1412848787"
                 }

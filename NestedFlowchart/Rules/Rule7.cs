@@ -35,14 +35,14 @@ namespace NestedFlowchart.Rules
                 Type = "INTs",
                 InitialMarking = string.Empty,
 
-                xPos1 = previousNode.previousPlaceModel.xPos1 - 4,
-                yPos1 = previousNode.previousPlaceModel.yPos1 - 168,
+                xPos1 = previousNode.currentPlaceModel.xPos1 - 4,
+                yPos1 = previousNode.currentPlaceModel.yPos1 - 168,
 
-                xPos2 = previousNode.previousPlaceModel.xPos2 - 4,
-                yPos2 = previousNode.previousPlaceModel.yPos2 - 167,
+                xPos2 = previousNode.currentPlaceModel.xPos2 - 4,
+                yPos2 = previousNode.currentPlaceModel.yPos2 - 167,
 
-                xPos3 = previousNode.previousPlaceModel.xPos3 - 4,
-                yPos3 = previousNode.previousPlaceModel.yPos3 - 167,
+                xPos3 = previousNode.currentPlaceModel.xPos3 - 4,
+                yPos3 = previousNode.currentPlaceModel.yPos3 - 167,
 
             };
 
@@ -54,7 +54,7 @@ namespace NestedFlowchart.Rules
                     Id1 = IdManagements.GetlastestArcId(),
                     Id2 = IdManagements.GetlastestArcId(),
 
-                    TransEnd = previousNode.previousTransitionModel.Id1,
+                    TransEnd = previousNode.currentTransitionModel.Id1,
                     PlaceEnd = pl.Id1,
 
                     xPos = position.GetLastestxArcPos(),

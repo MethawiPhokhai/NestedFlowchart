@@ -19,7 +19,7 @@ namespace NestedFlowchart.Rules
         /// <param name="arcTemplate"></param>
         /// <param name="previousPlace"></param>
         /// <returns></returns>
-        public (PlaceModel, TransitionModel?, ArcModel?, ArcModel?) ApplyRule(
+        public (PlaceModel, TransitionModel?, ArcModel?) ApplyRule(
             string arrayName,
 			PreviousNode previousNode,
             PositionManagements position,
@@ -68,24 +68,8 @@ namespace NestedFlowchart.Rules
 					Type = "loopi"
 				};
 
-				//Arc from P2 to T3
-				a1 = new ArcModel()
-				{
-					Id1 = IdManagements.GetlastestArcId(),
-					Id2 = IdManagements.GetlastestArcId(),
-
-					TransEnd = tr.Id1,
-					PlaceEnd = previousNode.previousPlaceModel.Id1,
-
-					xPos = position.GetLastestxArcPos(),
-					yPos = position.GetLastestyArcPos(),
-
-					Orientation = "PtoT", //Place to Transition
-					Type = arcVariable
-				};
-
 				//Arc from T3 to CN1
-				a2 = new ArcModel()
+				a1 = new ArcModel()
 				{
 					Id1 = IdManagements.GetlastestArcId(),
 					Id2 = IdManagements.GetlastestArcId(),
@@ -120,25 +104,9 @@ namespace NestedFlowchart.Rules
 					Type = "loopj"
 				};
 
-				//Arc from T3 to CN1
-				a1 = new ArcModel()
-				{
-					Id1 = IdManagements.GetlastestArcId(),
-					Id2 = IdManagements.GetlastestArcId(),
-
-					TransEnd = previousNode.previousTransitionModel.Id1,
-					PlaceEnd = pl.Id1,
-
-					xPos = position.GetLastestxArcPos(),
-					yPos = position.GetLastestyArcPos(),
-
-					Orientation = "TtoP", //Transition to Place
-					Type = arcVariable
-				};
-
 			}
 
-			return (pl, tr, a1, a2);
+			return (pl, tr, a1);
         }
 
 		private string DeclareArcVariable(string arrayName, int countSubPage)

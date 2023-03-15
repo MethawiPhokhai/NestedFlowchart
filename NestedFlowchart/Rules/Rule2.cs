@@ -9,12 +9,10 @@ namespace NestedFlowchart.Rules
     /// </summary>
     public class Rule2 : BaseRule
     {
-        public (PlaceModel, TransitionModel, ArcModel?, ArcModel)
+        public (PlaceModel, TransitionModel, ArcModel)
             ApplyRule(
-            List<PreviousNode> previousNodes,
             string arrayName,
-            PositionManagements position,
-            TempArrow arrow)
+            PositionManagements position)
         {
             TransitionModel tr = new TransitionModel()
             {
@@ -47,9 +45,7 @@ namespace NestedFlowchart.Rules
                 Type = "INTs"
             };
 
-            var a1 = CreateArcWithPreviousNode(arrow, position, arrayName, tr, previousNodes);
-
-            ArcModel a2 = new ArcModel()
+            ArcModel a1 = new ArcModel()
             {
                 Id1 = IdManagements.GetlastestArcId(),
                 Id2 = IdManagements.GetlastestArcId(),
@@ -64,7 +60,7 @@ namespace NestedFlowchart.Rules
                 Type = arrayName
             };
 
-            return (pl, tr, a1, a2);
+            return (pl, tr, a1);
         }
 
         public string AssignInitialMarking(
@@ -78,8 +74,8 @@ namespace NestedFlowchart.Rules
                 arrayName = SubstringBefore(sortedFlowcharts[i].ValueText.Trim(), '=').Trim();
                 var arrayValue = SubstringAfter(sortedFlowcharts[i].ValueText.Trim(), '=');
 
-                previousNode.previousPlaceModel.Type = "INTs";
-                previousNode.previousPlaceModel.InitialMarking = arrayValue;
+                previousNode.currentPlaceModel.Type = "INTs";
+                previousNode.currentPlaceModel.InitialMarking = arrayValue;
             }
 
             return arrayName;

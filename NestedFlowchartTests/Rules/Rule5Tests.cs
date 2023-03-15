@@ -14,7 +14,7 @@ namespace NestedFlowchart.Rules.Tests
             PositionManagements page1Position = new PositionManagements();
 
             PreviousNode previousNode = new PreviousNode();
-            previousNode.previousPlaceModel = new PlaceModel()
+            previousNode.currentPlaceModel = new PlaceModel()
             {
                 Id1 = "ID1412948772",
                 Id2 = "ID1412948773",
