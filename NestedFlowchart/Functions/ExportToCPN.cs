@@ -70,7 +70,10 @@ namespace NestedFlowchart.Functions
                 {
                     if (arrows.Any())
                     {
-                        var (arc, pv) = CreateArcWithPreviousNode(arrows.LastOrDefault(), page1Position, arrayName, previousNodes, notUseArrayName);
+                        //Get page position จาก page
+                        PositionManagements pagePosition = GetPagePositionByCountSubPage(previousNodes.LastOrDefault().CurrentMainPage, page1Position, page2Position);
+
+                        var (arc, pv) = CreateArcWithPreviousNode(arrows.LastOrDefault(), pagePosition, arrayName, previousNodes, notUseArrayName);
                         var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], arc);
                         CreatePageNodeByCountSubPage(pv.CurrentMainPage, pages, arc1);
 
@@ -78,6 +81,12 @@ namespace NestedFlowchart.Functions
                         if (pv.IsCreateSubPage)
                         {
                             pv.CurrentMainPage = pv.CurrentSubPage;
+                            pv.currentPlaceModel = pv.previousPlaceModel; //เอา previous place มาใส่ เพื่อให้ไป next node ของ subpage
+
+                            if (pv.CurrentMainPage > 0) //Toggle type of Rule3_2 becuase it go to subpage
+                            {
+                                pv.Type = (pv.Type == "transition") ? "page" : "transition";
+                            }
                         }
                     }
 
@@ -185,6 +194,7 @@ namespace NestedFlowchart.Functions
                         PreviousNode pv = new PreviousNode();
                         pv.elementId = sortedFlowcharts[i].ID;
                         pv.previousTransitionModel = previousNodes?.LastOrDefault()?.currentTransitionModel;
+                        pv.previousPlaceModel = rule3PS2; //เอาไว้เป็น previous ของ subpage เพื่อไปต่อ node ต่อไป
                         pv.currentPlaceModel = rule3InputPlace;
                         definejTransition = rule3Transition;
                         pv.Type = "transition";
@@ -313,7 +323,7 @@ namespace NestedFlowchart.Functions
                 else if (flowchartType == "condition")
                 {
                     #region Rule6
-                    PositionManagements pagePosition = GetPagePositionByCountSubPage(countSubPage, page1Position, page2Position);
+                    PositionManagements pagePosition = GetPagePositionByCountSubPage(previousNodes.LastOrDefault().CurrentMainPage, page1Position, page2Position);
                     string trueCondition = _rule6.CreateTrueCondition(sortedFlowcharts[i].ValueText, arrayName);
                     string falseCondition = _rule6.CreateFalseDecision(trueCondition);
 
@@ -323,14 +333,18 @@ namespace NestedFlowchart.Functions
                         trueCondition,
                         falseCondition,
                         arrayName,
-                        pagePosition,
-                        countSubPage);
+                        pagePosition);
 
 
                     PreviousNode pv = new PreviousNode();
                     pv.elementId = sortedFlowcharts[i].ID;
-                    pv.previousPlaceModel = rule6Place;
+                    pv.previousPlaceModel = previousNodes?.LastOrDefault()?.currentPlaceModel;
                     pv.currentTransitionModel = rule6TrueTransition;
+
+                    //Set lastest page
+                    pv.CurrentMainPage = previousNodes.LastOrDefault().CurrentMainPage;
+                    pv.CurrentSubPage = previousNodes.LastOrDefault().CurrentSubPage;
+
                     pv.Type = "place";
                     previousNodes.Add(pv);
 
@@ -343,7 +357,7 @@ namespace NestedFlowchart.Functions
 
                     var rule6String = ps3 + trueTransition + falseTransition + arc1 + arc2 + arc3;
 
-                    CreatePageNodeByCountSubPage(countSubPage, pages, rule6String);
+                    CreatePageNodeByCountSubPage(previousNodes.LastOrDefault().CurrentMainPage, pages, rule6String);
                     #endregion
                 }
                 //Rule 7 End

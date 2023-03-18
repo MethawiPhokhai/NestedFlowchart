@@ -26,11 +26,10 @@ namespace NestedFlowchart.Rules
             string trueCondition, 
             string falseCondition,
             string arrayName,
-            PositionManagements position,
-            int countSubPage)
+            PositionManagements position)
         {
 
-            string arcVariable = DeclareArcVariable(arrayName, countSubPage);
+            string arcVariable = DeclareArcVariable(arrayName, previousNode.CurrentMainPage);
 
             var xPos1 = position.xPos1;
             var yPos1 = position.GetLastestyPos1();
