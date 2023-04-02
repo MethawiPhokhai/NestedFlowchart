@@ -3,6 +3,7 @@ using NestedFlowchart.Models;
 using NestedFlowchart.Position;
 using NestedFlowchart.Rules;
 using NestedFlowchart.Templates;
+using System.Linq;
 using System.Text;
 
 namespace NestedFlowchart.Functions
@@ -71,6 +72,12 @@ namespace NestedFlowchart.Functions
                     if (arrows.Any())
                     {
                         var currentPreviousNode = previousNodes.LastOrDefault();
+
+                        // Toggle type of Rule 6 ถ้ามี condition ต่อกัน 2 อัน
+                        if (currentPreviousNode.IsPreviousNodeCondition && previousNodes.ElementAtOrDefault(previousNodes.Count - 2).IsPreviousNodeCondition)
+                        {
+                            currentPreviousNode.Type = (currentPreviousNode.Type == "transition") ? "place" : "transition";
+                        }
 
                         // Get page position from the page
                         PositionManagements pagePosition = GetPagePositionByCountSubPage(currentPreviousNode.CurrentMainPage, page1Position, page2Position);
