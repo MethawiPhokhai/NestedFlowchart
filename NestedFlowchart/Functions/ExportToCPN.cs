@@ -70,31 +70,39 @@ namespace NestedFlowchart.Functions
                 {
                     if (arrows.Any())
                     {
-                        //Get page position จาก page
-                        PositionManagements pagePosition = GetPagePositionByCountSubPage(previousNodes.LastOrDefault().CurrentMainPage, page1Position, page2Position);
+                        var currentPreviousNode = previousNodes.LastOrDefault();
 
+                        // Get page position from the page
+                        PositionManagements pagePosition = GetPagePositionByCountSubPage(currentPreviousNode.CurrentMainPage, page1Position, page2Position);
+
+                        // Create arc with previous node
                         var (arc, pv) = CreateArcWithPreviousNode(arrows.LastOrDefault(), pagePosition, arrayName, previousNodes, notUseArrayName);
+
+                        // Create arc and page node
                         var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], arc);
                         CreatePageNodeByCountSubPage(pv.CurrentMainPage, pages, arc1);
 
-                        //หลังจากสร้าง Arc เสร็จ ถ้ามีการสร้าง Subpage ให้ย้ายไปทำต่อใน Subpage
+                        // If a subpage is created, continue with the subpage
                         if (pv.IsCreateSubPage)
                         {
                             pv.CurrentMainPage = pv.CurrentSubPage;
-                            pv.currentPlaceModel = pv.previousPlaceModel; //เอา previous place มาใส่ เพื่อให้ไป next node ของ subpage
+                            pv.currentPlaceModel = pv.previousPlaceModel; // Set previous place for the next node of the subpage
 
-                            if (pv.CurrentMainPage > 0) //Toggle type of Rule3_2 becuase it go to subpage
+                            // Toggle type of Rule3_2 if a place has been created in the subpage and Rule 6 checks for transitions
+                            if (pv.CurrentMainPage > 0)
                             {
-                                pv.Type = (pv.Type == "transition") ? "page" : "transition";
+                                pv.Type = (pv.Type == "transition") ? "place" : "transition";
                             }
                         }
                     }
 
-                    //Keep arrow into temp for next element can use
-                    TempArrow arrow = new TempArrow();
-                    arrow.Id = sortedFlowcharts[i].ID;
-                    arrow.Source = sortedFlowcharts[i].Source;
-                    arrow.Destination = sortedFlowcharts[i].Target;
+                    // Store arrow in temp for the next element to use
+                    TempArrow arrow = new TempArrow()
+                    {
+                        Id = sortedFlowcharts[i].ID,
+                        Source = sortedFlowcharts[i].Source,
+                        Destination = sortedFlowcharts[i].Target
+                    };
                     arrows.Add(arrow);
                 }
                 //Rule1 : Start
@@ -327,8 +335,7 @@ namespace NestedFlowchart.Functions
                     string trueCondition = _rule6.CreateTrueCondition(sortedFlowcharts[i].ValueText, arrayName);
                     string falseCondition = _rule6.CreateFalseDecision(trueCondition);
 
-                    //TODO: Separate between true and false case by arrow[i+1]
-                    var (rule6Place, rule6Place2, rule6FalseTransition, rule6TrueTransition, rule6Arc1, rule6Arc2, rule6Arc3) = _rule6.ApplyRule(
+                    var (rule6Place, rule6Place2, rule6FalseTransition, rule6TrueTransition, rule6Arc1) = _rule6.ApplyRule(
                         previousNodes.LastOrDefault(),
                         trueCondition,
                         falseCondition,
@@ -340,22 +347,29 @@ namespace NestedFlowchart.Functions
                     pv.elementId = sortedFlowcharts[i].ID;
                     pv.previousPlaceModel = previousNodes?.LastOrDefault()?.currentPlaceModel;
                     pv.currentTransitionModel = rule6TrueTransition;
+                    pv.previousTransitionModel = previousNodes?.LastOrDefault()?.currentTransitionModel;
+                    pv.currentPlaceModel = rule6Place2;
 
                     //Set lastest page
                     pv.CurrentMainPage = previousNodes.LastOrDefault().CurrentMainPage;
                     pv.CurrentSubPage = previousNodes.LastOrDefault().CurrentSubPage;
 
+                    //จำเป็นต้อง Set เป็น Place เพราะว่าต้องใช้ใน Rule3_2
                     pv.Type = "place";
+
+                    //Set เพราะเอาไว้บอกตัวต่อไปว่า node ก่อนหน้าเป็น Condition
+                    pv.IsPreviousNodeCondition = true;
+
                     previousNodes.Add(pv);
+
+
 
                     var ps3 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule6Place2);
                     var trueTransition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule6TrueTransition);
                     var falseTransition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule6FalseTransition);
                     var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule6Arc1);
-                    var arc2 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule6Arc2);
-                    var arc3 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule6Arc3);
 
-                    var rule6String = ps3 + trueTransition + falseTransition + arc1 + arc2 + arc3;
+                    var rule6String = ps3 + trueTransition + falseTransition + arc1;
 
                     CreatePageNodeByCountSubPage(previousNodes.LastOrDefault().CurrentMainPage, pages, rule6String);
                     #endregion
@@ -455,23 +469,26 @@ namespace NestedFlowchart.Functions
             return countSubPage;
         }
 
-        private string[] ReadAllTemplate(string? TemplatePath)
+        private string[] ReadAllTemplate(string? templatePath)
         {
-            string[] templateNames = {
+            string[] templateNames =
+            {
                 "EmptyNet.txt", "Place.txt", "Transition.txt", "Arc.txt",
                 "VarType.txt", "ColorSet.txt", "Hierarchy_Instance.txt",
                 "Page.txt", "Hierarchy_SubPageTransition.txt", "Hierarchy_Port.txt"
             };
 
-            string[] allTemplates = new string[10];
+            string[] allTemplates = new string[templateNames.Length];
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < templateNames.Length; i++)
             {
-                allTemplates[i] = File.ReadAllText(TemplatePath + templateNames[i]);
+                string templateFilePath = Path.Combine(templatePath ?? string.Empty, templateNames[i]);
+                allTemplates[i] = File.ReadAllText(templateFilePath);
             }
 
             return allTemplates;
         }
+
 
         private void CreatePageNodeByCountSubPage(int countSubPage, PageDeclare pages, string rule)
         {
@@ -516,52 +533,42 @@ namespace NestedFlowchart.Functions
             return pagePosition;
         }
 
-        public (ArcModel?, PreviousNode) CreateArcWithPreviousNode(TempArrow arrow, PositionManagements position, string arrayName, List<PreviousNode> previousNodes, bool notUseArrayName)
+        public (ArcModel? arcModel, PreviousNode previousNode) CreateArcWithPreviousNode(
+            TempArrow arrow, PositionManagements position, string arrayName,
+            List<PreviousNode> previousNodes, bool notUseArrayName)
         {
-            //Search on previous node that source is the same id
             var found = previousNodes.FirstOrDefault(x => x.elementId == arrow.Destination);
 
-            if (found != null)
+            if (found == null)
             {
-                string arcVariable = notUseArrayName ? DeclareArcVariable(arrayName, found.CurrentMainPage) : arrayName;
-
-                if (found.Type == "place")
-                {
-                    return (new ArcModel()
-                    {
-                        Id1 = IdManagements.GetlastestArcId(),
-                        Id2 = IdManagements.GetlastestArcId(),
-
-                        PlaceEnd = found?.previousPlaceModel?.Id1,
-                        TransEnd = found?.currentTransitionModel?.Id1,
-
-                        xPos = position.xArcPos,
-                        yPos = position.yArcPos == 84 ? position.yArcPos : position.GetLastestyArcPos(),
-
-                        Orientation = "PtoT", //Place to Transition
-                        Type = arcVariable
-                    }, found);
-                }
-                else
-                {
-                    return (new ArcModel()
-                    {
-                        Id1 = IdManagements.GetlastestArcId(),
-                        Id2 = IdManagements.GetlastestArcId(),
-
-                        TransEnd = found?.previousTransitionModel?.Id1,
-                        PlaceEnd = found?.currentPlaceModel?.Id1,
-
-                        xPos = position.xArcPos,
-                        yPos = position.yArcPos == 84 ? position.yArcPos : position.GetLastestyArcPos(),
-
-                        Orientation = "TtoP", //Transition to Place
-                        Type = arcVariable
-                    }, found);
-                }
+                return (null, null);
             }
 
-            return (null, null);
+            string arcVariable = notUseArrayName ? DeclareArcVariable(arrayName, found.CurrentMainPage) : arrayName;
+            string orientation = found.Type == "place" ? "PtoT" : "TtoP";
+
+            ArcModel arcModel = new ArcModel
+            {
+                Id1 = IdManagements.GetlastestArcId(),
+                Id2 = IdManagements.GetlastestArcId(),
+                xPos = position.xArcPos,
+                yPos = position.yArcPos == 84 ? position.yArcPos : position.GetLastestyArcPos(),
+                Orientation = orientation,
+                Type = arcVariable
+            };
+
+            if (found.Type == "place")
+            {
+                arcModel.PlaceEnd = found?.previousPlaceModel?.Id1;
+                arcModel.TransEnd = found?.currentTransitionModel?.Id1;
+            }
+            else
+            {
+                arcModel.TransEnd = found?.previousTransitionModel?.Id1;
+                arcModel.PlaceEnd = found?.currentPlaceModel?.Id1;
+            }
+
+            return (arcModel, found);
         }
 
         private string DeclareArcVariable(string arrayName, int countSubPage)

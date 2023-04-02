@@ -16,5 +16,6 @@
         public int CurrentMainPage { get; set; }
         public int CurrentSubPage { get; set; }
         public bool IsCreateSubPage { get; set; }
+        public bool IsPreviousNodeCondition { get; set; }
     }
 }

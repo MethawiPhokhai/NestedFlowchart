@@ -21,7 +21,7 @@ namespace NestedFlowchart.Rules
         /// <param name="trueCondition"></param>
         /// <param name="falseCondition"></param>
         /// <returns></returns>
-        public (PlaceModel, PlaceModel, TransitionModel, TransitionModel, ArcModel, ArcModel, ArcModel?) ApplyRule(
+        public (PlaceModel, PlaceModel, TransitionModel, TransitionModel, ArcModel) ApplyRule(
             PreviousNode previousNode, 
             string trueCondition, 
             string falseCondition,
@@ -38,9 +38,8 @@ namespace NestedFlowchart.Rules
             var yPosArc = position.GetLastestyArcPos();
 
             PlaceModel? ps3 = null;
-            ArcModel a1, a2;
-            ArcModel? a3 = null;
-            if (previousNode.Type == "transition")
+            ArcModel a1 = null;
+            if (previousNode.IsPreviousNodeCondition)
             {
                 ps3 = new PlaceModel()
                 {
@@ -50,7 +49,7 @@ namespace NestedFlowchart.Rules
 
                     Name = IdManagements.GetlastestPlaceName(),
 
-                    xPos1 = position.xPos1,
+                    xPos1 = position.xPos1 + 39,
                     yPos1 = position.GetLastestyPos1() + 100,
 
                     xPos2 = position.GetLastestxPos2(),
@@ -59,27 +58,12 @@ namespace NestedFlowchart.Rules
                     Type = "loopj"
                 };
 
-                //a3 = new ArcModel()
-                //{
-                //    Id1 = IdManagements.GetlastestArcId(),
-                //    Id2 = IdManagements.GetlastestArcId(),
-
-                //    TransEnd = previousNode.currentTransitionModel.Id1,
-                //    PlaceEnd = ps3.Id1,
-
-                //    xPos = xPosArc - 84,
-                //    yPos = yPosArc,
-
-                //    Orientation = "TtoP", //Transition to Place
-                //    Type = arcVariable
-                //};
-
-                //Move more because it add on place above
+                // Adjust yPos values because a new place was added above
                 yPos1 -= 80;
                 yPosArc -= 60;
             }
 
-
+            //TODO: Create False transition later
             ////GF1 Transition
             //TransitionModel falseTransition = new TransitionModel()
             //{
@@ -121,26 +105,10 @@ namespace NestedFlowchart.Rules
                 Condition = trueCondition
             };
 
-            if(previousNode.Type == "transition")
+            if (previousNode.IsPreviousNodeCondition)
             {
-                //Arc from CN1 to GF1
-                //a1 = new ArcModel()
-                //{
-                //    Id1 = IdManagements.GetlastestArcId(),
-                //    Id2 = IdManagements.GetlastestArcId(),
-
-                //    TransEnd = falseTransition.Id1,
-                //    PlaceEnd = ps3.Id1,
-
-                //    xPos = xPosArc - 84,
-                //    yPos = yPosArc,
-
-                //    Orientation = "PtoT", //Place to Transition
-                //    Type = arcVariable
-                //};
-
                 //Arc from CN1 to GT1
-                a2 = new ArcModel()
+                a1 = new ArcModel()
                 {
                     Id1 = IdManagements.GetlastestArcId(),
                     Id2 = IdManagements.GetlastestArcId(),
@@ -155,42 +123,8 @@ namespace NestedFlowchart.Rules
                     Type = arcVariable
                 };
             }
-            else
-            {
-                ////Arc from CN1 to GF1
-                //a1 = new ArcModel()
-                //{
-                //    Id1 = IdManagements.GetlastestArcId(),
-                //    Id2 = IdManagements.GetlastestArcId(),
 
-                //    TransEnd = falseTransition.Id1,
-                //    PlaceEnd = previousNode.currentPlaceModel.Id1,
-
-                //    xPos = xPosArc - 84,
-                //    yPos = yPosArc,
-
-                //    Orientation = "PtoT", //Place to Transition
-                //    Type = arcVariable
-                //};
-
-                ////Arc from CN1 to GT1
-                //a2 = new ArcModel()
-                //{
-                //    Id1 = IdManagements.GetlastestArcId(),
-                //    Id2 = IdManagements.GetlastestArcId(),
-
-                //    TransEnd = trueTransition.Id1,
-                //    PlaceEnd = previousNode.currentPlaceModel.Id1,
-
-                //    xPos = xPosArc + 34,
-                //    yPos = yPosArc,
-
-                //    Orientation = "PtoT", //Place to Transition
-                //    Type = arcVariable
-                //};
-            }
-
-            return (previousNode.currentPlaceModel, ps3, null, trueTransition, null, null, null);
+            return (previousNode.currentPlaceModel, ps3, null, trueTransition, a1);
         }
 
         private string DeclareArcVariable(string arrayName, int countSubPage)

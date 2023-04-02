@@ -168,8 +168,6 @@ namespace NestedFlowchart.Rules
             #region SubPage
 
 
-            //TODO : ใช้ position2 แทน previousnode ในการระบุ position
-
             var p3InputPort = new HierarchyPortModel()
             {
                 Id = IdManagements.GetlastestPortId(),
