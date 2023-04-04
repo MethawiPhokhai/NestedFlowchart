@@ -281,7 +281,7 @@ namespace NestedFlowchart.Functions
                         else if(flowchartValue.Contains("j ++"))
                         {
                             #region Rule4_3
-                            PositionManagements pagePosition = GetPagePositionByCountSubPage(countSubPage, page1Position, page2Position);
+                            PositionManagements pagePosition = GetPagePositionByCountSubPage(previousNodes.LastOrDefault().CurrentMainPage, page1Position, page2Position);
                             var (rule4Transition, rule4Arc) = _rule4.ApplyRuleWithCodeSegment2(
                                                                     arrayName,
                                                                     previousNodes.LastOrDefault(),
@@ -293,6 +293,11 @@ namespace NestedFlowchart.Functions
                             pv.previousTransitionModel = previousNodes?.LastOrDefault()?.currentTransitionModel;
                             pv.currentTransitionModel = rule4Transition;
                             pv.Type = "transition";
+
+                            //Set lastest page
+                            pv.CurrentMainPage = previousNodes.LastOrDefault().CurrentMainPage;
+                            pv.CurrentSubPage = previousNodes.LastOrDefault().CurrentSubPage;
+
                             previousNodes.Add(pv);
 
 
@@ -300,7 +305,7 @@ namespace NestedFlowchart.Functions
                             var transition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule4Transition);
 
                             var rule4String = transition + arc1;
-                            CreatePageNodeByCountSubPage(countSubPage, pages, rule4String);
+                            CreatePageNodeByCountSubPage(previousNodes.LastOrDefault().CurrentMainPage, pages, rule4String);
                             #endregion
                         }
                         //countSubPage = Rule4(sortedFlowcharts, allTemplates, pages, previousNode, arrayName, page1Position, i);
