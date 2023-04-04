@@ -74,7 +74,8 @@ namespace NestedFlowchart.Functions
                     {
                         var currentPreviousNode = previousNodes.LastOrDefault();
 
-                        // Toggle type of Rule 6 ถ้ามี condition ต่อกัน 2 อัน
+                        // Toggle type of Rule 6 ถ้ามี condition ต่อกัน 2 อัน หรือ
+                        // กรณี CN2 ถ้ามี Set IsConnector มา
                         if ((currentPreviousNode.IsPreviousNodeCondition && previousNodes.ElementAtOrDefault(previousNodes.Count - 2).IsPreviousNodeCondition) ||
                             (currentPreviousNode.IsConnector && currentPreviousNode.CurrentMainPage == 1))
                         {
