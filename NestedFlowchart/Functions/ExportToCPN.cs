@@ -250,8 +250,8 @@ namespace NestedFlowchart.Functions
                         if (flowchartValue.Contains("temp = array[ j+1]"))
                         {
                             #region Rule4_2
-                            PositionManagements pagePosition = GetPagePositionByCountSubPage(countSubPage, page1Position, page2Position);
-                            var (rule4Place, rule4Transition, rule4Arc, rule4Arc2) = _rule4.ApplyRuleWithCodeSegment(
+                            PositionManagements pagePosition = GetPagePositionByCountSubPage(previousNodes.LastOrDefault().CurrentMainPage, page1Position, page2Position);
+                            var (rule4Place, rule4Transition, rule4Arc) = _rule4.ApplyRuleWithCodeSegment(
                                                                                             arrayName,
                                                                                             previousNodes.LastOrDefault(),
                                                                                             pagePosition);
@@ -263,15 +263,19 @@ namespace NestedFlowchart.Functions
                             pv.currentPlaceModel = rule4Place;
                             pv.currentTransitionModel = rule4Transition;
                             pv.Type = "transition";
+
+                            //Set lastest page
+                            pv.CurrentMainPage = previousNodes.LastOrDefault().CurrentMainPage;
+                            pv.CurrentSubPage = previousNodes.LastOrDefault().CurrentSubPage;
+
                             previousNodes.Add(pv);
 
                             var place1 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule4Place);
                             var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule4Arc);
                             var transition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule4Transition);
-                            var arc2 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule4Arc2);
 
-                            var rule4String = place1 + transition + arc1 + arc2;
-                            CreatePageNodeByCountSubPage(countSubPage, pages, rule4String);
+                            var rule4String = place1 + transition + arc1;
+                            CreatePageNodeByCountSubPage(previousNodes.LastOrDefault().CurrentMainPage, pages, rule4String);
                             #endregion
                         }
                         else if(flowchartValue.Contains("j ++"))

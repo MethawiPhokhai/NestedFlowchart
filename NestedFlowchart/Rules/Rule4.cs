@@ -89,11 +89,13 @@ namespace NestedFlowchart.Rules
         }
 
 
-        public (PlaceModel, TransitionModel, ArcModel, ArcModel) ApplyRuleWithCodeSegment(
+        public (PlaceModel, TransitionModel, ArcModel) ApplyRuleWithCodeSegment(
             string arrayName,
             PreviousNode previousNode,
             PositionManagements position)
         {
+            string arcVariable = DeclareArcVariable(arrayName, previousNode.CurrentMainPage);
+
             //PS4
             PlaceModel pl = new PlaceModel()
             {
@@ -157,24 +159,8 @@ namespace NestedFlowchart.Rules
 				CodeSegment = codeSeg
 			};
 
-            //Arc from PS4 to TS2
-            ArcModel a1 = new ArcModel()
-            {
-                Id1 = IdManagements.GetlastestArcId(),
-                Id2 = IdManagements.GetlastestArcId(),
-
-                TransEnd = previousNode.currentTransitionModel.Id1,
-                PlaceEnd = pl.Id1,
-
-                xPos = position.GetLastestxArcPos(),
-                yPos = position.GetLastestyArcPos(),
-
-                Orientation = "TtoP",// Transition to Place
-				Type = $"(i,j,{arrayName})"
-            };
-
 			//Arc from PS4 to TS2
-			ArcModel a2 = new ArcModel()
+			ArcModel a1 = new ArcModel()
 			{
 				Id1 = IdManagements.GetlastestArcId(),
 				Id2 = IdManagements.GetlastestArcId(),
@@ -186,11 +172,10 @@ namespace NestedFlowchart.Rules
 				yPos = position.GetLastestyArcPos(),
 
 				Orientation = "PtoT", //Place to Transition 
-				Type = $"(i,j,{arrayName})"
-			};
+				Type = arcVariable
+            };
 
-
-			return (pl, tr, a1, a2);
+			return (pl, tr, a1);
         }
 
         public (TransitionModel, ArcModel) ApplyRuleWithCodeSegment2(
@@ -246,6 +231,23 @@ namespace NestedFlowchart.Rules
 
 
             return (tr, a1);
+        }
+
+        private string DeclareArcVariable(string arrayName, int countSubPage)
+        {
+            //arc variable
+            string arcVariable = string.Empty;
+            switch (countSubPage)
+            {
+                case 0:
+                    arcVariable = $"(i,{arrayName})";
+                    break;
+                case 1:
+                    arcVariable = $"(i,j,{arrayName})";
+                    break;
+            }
+
+            return arcVariable;
         }
     }
 }
