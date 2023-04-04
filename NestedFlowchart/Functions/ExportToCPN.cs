@@ -48,7 +48,7 @@ namespace NestedFlowchart.Functions
             /*
              * Declare Array name for arc
              */
-            bool notUseArrayName = false;
+            bool isDeclaredI = false;
             string arrayName = string.Empty;
 			string arrayName2 = "array2";
 			#endregion
@@ -65,6 +65,7 @@ namespace NestedFlowchart.Functions
             {
                 var flowchartType = sortedFlowcharts[i].NodeType.ToLower();
                 var flowchartValue = sortedFlowcharts[i].ValueText;
+                System.Diagnostics.Debug.WriteLine(flowchartValue);
 
                 //Arrow
                 if (flowchartType == "arrow")
@@ -74,7 +75,8 @@ namespace NestedFlowchart.Functions
                         var currentPreviousNode = previousNodes.LastOrDefault();
 
                         // Toggle type of Rule 6 ถ้ามี condition ต่อกัน 2 อัน
-                        if (currentPreviousNode.IsPreviousNodeCondition && previousNodes.ElementAtOrDefault(previousNodes.Count - 2).IsPreviousNodeCondition)
+                        if ((currentPreviousNode.IsPreviousNodeCondition && previousNodes.ElementAtOrDefault(previousNodes.Count - 2).IsPreviousNodeCondition) ||
+                            (currentPreviousNode.IsConnector && currentPreviousNode.CurrentMainPage == 1))
                         {
                             currentPreviousNode.Type = (currentPreviousNode.Type == "transition") ? "place" : "transition";
                         }
@@ -83,7 +85,7 @@ namespace NestedFlowchart.Functions
                         PositionManagements pagePosition = GetPagePositionByCountSubPage(currentPreviousNode.CurrentMainPage, page1Position, page2Position);
 
                         // Create arc with previous node
-                        var (arc, pv) = CreateArcWithPreviousNode(arrows.LastOrDefault(), pagePosition, arrayName, previousNodes, notUseArrayName);
+                        var (arc, pv) = CreateArcWithPreviousNode(arrows.LastOrDefault(), pagePosition, arrayName, previousNodes, isDeclaredI);
 
                         // Create arc and page node
                         var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], arc);
@@ -315,7 +317,7 @@ namespace NestedFlowchart.Functions
                 else if (flowchartType == "connector")
                 {
                     #region Rule5
-                    PositionManagements pagePosition = GetPagePositionByCountSubPage(countSubPage, page1Position, page2Position);
+                    PositionManagements pagePosition = GetPagePositionByCountSubPage(previousNodes.LastOrDefault().CurrentMainPage, page1Position, page2Position);
                     var (rule5Place, rule5Transition, rule5Arc1) = _rule5.ApplyRule(
                                     arrayName,
                                     previousNodes.LastOrDefault(),
@@ -330,17 +332,25 @@ namespace NestedFlowchart.Functions
                     pv.currentPlaceModel = rule5Place;
                     pv.currentTransitionModel = rule5Transition;
                     pv.Type = "place";
+
+                    //Set lastest page
+                    pv.CurrentMainPage = previousNodes.LastOrDefault().CurrentMainPage;
+                    pv.CurrentSubPage = previousNodes.LastOrDefault().CurrentSubPage;
+
+                    //Set ให้ Toggle type เพราะ connector reuse 2 ที่
+                    pv.IsConnector = true;
+
                     previousNodes.Add(pv);
 
-                    //Set to use (i,arr)
-                    notUseArrayName = true;
+                    //Set หลังจากที่ประกาศ i เพื่อให้ Arc Variable ต่อไปใช้ (i,array)
+                    isDeclaredI = true;
 
                     var place1 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule5Place);
                     var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule5Arc1);
                     var transition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule5Transition);
                     var rule5String = place1 + transition + arc1;
 
-                    CreatePageNodeByCountSubPage(countSubPage, pages, rule5String);
+                    CreatePageNodeByCountSubPage(previousNodes.LastOrDefault().CurrentMainPage, pages, rule5String);
                     #endregion
                 }
                 //Rule 6 Decision
@@ -551,16 +561,15 @@ namespace NestedFlowchart.Functions
 
         public (ArcModel? arcModel, PreviousNode previousNode) CreateArcWithPreviousNode(
             TempArrow arrow, PositionManagements position, string arrayName,
-            List<PreviousNode> previousNodes, bool notUseArrayName)
+            List<PreviousNode> previousNodes, bool isDeclaredI)
         {
+            //หาตัวแรกที่ id ตรงกับ Destination เพื่อเอามาสร้าง Arc ต่อกัน
             var found = previousNodes.FirstOrDefault(x => x.elementId == arrow.Destination);
 
-            if (found == null)
-            {
-                return (null, null);
-            }
-
-            string arcVariable = notUseArrayName ? DeclareArcVariable(arrayName, found.CurrentMainPage) : arrayName;
+            //กรณีอยู่หน้าแรก และยังไม่ประกาศ i ให้ใช้ arc variable array เฉยๆ นอกจากนั้นไป get ตาม page
+            string arcVariable = isDeclaredI ? DeclareArcVariable(arrayName, found.CurrentMainPage) : arrayName;
+            
+            //ถ้าเป็น place ให้ใช้ PtoT, ถ้าเป็น transition ให้ใช้ TtoP
             string orientation = found.Type == "place" ? "PtoT" : "TtoP";
 
             ArcModel arcModel = new ArcModel
