@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace NestedFlowchart.Rules
 {
@@ -178,7 +179,7 @@ namespace NestedFlowchart.Rules
 			return (pl, tr, a1);
         }
 
-        public TransitionModel ApplyRuleWithCodeSegment2(
+        public (TransitionModel, ArcModel) ApplyRuleWithCodeSegment2(
         string arrayName,
         PreviousNode previousNode,
         PositionManagements position)
@@ -214,7 +215,19 @@ namespace NestedFlowchart.Rules
                 CodeSegment = codeSeg
             };
 
-            return tr;
+            ArcModel arcModel = new ArcModel
+            {
+                Id1 = IdManagements.GetlastestArcId(),
+                Id2 = IdManagements.GetlastestArcId(),
+                xPos = position.xArcPos,
+                yPos = position.yArcPos == 84 ? position.yArcPos : position.GetLastestyArcPos(),
+                Orientation = "TtoP",
+                Type = "(i,j2,array)",
+                TransEnd = "ID1412848817", //TS4
+                PlaceEnd = "ID1412948794"  //PS2
+            };
+
+            return (tr, arcModel);
         }
 
         private string DeclareArcVariable(string arrayName, int countSubPage)

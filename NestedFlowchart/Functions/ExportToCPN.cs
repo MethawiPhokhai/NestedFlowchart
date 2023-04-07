@@ -75,7 +75,6 @@ namespace NestedFlowchart.Functions
                         var currentPreviousNode = previousNodes.LastOrDefault();
 
                         // Toggle type of Rule 6 ถ้ามี condition ต่อกัน 2 อัน หรือ
-                        // กรณี CN2 ถ้ามี Set IsConnector มา
                         if ((currentPreviousNode.IsPreviousNodeCondition && previousNodes.ElementAtOrDefault(previousNodes.Count - 2).IsPreviousNodeCondition))
                         {
                             currentPreviousNode.Type = (currentPreviousNode.Type == "transition") ? "place" : "transition";
@@ -284,7 +283,7 @@ namespace NestedFlowchart.Functions
                         {
                             #region Rule4_3
                             PositionManagements pagePosition = GetPagePositionByCountSubPage(previousNodes.LastOrDefault().CurrentMainPage, page1Position, page2Position);
-                            var rule4Transition = _rule4.ApplyRuleWithCodeSegment2(
+                            var (rule4Transition, rule4Arc) = _rule4.ApplyRuleWithCodeSegment2(
                                                                     arrayName,
                                                                     previousNodes.LastOrDefault(),
                                                                     pagePosition);
@@ -304,8 +303,9 @@ namespace NestedFlowchart.Functions
 
 
                             var transition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule4Transition);
+                            var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule4Arc);
 
-                            var rule4String = transition;
+                            var rule4String = transition + arc1;
                             CreatePageNodeByCountSubPage(previousNodes.LastOrDefault().CurrentMainPage, pages, rule4String);
                             #endregion
                         }
