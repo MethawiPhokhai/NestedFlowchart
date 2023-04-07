@@ -17,6 +17,5 @@
         public int CurrentSubPage { get; set; }
         public bool IsCreateSubPage { get; set; }
         public bool IsPreviousNodeCondition { get; set; }
-        public bool IsConnector { get; set; }
     }
 }

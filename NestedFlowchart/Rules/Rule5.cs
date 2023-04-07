@@ -19,7 +19,7 @@ namespace NestedFlowchart.Rules
         /// <param name="arcTemplate"></param>
         /// <param name="previousPlace"></param>
         /// <returns></returns>
-        public (PlaceModel, TransitionModel?, ArcModel?) ApplyRule(
+        public (PlaceModel, TransitionModel?, ArcModel?, string) ApplyRule(
             string arrayName,
 			PreviousNode previousNode,
             PositionManagements position,
@@ -29,6 +29,7 @@ namespace NestedFlowchart.Rules
 			TransitionModel tr = null;
 			PlaceModel pl = null;
 			ArcModel a1 = null, a2 = null;
+			string previousTypeReturn = string.Empty;
 
 			if (previousNode.Type == "place")
             {
@@ -83,7 +84,10 @@ namespace NestedFlowchart.Rules
 					Orientation = "TtoP", //Transition to Place
 					Type = arcVariable
 				};
-			}
+
+				previousTypeReturn = "place";
+
+            }
 			else
 			{
 				//CN1 Place
@@ -104,9 +108,11 @@ namespace NestedFlowchart.Rules
 					Type = "loopj"
 				};
 
-			}
+                previousTypeReturn = "transition";
 
-			return (pl, tr, a1);
+            }
+
+			return (pl, tr, a1, previousTypeReturn);
         }
 
 		private string DeclareArcVariable(string arrayName, int countSubPage)

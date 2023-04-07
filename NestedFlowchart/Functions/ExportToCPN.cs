@@ -76,8 +76,7 @@ namespace NestedFlowchart.Functions
 
                         // Toggle type of Rule 6 ถ้ามี condition ต่อกัน 2 อัน หรือ
                         // กรณี CN2 ถ้ามี Set IsConnector มา
-                        if ((currentPreviousNode.IsPreviousNodeCondition && previousNodes.ElementAtOrDefault(previousNodes.Count - 2).IsPreviousNodeCondition) ||
-                            (currentPreviousNode.IsConnector && currentPreviousNode.CurrentMainPage == 1))
+                        if ((currentPreviousNode.IsPreviousNodeCondition && previousNodes.ElementAtOrDefault(previousNodes.Count - 2).IsPreviousNodeCondition))
                         {
                             currentPreviousNode.Type = (currentPreviousNode.Type == "transition") ? "place" : "transition";
                         }
@@ -319,7 +318,7 @@ namespace NestedFlowchart.Functions
                 {
                     #region Rule5
                     PositionManagements pagePosition = GetPagePositionByCountSubPage(previousNodes.LastOrDefault().CurrentMainPage, page1Position, page2Position);
-                    var (rule5Place, rule5Transition, rule5Arc1) = _rule5.ApplyRule(
+                    var (rule5Place, rule5Transition, rule5Arc1, previousTypeReturn) = _rule5.ApplyRule(
                                     arrayName,
                                     previousNodes.LastOrDefault(),
                                     pagePosition,
@@ -332,14 +331,11 @@ namespace NestedFlowchart.Functions
                     pv.previousTransitionModel = previousNodes?.LastOrDefault()?.currentTransitionModel;
                     pv.currentPlaceModel = rule5Place;
                     pv.currentTransitionModel = rule5Transition;
-                    pv.Type = "place";
+                    pv.Type = previousTypeReturn;
 
                     //Set lastest page
                     pv.CurrentMainPage = previousNodes.LastOrDefault().CurrentMainPage;
                     pv.CurrentSubPage = previousNodes.LastOrDefault().CurrentSubPage;
-
-                    //Set ให้ Toggle type เพราะ connector reuse 2 ที่
-                    pv.IsConnector = true;
 
                     previousNodes.Add(pv);
 
