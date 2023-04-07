@@ -178,7 +178,7 @@ namespace NestedFlowchart.Rules
 			return (pl, tr, a1);
         }
 
-        public (TransitionModel, ArcModel) ApplyRuleWithCodeSegment2(
+        public TransitionModel ApplyRuleWithCodeSegment2(
         string arrayName,
         PreviousNode previousNode,
         PositionManagements position)
@@ -214,23 +214,7 @@ namespace NestedFlowchart.Rules
                 CodeSegment = codeSeg
             };
 
-            ArcModel a1 = new ArcModel()
-            {
-                Id1 = IdManagements.GetlastestArcId(),
-                Id2 = IdManagements.GetlastestArcId(),
-
-                TransEnd = tr.Id1,
-                PlaceEnd = previousNode.currentPlaceModel.Id1,
-
-                xPos = position.GetLastestxArcPos(),
-                yPos = position.GetLastestyArcPos(),
-
-                Orientation = "PtoT", //Place to Transition 
-                Type = $"(i,j,{arrayName})"
-            };
-
-
-            return (tr, a1);
+            return tr;
         }
 
         private string DeclareArcVariable(string arrayName, int countSubPage)

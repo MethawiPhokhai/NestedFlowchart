@@ -284,7 +284,7 @@ namespace NestedFlowchart.Functions
                         {
                             #region Rule4_3
                             PositionManagements pagePosition = GetPagePositionByCountSubPage(previousNodes.LastOrDefault().CurrentMainPage, page1Position, page2Position);
-                            var (rule4Transition, rule4Arc) = _rule4.ApplyRuleWithCodeSegment2(
+                            var rule4Transition = _rule4.ApplyRuleWithCodeSegment2(
                                                                     arrayName,
                                                                     previousNodes.LastOrDefault(),
                                                                     pagePosition);
@@ -294,7 +294,7 @@ namespace NestedFlowchart.Functions
                             pv.previousPlaceModel = previousNodes?.LastOrDefault()?.currentPlaceModel;
                             pv.previousTransitionModel = previousNodes?.LastOrDefault()?.currentTransitionModel;
                             pv.currentTransitionModel = rule4Transition;
-                            pv.Type = "transition";
+                            pv.Type = "place";
 
                             //Set lastest page
                             pv.CurrentMainPage = previousNodes.LastOrDefault().CurrentMainPage;
@@ -303,10 +303,9 @@ namespace NestedFlowchart.Functions
                             previousNodes.Add(pv);
 
 
-                            var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule4Arc);
                             var transition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule4Transition);
 
-                            var rule4String = transition + arc1;
+                            var rule4String = transition;
                             CreatePageNodeByCountSubPage(previousNodes.LastOrDefault().CurrentMainPage, pages, rule4String);
                             #endregion
                         }
