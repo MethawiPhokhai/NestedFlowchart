@@ -309,7 +309,39 @@ namespace NestedFlowchart.Functions
                             CreatePageNodeByCountSubPage(previousNodes.LastOrDefault().CurrentMainPage, pages, rule4String);
                             #endregion
                         }
-                        //countSubPage = Rule4(sortedFlowcharts, allTemplates, pages, previousNode, arrayName, page1Position, i);
+                        else if (flowchartValue.Contains("i ++"))
+                        {
+                            #region Rule4_4
+                            //Set back to main page
+                            previousNodes.LastOrDefault().CurrentMainPage--;
+
+                            PositionManagements pagePosition = GetPagePositionByCountSubPage(previousNodes.LastOrDefault().CurrentMainPage, page1Position, page2Position);
+                            var (rule4Transition, rule4Arc) = _rule4.ApplyRuleWithCodeSegment3(
+                                                                    arrayName,
+                                                                    previousNodes.LastOrDefault(),
+                                                                    pagePosition);
+
+                            PreviousNode pv = new PreviousNode();
+                            pv.elementId = sortedFlowcharts[i].ID;
+                            pv.previousPlaceModel = previousNodes?.LastOrDefault()?.currentPlaceModel;
+                            pv.previousTransitionModel = previousNodes?.LastOrDefault()?.currentTransitionModel;
+                            pv.currentTransitionModel = rule4Transition;
+                            pv.Type = "place";
+
+                            //Set lastest page
+                            pv.CurrentMainPage = previousNodes.LastOrDefault().CurrentMainPage;
+                            pv.CurrentSubPage = previousNodes.LastOrDefault().CurrentSubPage;
+
+                            previousNodes.Add(pv);
+
+
+                            var transition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule4Transition);
+                            var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule4Arc);
+
+                            var rule4String = transition + arc1;
+                            CreatePageNodeByCountSubPage(previousNodes.LastOrDefault().CurrentMainPage, pages, rule4String);
+                            #endregion
+                        }
                     }
                 }
                 //Rule 5 Connector
@@ -454,41 +486,6 @@ namespace NestedFlowchart.Functions
 
             //Write to CPN File
             File.WriteAllText(ResultPath + "Result.cpn", firstCPN);
-        }
-
-        private int Rule4(List<XMLCellNode> sortedFlowcharts, string[] allTemplates, PageDeclare pages, List<PreviousNode> previousNodes, string arrayName, PositionManagements page1Position, int i)
-        {
-            int countSubPage;
-            //countSubPage = 0,1 to test create on current page
-
-            if (sortedFlowcharts[i].ValueText.ToLower().Trim().Contains("i ++"))
-            {
-                //TODO: Send real process to code segment inscription
-                var (rule4Place, rule4Transition, _, rule4String) = _rule4.ApplyRule(
-                    allTemplates[(int)TemplateEnum.TransitionTemplate],
-                    allTemplates[(int)TemplateEnum.PlaceTemplate],
-                    allTemplates[(int)TemplateEnum.ArcTemplate],
-                    arrayName,
-                    previousNodes.LastOrDefault(),
-                    page1Position);
-
-                
-                PreviousNode pv = new PreviousNode();
-                pv.elementId = sortedFlowcharts[i].ID;
-                pv.previousPlaceModel = previousNodes?.LastOrDefault()?.currentPlaceModel;
-                pv.previousTransitionModel = previousNodes?.LastOrDefault()?.currentTransitionModel;
-                pv.currentPlaceModel = rule4Place;
-                pv.currentTransitionModel = rule4Transition;
-                pv.Type = "transition";
-                previousNodes.Add(pv);
-
-
-                countSubPage = 0;
-                CreatePageNodeByCountSubPage(countSubPage, pages, rule4String);
-            }
-
-            countSubPage = 1;
-            return countSubPage;
         }
 
         private string[] ReadAllTemplate(string? templatePath)
