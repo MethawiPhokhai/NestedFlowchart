@@ -21,7 +21,7 @@ namespace NestedFlowchart.Rules
         /// <param name="trueCondition"></param>
         /// <param name="falseCondition"></param>
         /// <returns></returns>
-        public (PlaceModel, PlaceModel, TransitionModel, TransitionModel, ArcModel) ApplyRule(
+        public (PlaceModel, PlaceModel, TransitionModel, TransitionModel, ArcModel?, ArcModel?) ApplyRule(
             PreviousNode previousNode, 
             string trueCondition, 
             string falseCondition,
@@ -38,7 +38,7 @@ namespace NestedFlowchart.Rules
             var yPosArc = position.GetLastestyArcPos();
 
             PlaceModel? ps3 = null;
-            ArcModel a1 = null;
+            ArcModel a1 = null, a2 = null;
             if (previousNode.IsPreviousNodeCondition)
             {
                 ps3 = new PlaceModel()
@@ -63,27 +63,26 @@ namespace NestedFlowchart.Rules
                 yPosArc -= 60;
             }
 
-            //TODO: Create False transition later
-            ////GF1 Transition
-            //TransitionModel falseTransition = new TransitionModel()
-            //{
-            //    Id1 = IdManagements.GetlastestTransitionId(),
-            //    Id2 = IdManagements.GetlastestTransitionId(),
-            //    Id3 = IdManagements.GetlastestTransitionId(),
-            //    Id4 = IdManagements.GetlastestTransitionId(),
-            //    Id5 = IdManagements.GetlastestTransitionId(),
+            //GF1 Transition
+            TransitionModel falseTransition = new TransitionModel()
+            {
+                Id1 = IdManagements.GetlastestTransitionId(),
+                Id2 = IdManagements.GetlastestTransitionId(),
+                Id3 = IdManagements.GetlastestTransitionId(),
+                Id4 = IdManagements.GetlastestTransitionId(),
+                Id5 = IdManagements.GetlastestTransitionId(),
 
-            //    Name = IdManagements.GetlastestFalseGuardTransitionName(),
+                Name = IdManagements.GetlastestFalseGuardTransitionName(),
 
-            //    xPos1 = xPos1 - 39,
-            //    yPos1 = yPos1,
+                xPos1 = xPos1 - 39,
+                yPos1 = yPos1,
 
-            //    xPos2 = xPos1 - 80,
-            //    yPos2 = yPos1 + 30,
+                xPos2 = xPos1 - 80,
+                yPos2 = yPos1 + 30,
 
-            //    Condition = falseCondition
+                Condition = falseCondition
 
-            //};
+            };
 
             //GT1 Transition
             TransitionModel trueTransition = new TransitionModel()
@@ -105,6 +104,7 @@ namespace NestedFlowchart.Rules
                 Condition = trueCondition
             };
 
+            //ถ้าเป็น condition ต่อกัน จะลาก Arc ไม่ได้ เลยต้อง Set ตรงนี้ เพื่อลาก Arc
             if (previousNode.IsPreviousNodeCondition)
             {
                 //Arc from CN1 to GT1
@@ -122,9 +122,25 @@ namespace NestedFlowchart.Rules
                     Orientation = "PtoT", //Place to Transition
                     Type = arcVariable
                 };
+
+                //Arc from CN1 to GF1
+                a2 = new ArcModel()
+                {
+                    Id1 = IdManagements.GetlastestArcId(),
+                    Id2 = IdManagements.GetlastestArcId(),
+
+                    TransEnd = falseTransition.Id1,
+                    PlaceEnd = ps3.Id1,
+
+                    xPos = xPosArc + 34,
+                    yPos = yPosArc,
+
+                    Orientation = "PtoT", //Place to Transition
+                    Type = arcVariable
+                };
             }
 
-            return (previousNode.currentPlaceModel, ps3, null, trueTransition, a1);
+            return (previousNode.currentPlaceModel, ps3, falseTransition, trueTransition, a1, a2);
         }
 
         private string DeclareArcVariable(string arrayName, int countSubPage)

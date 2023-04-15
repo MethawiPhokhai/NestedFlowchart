@@ -394,7 +394,7 @@ namespace NestedFlowchart.Functions
                     string trueCondition = _rule6.CreateTrueCondition(sortedFlowcharts[i].ValueText, arrayName);
                     string falseCondition = _rule6.CreateFalseDecision(trueCondition);
 
-                    var (rule6Place, rule6Place2, rule6FalseTransition, rule6TrueTransition, rule6Arc1) = _rule6.ApplyRule(
+                    var (rule6Place, rule6Place2, rule6FalseTransition, rule6TrueTransition, rule6Arc1, rule6Arc2) = _rule6.ApplyRule(
                         previousNodes.LastOrDefault(),
                         trueCondition,
                         falseCondition,
@@ -427,8 +427,9 @@ namespace NestedFlowchart.Functions
                     var trueTransition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule6TrueTransition);
                     var falseTransition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule6FalseTransition);
                     var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule6Arc1);
+                    var arc2 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule6Arc2);
 
-                    var rule6String = ps3 + trueTransition + falseTransition + arc1;
+                    var rule6String = ps3 + trueTransition + falseTransition + arc1 + arc2;
 
                     CreatePageNodeByCountSubPage(previousNodes.LastOrDefault().CurrentMainPage, pages, rule6String);
                     #endregion
@@ -476,6 +477,15 @@ namespace NestedFlowchart.Functions
                     //CreatePageNodeByCountSubPage(countSubPage, pages, rule7String);
                     //#endregion
                 }
+            }
+
+            //Loop to create arc for false condition
+            for (int i = 0; i < sortedFlowcharts.Count; i++)
+            {
+                var flowchartType = sortedFlowcharts[i].NodeType.ToLower();
+                var flowchartValue = sortedFlowcharts[i].ValueText;
+                System.Diagnostics.Debug.WriteLine(flowchartValue);
+
             }
 
             #endregion AppleRules
@@ -566,6 +576,12 @@ namespace NestedFlowchart.Functions
 
             //กรณีอยู่หน้าแรก และยังไม่ประกาศ i ให้ใช้ arc variable array เฉยๆ นอกจากนั้นไป get ตาม page
             string arcVariable = isDeclaredI ? DeclareArcVariable(arrayName, found.CurrentMainPage) : arrayName;
+
+            //กรณีลากใส่ CN2
+            if (arrow.Destination.Contains("KSG-18"))
+            {
+                arcVariable = "(i,j,array2)";
+            }
             
             //ถ้าเป็น place ให้ใช้ PtoT, ถ้าเป็น transition ให้ใช้ TtoP
             string orientation = found.Type == "place" ? "PtoT" : "TtoP";

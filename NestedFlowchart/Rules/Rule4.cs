@@ -173,6 +173,7 @@ namespace NestedFlowchart.Rules
 			return (pl, tr, a1);
         }
 
+        //j++
         public (TransitionModel, ArcModel) ApplyRuleWithCodeSegment2(
         string arrayName,
         PreviousNode previousNode,
@@ -217,13 +218,14 @@ namespace NestedFlowchart.Rules
                 yPos = position.yArcPos == 84 ? position.yArcPos : position.GetLastestyArcPos(),
                 Orientation = "TtoP",
                 Type = "(i,j2,array)",
-                TransEnd = "ID1412848817", //TS4
+                TransEnd = "ID1412848832", //TS4
                 PlaceEnd = "ID1412948794"  //PS2
             };
 
             return (tr, arcModel);
         }
 
+        //i++
         public (TransitionModel, ArcModel, ArcModel) ApplyRuleWithCodeSegment3(
         string arrayName,
         PreviousNode previousNode,
@@ -268,7 +270,7 @@ namespace NestedFlowchart.Rules
                 yPos = position.yArcPos == 84 ? position.yArcPos : position.GetLastestyArcPos(),
                 Orientation = "TtoP",
                 Type = "(i2,array)",
-                TransEnd = "ID1412848822", //T5
+                TransEnd = "ID1412848837", //T6
                 PlaceEnd = "ID1412948781"  //CN1
             };
 
@@ -280,7 +282,7 @@ namespace NestedFlowchart.Rules
                 yPos = position.yArcPos == 84 ? position.yArcPos : position.GetLastestyArcPos(),
                 Orientation = "PtoT",
                 Type = "(i,array)",
-                TransEnd = "ID1412848822", //T5
+                TransEnd = "ID1412848837", //T6
                 PlaceEnd = "ID1412948786"  //P4
             };
 
