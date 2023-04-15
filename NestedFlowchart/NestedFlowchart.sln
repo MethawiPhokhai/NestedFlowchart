@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NestedFlowchart", "NestedFlowchart.csproj", "{AB8C9F61-AC16-413A-821F-B8AB5F2785F1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NestedFlowchartTests", "..\NestedFlowchartTests\NestedFlowchartTests.csproj", "{3E1DCC73-C329-4B63-A086-648F2E43759A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NestedFlowchartTests", "..\NestedFlowchartTests\NestedFlowchartTests.csproj", "{3E1DCC73-C329-4B63-A086-648F2E43759A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -72,34 +72,38 @@ namespace NestedFlowchart.Functions
                 {
                     if (arrows.Any())
                     {
-                        var currentPreviousNode = previousNodes.LastOrDefault();
-
-                        // Toggle type of Rule 6 ถ้ามี condition ต่อกัน 2 อัน หรือ
-                        if ((currentPreviousNode.IsPreviousNodeCondition && previousNodes.ElementAtOrDefault(previousNodes.Count - 2).IsPreviousNodeCondition))
+                        //Abandoned return arc
+                        if (!(arrows.LastOrDefault().Id.Contains("KSG-26") || arrows.LastOrDefault().Id.Contains("KSG-17")))
                         {
-                            currentPreviousNode.Type = (currentPreviousNode.Type == "transition") ? "place" : "transition";
-                        }
+                            var currentPreviousNode = previousNodes.LastOrDefault();
 
-                        // Get page position from the page
-                        PositionManagements pagePosition = GetPagePositionByCountSubPage(currentPreviousNode.CurrentMainPage, page1Position, page2Position);
-
-                        // Create arc with previous node
-                        var (arc, pv) = CreateArcWithPreviousNode(arrows.LastOrDefault(), pagePosition, arrayName, previousNodes, isDeclaredI);
-
-                        // Create arc and page node
-                        var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], arc);
-                        CreatePageNodeByCountSubPage(pv.CurrentMainPage, pages, arc1);
-
-                        // If a subpage is created, continue with the subpage
-                        if (pv.IsCreateSubPage)
-                        {
-                            pv.CurrentMainPage = pv.CurrentSubPage;
-                            pv.currentPlaceModel = pv.previousPlaceModel; // Set previous place for the next node of the subpage
-
-                            // Toggle type of Rule3_2 if a place has been created in the subpage and Rule 6 checks for transitions
-                            if (pv.CurrentMainPage > 0)
+                            // Toggle type of Rule 6 ถ้ามี condition ต่อกัน 2 อัน หรือ
+                            if ((currentPreviousNode.IsPreviousNodeCondition && previousNodes.ElementAtOrDefault(previousNodes.Count - 2).IsPreviousNodeCondition))
                             {
-                                pv.Type = (pv.Type == "transition") ? "place" : "transition";
+                                currentPreviousNode.Type = (currentPreviousNode.Type == "transition") ? "place" : "transition";
+                            }
+
+                            // Get page position from the page
+                            PositionManagements pagePosition = GetPagePositionByCountSubPage(currentPreviousNode.CurrentMainPage, page1Position, page2Position);
+
+                            // Create arc with previous node
+                            var (arc, pv) = CreateArcWithPreviousNode(arrows.LastOrDefault(), pagePosition, arrayName, previousNodes, isDeclaredI);
+
+                            // Create arc and page node
+                            var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], arc);
+                            CreatePageNodeByCountSubPage(pv.CurrentMainPage, pages, arc1);
+
+                            // If a subpage is created, continue with the subpage
+                            if (pv.IsCreateSubPage)
+                            {
+                                pv.CurrentMainPage = pv.CurrentSubPage;
+                                pv.currentPlaceModel = pv.previousPlaceModel; // Set previous place for the next node of the subpage
+
+                                // Toggle type of Rule3_2 if a place has been created in the subpage and Rule 6 checks for transitions
+                                if (pv.CurrentMainPage > 0)
+                                {
+                                    pv.Type = (pv.Type == "transition") ? "place" : "transition";
+                                }
                             }
                         }
                     }
@@ -279,7 +283,7 @@ namespace NestedFlowchart.Functions
                             CreatePageNodeByCountSubPage(previousNodes.LastOrDefault().CurrentMainPage, pages, rule4String);
                             #endregion
                         }
-                        else if(flowchartValue.Contains("j ++"))
+                        else if (flowchartValue.Contains("j ++"))
                         {
                             #region Rule4_3
                             PositionManagements pagePosition = GetPagePositionByCountSubPage(previousNodes.LastOrDefault().CurrentMainPage, page1Position, page2Position);
@@ -316,7 +320,7 @@ namespace NestedFlowchart.Functions
                             previousNodes.LastOrDefault().CurrentMainPage--;
 
                             PositionManagements pagePosition = GetPagePositionByCountSubPage(previousNodes.LastOrDefault().CurrentMainPage, page1Position, page2Position);
-                            var (rule4Transition, rule4Arc) = _rule4.ApplyRuleWithCodeSegment3(
+                            var (rule4Transition, rule4Arc1, rule4Arc2) = _rule4.ApplyRuleWithCodeSegment3(
                                                                     arrayName,
                                                                     previousNodes.LastOrDefault(),
                                                                     pagePosition);
@@ -336,9 +340,10 @@ namespace NestedFlowchart.Functions
 
 
                             var transition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule4Transition);
-                            var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule4Arc);
+                            var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule4Arc1);
+                            var arc2 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule4Arc2);
 
-                            var rule4String = transition + arc1;
+                            var rule4String = transition + arc1 + arc2;
                             CreatePageNodeByCountSubPage(previousNodes.LastOrDefault().CurrentMainPage, pages, rule4String);
                             #endregion
                         }
