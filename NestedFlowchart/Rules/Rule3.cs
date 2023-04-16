@@ -4,7 +4,7 @@ using NestedFlowchart.Position;
 
 namespace NestedFlowchart.Rules
 {
-    public class Rule3 : BaseRule
+    public class Rule3 : ArcBaseRule
     {
         /// <summary>
         /// Transform process into place and transition connected by arc

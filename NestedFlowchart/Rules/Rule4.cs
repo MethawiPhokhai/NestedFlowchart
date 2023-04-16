@@ -4,7 +4,7 @@ using NestedFlowchart.Position;
 
 namespace NestedFlowchart.Rules
 {
-    public class Rule4
+    public class Rule4 : ArcBaseRule
     {
         /// <summary>
         /// Transform simple process into place and transition connected by arc
@@ -287,23 +287,6 @@ namespace NestedFlowchart.Rules
             };
 
             return (tr, a1, a2);
-        }
-
-        private string DeclareArcVariable(string arrayName, int countSubPage)
-        {
-            //arc variable
-            string arcVariable = string.Empty;
-            switch (countSubPage)
-            {
-                case 0:
-                    arcVariable = $"(i,{arrayName})";
-                    break;
-                case 1:
-                    arcVariable = $"(i,j,{arrayName})";
-                    break;
-            }
-
-            return arcVariable;
         }
     }
 }

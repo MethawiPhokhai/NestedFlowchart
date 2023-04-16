@@ -1,15 +1,10 @@
 ﻿using NestedFlowchart.Functions;
 using NestedFlowchart.Models;
 using NestedFlowchart.Position;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NestedFlowchart.Rules
 {
-    public class Rule5
+    public class Rule5 : ArcBaseRule
     {
         /// <summary>
         /// Transform connector into transition andplace connected by arc
@@ -114,22 +109,5 @@ namespace NestedFlowchart.Rules
 
 			return (pl, tr, a1, previousTypeReturn);
         }
-
-		private string DeclareArcVariable(string arrayName, int countSubPage)
-		{
-			//arc variable
-			string arcVariable = string.Empty;
-			switch (countSubPage)
-			{
-				case 0:
-					arcVariable = $"(i,{arrayName})";
-					break;
-				case 1:
-					arcVariable = $"(i,j,{arrayName})";
-					break;
-			}
-
-			return arcVariable;
-		}
 	}
 }

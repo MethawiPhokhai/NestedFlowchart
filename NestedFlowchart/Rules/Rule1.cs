@@ -7,7 +7,7 @@ namespace NestedFlowchart.Rules
     /// <summary>
     /// Transform Start to place start
     /// </summary>
-    public class Rule1
+    public class Rule1 : ArcBaseRule
     {
         public PlaceModel ApplyRule(PositionManagements position)
         {

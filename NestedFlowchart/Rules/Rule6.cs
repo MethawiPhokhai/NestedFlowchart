@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace NestedFlowchart.Rules
 {
-    public class Rule6
+    public class Rule6 : ArcBaseRule
     {
         /// <summary>
         /// Transform dicision into place and transition connected by arc
@@ -141,23 +141,6 @@ namespace NestedFlowchart.Rules
             }
 
             return (previousNode.currentPlaceModel, ps3, falseTransition, trueTransition, a1, a2);
-        }
-
-        private string DeclareArcVariable(string arrayName, int countSubPage)
-        {
-            //arc variable
-            string arcVariable = string.Empty;
-            switch (countSubPage)
-            {
-                case 0:
-                    arcVariable = $"(i,{arrayName})";
-                    break;
-                case 1:
-                    arcVariable = $"(i,j,{arrayName})";
-                    break;
-            }
-
-            return arcVariable;
         }
 
         public string CreateTrueCondition(string condition, string arrayName)
