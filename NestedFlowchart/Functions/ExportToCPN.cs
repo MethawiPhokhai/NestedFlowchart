@@ -464,45 +464,16 @@ namespace NestedFlowchart.Functions
                 //Rule 7 End
                 else if (flowchartType == "end")
                 {
-                    //#region Rule7
-                    ////TODO: Previous transition need to check (in subpage)
+                    #region Rule7
+                    var rule7Place = _rule7.ApplyRule(
+                        arrayName,
+                        page1Position);
 
-                    ///*
-                    // * For Test (force set GF to end)
-                    // */
-                    //var previousNode = new PreviousNode
-                    //{
-                    //    currentTransitionModel = new TransitionModel
-                    //    {
-                    //        Id1 = "ID1412848787"
-                    //    },
-                    //    Type = "transition",
-                    //};
+                    var place1 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule7Place);
+                    var rule7String = place1;
 
-
-
-
-
-                    //var (rule7Place, rule7Transition, rule7Arc1) = _rule7.ApplyRule(
-                    //    arrayName,
-                    //    previousNode,
-                    //    page1Position);
-
-                    //previousNode.currentPlaceModel = rule7Place;
-
-                    //var place1 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule7Place);
-
-                    //var transition = rule7Transition != null ?
-                    //    _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule7Transition) :
-                    //    string.Empty;
-
-                    //var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule7Arc1);
-                    //var rule7String = place1 + transition + arc1;
-
-                    ////Reset because it's need to end at main page
-                    //countSubPage = 0;
-                    //CreatePageNodeByCountSubPage(countSubPage, pages, rule7String);
-                    //#endregion
+                    CreatePageNodeByCountSubPage(countSubPage, pages, rule7String);
+                    #endregion
                 }
             }
 
