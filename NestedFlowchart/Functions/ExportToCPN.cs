@@ -120,6 +120,14 @@ namespace NestedFlowchart.Functions
                                     var arc22 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], arc2);
                                     CreatePageNodeByCountSubPage(pv2.CurrentMainPage, pages, arc22);
 
+                                    //Create arc to Output port place
+                                    if (arrows.LastOrDefault().Id.Contains("KSG-30"))
+                                    {
+                                        var outputArc = CreateArcforOutputPortPlace(pagePosition);
+                                        var outputArc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], outputArc);
+                                        CreatePageNodeByCountSubPage(1, pages, outputArc1);
+                                    }
+
                                 }
                             }
                             

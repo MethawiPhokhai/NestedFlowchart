@@ -81,6 +81,22 @@ namespace NestedFlowchart.Rules
             return (arcModel, found);
         }
 
+        public ArcModel CreateArcforOutputPortPlace(
+            PositionManagements position)
+        {
+            return new ArcModel
+            {
+                Id1 = IdManagements.GetlastestArcId(),
+                Id2 = IdManagements.GetlastestArcId(),
+                PlaceEnd = "ID1412948787", //P4
+                TransEnd = "ID1412848807", //GF2
+                xPos = position.xArcPos,
+                yPos = position.yArcPos == 84 ? position.yArcPos : position.GetLastestyArcPos(),
+                Orientation = "TtoP",
+                Type = "(i,array)"
+            };
+        }
+
         public string DeclareArcVariable(string arrayName, int countSubPage)
         {
             //arc variable
