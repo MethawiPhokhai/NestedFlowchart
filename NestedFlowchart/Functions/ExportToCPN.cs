@@ -105,6 +105,24 @@ namespace NestedFlowchart.Functions
                                     pv.Type = (pv.Type == "transition") ? "place" : "transition";
                                 }
                             }
+
+
+                            //don't create for GF3
+                            if (!arrows.LastOrDefault().Id.Contains("KSG-21"))
+                            {
+                                //Create arc to GF
+                                if (sortedFlowcharts[i - 1].NodeType.ToLower() == "condition")
+                                {
+                                    // Create arc with previous node
+                                    var (arc2, pv2) = CreateArcforFalseCondition(arrows.LastOrDefault(), pagePosition, arrayName, previousNodes, isDeclaredI);
+
+                                    // Create arc and page node
+                                    var arc22 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], arc2);
+                                    CreatePageNodeByCountSubPage(pv2.CurrentMainPage, pages, arc22);
+
+                                }
+                            }
+                            
                         }
                     }
 
@@ -254,7 +272,7 @@ namespace NestedFlowchart.Functions
                     {
                         if (flowchartValue.Contains("temp = array[ j+1]"))
                         {
-                            #region Rule4_2
+                            #region Rule4_1
                             PositionManagements pagePosition = GetPagePositionByCountSubPage(previousNodes.LastOrDefault().CurrentMainPage, page1Position, page2Position);
                             var (rule4Place, rule4Transition, rule4Arc) = _rule4.ApplyRuleWithCodeSegment(
                                                                                             arrayName,
@@ -285,7 +303,7 @@ namespace NestedFlowchart.Functions
                         }
                         else if (flowchartValue.Contains("j ++"))
                         {
-                            #region Rule4_3
+                            #region Rule4_2
                             PositionManagements pagePosition = GetPagePositionByCountSubPage(previousNodes.LastOrDefault().CurrentMainPage, page1Position, page2Position);
                             var (rule4Transition, rule4Arc) = _rule4.ApplyRuleWithCodeSegment2(
                                                                     arrayName,
@@ -315,7 +333,7 @@ namespace NestedFlowchart.Functions
                         }
                         else if (flowchartValue.Contains("i ++"))
                         {
-                            #region Rule4_4
+                            #region Rule4_3
                             //Set back to main page
                             previousNodes.LastOrDefault().CurrentMainPage--;
 
@@ -406,6 +424,7 @@ namespace NestedFlowchart.Functions
                     pv.elementId = sortedFlowcharts[i].ID;
                     pv.previousPlaceModel = previousNodes?.LastOrDefault()?.currentPlaceModel;
                     pv.currentTransitionModel = rule6TrueTransition;
+                    pv.currentFalseTransitionModel = rule6FalseTransition;
                     pv.previousTransitionModel = previousNodes?.LastOrDefault()?.currentTransitionModel;
                     pv.currentPlaceModel = rule6Place2;
 

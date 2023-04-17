@@ -9,6 +9,7 @@
 
         public PlaceModel currentPlaceModel { get; set; } = new PlaceModel();
         public TransitionModel currentTransitionModel { get; set; } = new TransitionModel();
+        public TransitionModel currentFalseTransitionModel { get; set; } = new TransitionModel();
 
         //place, transition
         public string Type { get; set; }

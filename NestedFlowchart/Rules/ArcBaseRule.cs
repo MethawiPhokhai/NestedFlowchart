@@ -1,14 +1,18 @@
 ﻿using NestedFlowchart.Functions;
 using NestedFlowchart.Models;
 using NestedFlowchart.Position;
+using System.Windows.Forms;
 
 namespace NestedFlowchart.Rules
 {
     public class ArcBaseRule
     {
         public (ArcModel? arcModel, PreviousNode previousNode) CreateArcWithPreviousNode(
-            TempArrow arrow, PositionManagements position, string arrayName,
-            List<PreviousNode> previousNodes, bool isDeclaredI)
+            TempArrow arrow, 
+            PositionManagements position, 
+            string arrayName,
+            List<PreviousNode> previousNodes, 
+            bool isDeclaredI)
         {
             //หาตัวแรกที่ id ตรงกับ Destination เพื่อเอามาสร้าง Arc ต่อกัน
             var found = previousNodes.FirstOrDefault(x => x.elementId == arrow.Destination);
@@ -45,6 +49,34 @@ namespace NestedFlowchart.Rules
                 arcModel.TransEnd = found?.previousTransitionModel?.Id1;
                 arcModel.PlaceEnd = found?.currentPlaceModel?.Id1;
             }
+
+            return (arcModel, found);
+        }
+
+        public (ArcModel? arcModel, PreviousNode previousNode) CreateArcforFalseCondition(
+            TempArrow arrow,
+            PositionManagements position,
+            string arrayName,
+            List<PreviousNode> previousNodes,
+            bool isDeclaredI)
+        {
+            //หาตัวแรกที่ id ตรงกับ Destination เพื่อเอามาสร้าง Arc ต่อกัน
+            var found = previousNodes.FirstOrDefault(x => x.elementId == arrow.Destination);
+
+            //กรณีอยู่หน้าแรก และยังไม่ประกาศ i ให้ใช้ arc variable array เฉยๆ นอกจากนั้นไป get ตาม page
+            string arcVariable = isDeclaredI ? DeclareArcVariable(arrayName, found.CurrentMainPage) : arrayName;
+
+            ArcModel arcModel = new ArcModel
+            {
+                Id1 = IdManagements.GetlastestArcId(),
+                Id2 = IdManagements.GetlastestArcId(),
+                PlaceEnd = found?.previousPlaceModel?.Id1,
+                TransEnd = found?.currentFalseTransitionModel?.Id1,
+                xPos = position.xArcPos,
+                yPos = position.yArcPos == 84 ? position.yArcPos : position.GetLastestyArcPos(),
+                Orientation = "PtoT",
+                Type = arcVariable
+            };
 
             return (arcModel, found);
         }
