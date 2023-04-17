@@ -97,6 +97,38 @@ namespace NestedFlowchart.Rules
             };
         }
 
+        public ArcModel CreateArcforEndPlace(
+        PositionManagements position)
+        {
+            return new ArcModel
+            {
+                Id1 = IdManagements.GetlastestArcId(),
+                Id2 = IdManagements.GetlastestArcId(),
+                PlaceEnd = "ID1412948808", //End
+                TransEnd = "ID1412848787", //GF1
+                xPos = position.xArcPos,
+                yPos = position.yArcPos == 84 ? position.yArcPos : position.GetLastestyArcPos(),
+                Orientation = "TtoP",
+                Type = "array"
+            };
+        }
+
+        public ArcModel CreateArcforCN2(
+            PositionManagements position)
+        {
+            return new ArcModel
+            {
+                Id1 = IdManagements.GetlastestArcId(),
+                Id2 = IdManagements.GetlastestArcId(),
+                PlaceEnd = "ID1412948805", //CN2
+                TransEnd = "ID1412848817", //GF3
+                xPos = position.xArcPos,
+                yPos = position.yArcPos == 84 ? position.yArcPos : position.GetLastestyArcPos(),
+                Orientation = "TtoP",
+                Type = "(i,j,array)"
+            };
+        }
+
         public string DeclareArcVariable(string arrayName, int countSubPage)
         {
             //arc variable

@@ -127,10 +127,16 @@ namespace NestedFlowchart.Functions
                                         var outputArc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], outputArc);
                                         CreatePageNodeByCountSubPage(1, pages, outputArc1);
                                     }
+                                }
 
+                                //Create arc to Output port place
+                                if (arrows.LastOrDefault().Id.Contains("KSG-25"))
+                                {
+                                    var GF3Arc = CreateArcforCN2(pagePosition);
+                                    var GF3Arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], GF3Arc);
+                                    CreatePageNodeByCountSubPage(1, pages, GF3Arc1);
                                 }
                             }
-                            
                         }
                     }
 
@@ -469,8 +475,12 @@ namespace NestedFlowchart.Functions
                         arrayName,
                         page1Position);
 
+                    var rule7Arc1 = _rule7.CreateArcforEndPlace(page1Position);
+
                     var place1 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule7Place);
-                    var rule7String = place1;
+                    var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule7Arc1);
+
+                    var rule7String = place1 + arc1;
 
                     CreatePageNodeByCountSubPage(countSubPage, pages, rule7String);
                     #endregion
