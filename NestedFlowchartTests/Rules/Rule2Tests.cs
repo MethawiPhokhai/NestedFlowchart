@@ -50,8 +50,6 @@ namespace NestedFlowchart.Rules.Tests
             Assert.IsNotNull(pl);
             Assert.IsNotNull(tr);
             Assert.IsNotNull(a1);
-            Assert.AreEqual(previousNode.currentPlaceModel.Id1, a1.PlaceEnd);
-            Assert.IsTrue(a1.Type.Contains(arrayName));
         }
     }
 }

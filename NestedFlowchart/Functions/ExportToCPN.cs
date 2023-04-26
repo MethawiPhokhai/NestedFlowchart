@@ -200,7 +200,6 @@ namespace NestedFlowchart.Functions
                     if (flowchartValue.ToLower().Trim().Contains("i ="))
                     {
                         #region rule3_1
-                        //TODO: Find solution to declare var
                         //In case declare more than 1 line
                         var code = sortedFlowcharts[i].ValueText.Replace("<br>", "\n").ToLower().Replace("int", "").Replace(";", "");
 
