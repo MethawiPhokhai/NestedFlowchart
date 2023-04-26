@@ -4,6 +4,7 @@ using NestedFlowchart.Position;
 using NestedFlowchart.Rules;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,47 +14,57 @@ namespace NestedFlowchart.Rules.Tests
     [TestClass()]
     public class Rule6Tests
     {
-        //[TestMethod()]
-        //public void ApplyRule_ValidInput_ReturnsExpectedOutput()
-        //{
-        //    // Arrange
-        //    PositionManagements page1Position = new PositionManagements();
+        [TestMethod()]
+        public void ApplyRule_ValidInput_ReturnsExpectedOutput()
+        {
+            // Arrange
+            Rule6 rule6 = new Rule6();
+            string arrayName = "array";
 
-        //    PreviousNode previousNode = new PreviousNode();
-        //    PlaceModel previousPlace = new PlaceModel()
-        //    {
-        //        Id1 = "ID1412948772",
-        //        Id2 = "ID1412948773",
-        //        Id3 = "ID1412948774",
-        //        Name = "Start",
-        //        Type = "UNIT",
-        //        xPos1 = page1Position.xPos1,
-        //        yPos1 = page1Position.yPos1,
-        //        xPos2 = page1Position.xPos2,
-        //        yPos2 = page1Position.yPos2,
-        //        xPos3 = page1Position.xPos3,
-        //        yPos3 = page1Position.yPos3
-        //    };
-        //    string trueCondition = "T";
-        //    string falseCondition = "F";
-        //    string arrayName = "array";
-        //    int countSubPage = 0;
-        //    previousNode.currentPlaceModel = previousPlace;
+            string trueCondition = rule6.CreateTrueCondition("i < 5", arrayName);
+            string falseCondition = rule6.CreateFalseDecision(trueCondition);
 
-        //    // Act
-        //    Rule6 rule6 = new Rule6();
-        //    var (pl, _, falseTransition, trueTransition, a1, a2, _) = rule6.ApplyRule(previousNode, trueCondition, falseCondition, arrayName, page1Position, countSubPage);
+            PositionManagements page1Position = new PositionManagements();
 
-        //    // Assert
-        //    Assert.IsNotNull(pl);
-        //    Assert.IsNotNull(falseTransition);
-        //    Assert.IsTrue(falseTransition.Condition.Contains(falseCondition));
-        //    Assert.IsNotNull(trueTransition);
-        //    Assert.IsTrue(trueTransition.Condition.Contains(trueCondition));
-        //    Assert.IsNotNull(a1);
-        //    Assert.IsNotNull(a2);
-        //    Assert.IsTrue(a1.Type.Contains(arrayName));
-        //    Assert.IsTrue(a2.Type.Contains(arrayName));
-        //}
+            List<PreviousNode> previousNodes = new List<PreviousNode>();
+            PreviousNode previousNode = new PreviousNode
+            {
+                currentPlaceModel = new PlaceModel()
+                {
+                    Id1 = "ID1412948772",
+                    Id2 = "ID1412948773",
+                    Id3 = "ID1412948774",
+                    Name = "Start",
+                    Type = "UNIT",
+                    xPos1 = page1Position.xPos1,
+                    yPos1 = page1Position.yPos1,
+                    xPos2 = page1Position.xPos2,
+                    yPos2 = page1Position.yPos2,
+                    xPos3 = page1Position.xPos3,
+                    yPos3 = page1Position.yPos3
+                }
+            };
+
+            previousNodes.Add(previousNode);
+
+
+            // Act
+            var (rule6Place, rule6Place2, rule6FalseTransition, rule6TrueTransition, rule6Arc1, rule6Arc2) = rule6.ApplyRule(
+                previousNodes.LastOrDefault(),
+                trueCondition,
+                falseCondition,
+                arrayName,
+                page1Position);
+
+            // Assert
+            Assert.IsNotNull(rule6Place);
+
+            Assert.IsNotNull(rule6FalseTransition);
+            Assert.IsTrue(rule6FalseTransition.Condition.Contains(falseCondition));
+
+            Assert.IsNotNull(rule6TrueTransition);
+            Assert.IsTrue(rule6TrueTransition.Condition.Contains(trueCondition));
+
+        }
     }
 }
