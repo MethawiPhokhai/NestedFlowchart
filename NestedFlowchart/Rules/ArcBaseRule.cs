@@ -15,6 +15,7 @@ namespace NestedFlowchart.Rules
             List<PreviousNode> previousNodes, 
             bool isDeclaredI)
         {
+            bool IsUsePreviousFalse = false;
             //หาตัวแรกที่ id ตรงกับ Destination เพื่อเอามาสร้าง Arc ต่อกัน
             var sourceNode = previousNodes.FirstOrDefault(x => x.elementId == arrow.Source);
             var destinationNode = previousNodes.FirstOrDefault(x => x.elementId == arrow.Destination);
@@ -23,10 +24,11 @@ namespace NestedFlowchart.Rules
             string arcVariable = isDeclaredI ? DeclareArcVariable(arrayName, destinationNode.CurrentMainPage) : arrayName;
 
             //กรณีลากใส่ CN2
-            if (arrow.Destination.Contains("KSG-18"))
+            if (arrow.Id.Contains("3K-55"))
             {
-                arcVariable = "(i,j,array2)";
+                IsUsePreviousFalse = true;
             }
+            //กรณีลากใส่ P5
             else if (arrow.Id.Contains("KSG-26"))
             {
                 type = "transition";
@@ -53,7 +55,10 @@ namespace NestedFlowchart.Rules
             }
             else
             {
-                arcModel.TransEnd = sourceNode?.currentTransitionModel?.Id1;
+                arcModel.TransEnd = IsUsePreviousFalse ? 
+                    sourceNode.currentFalseTransitionModel.Id1 :
+                    sourceNode?.currentTransitionModel?.Id1;
+
                 arcModel.PlaceEnd = destinationNode?.currentPlaceModel?.Id1;
             }
 

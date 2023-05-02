@@ -348,7 +348,7 @@ namespace NestedFlowchart.Functions
                             PreviousNode pv = new PreviousNode();
                             pv.elementId = sortedFlowcharts[i].ID;
                             pv.currentTransitionModel = rule4Transition;
-                            pv.Type = "place";
+                            pv.Type = "transition";
 
                             //Set lastest page
                             pv.CurrentMainPage = previousNodes.LastOrDefault().CurrentMainPage;
@@ -356,12 +356,9 @@ namespace NestedFlowchart.Functions
 
                             previousNodes.Add(pv);
 
-
                             var transition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule4Transition);
-                            var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule4Arc1);
-                            var arc2 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule4Arc2);
 
-                            var rule4String = transition + arc1 + arc2;
+                            var rule4String = transition;
                             CreatePageNodeByCountSubPage(previousNodes.LastOrDefault().CurrentMainPage, pages, rule4String);
                             #endregion
                         }
