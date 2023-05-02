@@ -5,7 +5,6 @@
         public string elementId { get; set; }
 
         public PlaceModel previousPlaceModel { get; set; } = new PlaceModel();
-        public TransitionModel previousTransitionModel { get; set; } = new TransitionModel();
 
         public PlaceModel currentPlaceModel { get; set; } = new PlaceModel();
         public TransitionModel currentTransitionModel { get; set; } = new TransitionModel();

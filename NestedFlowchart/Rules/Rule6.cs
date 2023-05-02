@@ -21,7 +21,7 @@ namespace NestedFlowchart.Rules
         /// <param name="trueCondition"></param>
         /// <param name="falseCondition"></param>
         /// <returns></returns>
-        public (PlaceModel, PlaceModel, TransitionModel, TransitionModel, ArcModel?, ArcModel?) ApplyRule(
+        public (PlaceModel, TransitionModel, TransitionModel, ArcModel?, ArcModel?) ApplyRule(
             PreviousNode previousNode, 
             string trueCondition, 
             string falseCondition,
@@ -140,7 +140,7 @@ namespace NestedFlowchart.Rules
                 };
             }
 
-            return (previousNode.currentPlaceModel, ps3, falseTransition, trueTransition, a1, a2);
+            return (ps3, falseTransition, trueTransition, a1, a2);
         }
 
         public string CreateTrueCondition(string condition, string arrayName)

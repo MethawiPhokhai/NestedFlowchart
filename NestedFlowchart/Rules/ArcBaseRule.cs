@@ -9,25 +9,32 @@ namespace NestedFlowchart.Rules
     {
         public (ArcModel? arcModel, PreviousNode previousNode) CreateArcWithPreviousNode(
             TempArrow arrow, 
+            string type,
             PositionManagements position, 
             string arrayName,
             List<PreviousNode> previousNodes, 
             bool isDeclaredI)
         {
             //หาตัวแรกที่ id ตรงกับ Destination เพื่อเอามาสร้าง Arc ต่อกัน
-            var found = previousNodes.FirstOrDefault(x => x.elementId == arrow.Destination);
+            var sourceNode = previousNodes.FirstOrDefault(x => x.elementId == arrow.Source);
+            var destinationNode = previousNodes.FirstOrDefault(x => x.elementId == arrow.Destination);
 
             //กรณีอยู่หน้าแรก และยังไม่ประกาศ i ให้ใช้ arc variable array เฉยๆ นอกจากนั้นไป get ตาม page
-            string arcVariable = isDeclaredI ? DeclareArcVariable(arrayName, found.CurrentMainPage) : arrayName;
+            string arcVariable = isDeclaredI ? DeclareArcVariable(arrayName, destinationNode.CurrentMainPage) : arrayName;
 
             //กรณีลากใส่ CN2
             if (arrow.Destination.Contains("KSG-18"))
             {
                 arcVariable = "(i,j,array2)";
             }
+            else if (arrow.Id.Contains("KSG-26"))
+            {
+                type = "transition";
+                arcVariable = "(i,j2,array)";
+            }
 
             //ถ้าเป็น place ให้ใช้ PtoT, ถ้าเป็น transition ให้ใช้ TtoP
-            string orientation = found.Type == "place" ? "PtoT" : "TtoP";
+            string orientation = (type == "place") ? "PtoT" : "TtoP";
 
             ArcModel arcModel = new ArcModel
             {
@@ -39,46 +46,18 @@ namespace NestedFlowchart.Rules
                 Type = arcVariable
             };
 
-            if (found.Type == "place")
+            if (type == "place")
             {
-                arcModel.PlaceEnd = found?.previousPlaceModel?.Id1;
-                arcModel.TransEnd = found?.currentTransitionModel?.Id1;
+                arcModel.PlaceEnd = sourceNode?.currentPlaceModel?.Id1;
+                arcModel.TransEnd = destinationNode?.currentTransitionModel?.Id1;
             }
             else
             {
-                arcModel.TransEnd = found?.previousTransitionModel?.Id1;
-                arcModel.PlaceEnd = found?.currentPlaceModel?.Id1;
+                arcModel.TransEnd = sourceNode?.currentTransitionModel?.Id1;
+                arcModel.PlaceEnd = destinationNode?.currentPlaceModel?.Id1;
             }
 
-            return (arcModel, found);
-        }
-
-        public (ArcModel? arcModel, PreviousNode previousNode) CreateArcforFalseCondition(
-            TempArrow arrow,
-            PositionManagements position,
-            string arrayName,
-            List<PreviousNode> previousNodes,
-            bool isDeclaredI)
-        {
-            //หาตัวแรกที่ id ตรงกับ Destination เพื่อเอามาสร้าง Arc ต่อกัน
-            var found = previousNodes.FirstOrDefault(x => x.elementId == arrow.Destination);
-
-            //กรณีอยู่หน้าแรก และยังไม่ประกาศ i ให้ใช้ arc variable array เฉยๆ นอกจากนั้นไป get ตาม page
-            string arcVariable = isDeclaredI ? DeclareArcVariable(arrayName, found.CurrentMainPage) : arrayName;
-
-            ArcModel arcModel = new ArcModel
-            {
-                Id1 = IdManagements.GetlastestArcId(),
-                Id2 = IdManagements.GetlastestArcId(),
-                PlaceEnd = found?.previousPlaceModel?.Id1,
-                TransEnd = found?.currentFalseTransitionModel?.Id1,
-                xPos = position.xArcPos,
-                yPos = position.yArcPos == 84 ? position.yArcPos : position.GetLastestyArcPos(),
-                Orientation = "PtoT",
-                Type = arcVariable
-            };
-
-            return (arcModel, found);
+            return (arcModel, destinationNode);
         }
 
         public ArcModel CreateArcforOutputPortPlace(

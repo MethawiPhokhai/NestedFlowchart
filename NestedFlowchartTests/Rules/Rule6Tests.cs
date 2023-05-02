@@ -49,7 +49,7 @@ namespace NestedFlowchart.Rules.Tests
 
 
             // Act
-            var (rule6Place, rule6Place2, rule6FalseTransition, rule6TrueTransition, rule6Arc1, rule6Arc2) = rule6.ApplyRule(
+            var (rule6Place, rule6FalseTransition, rule6TrueTransition, rule6Arc1, rule6Arc2) = rule6.ApplyRule(
                 previousNodes.LastOrDefault(),
                 trueCondition,
                 falseCondition,
