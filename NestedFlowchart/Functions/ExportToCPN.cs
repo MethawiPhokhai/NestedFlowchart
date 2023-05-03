@@ -87,11 +87,15 @@ namespace NestedFlowchart.Functions
                             PositionManagements pagePosition = GetPagePositionByCountSubPage(currentPreviousNode.CurrentMainPage, page1Position, page2Position);
 
                             // Create arc with previous node
-                            var (arc, pv) = CreateArcWithPreviousNode(arrows.LastOrDefault(), currentPreviousNode.Type, pagePosition, arrayName, previousNodes, isDeclaredI);
+                            var (arc, arc2, pv, currentMain, currentSub) = CreateArcWithPreviousNode(arrows.LastOrDefault(), currentPreviousNode.Type, pagePosition, arrayName, previousNodes, isDeclaredI);
 
                             // Create arc and page node
                             var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], arc);
-                            CreatePageNodeByCountSubPage(pv.CurrentMainPage, pages, arc1);
+                            CreatePageNodeByCountSubPage(currentMain, pages, arc1);
+
+                            // Create arc and page node
+                            var arc22 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], arc2);
+                            CreatePageNodeByCountSubPage(currentSub, pages, arc22);
 
                             // If a subpage is created, continue with the subpage
                             if (pv.IsCreateSubPage)
@@ -242,6 +246,10 @@ namespace NestedFlowchart.Functions
                         pv.elementId = sortedFlowcharts[i].ID;
                         pv.previousPlaceModel = rule3PS2; //เอาไว้เป็น previous ของ subpage เพื่อไปต่อ node ต่อไป
                         pv.currentPlaceModel = rule3InputPlace;
+
+                        pv.outputPortMainPagePlaceModel = rule3OutputPlace;
+                        pv.outputPortSubPagePlaceModel = rule3OutputPlace2;
+
                         definejTransition = rule3Transition;
                         pv.Type = "transition";
                         previousNodes.Add(pv);

@@ -10,6 +10,9 @@
         public TransitionModel currentTransitionModel { get; set; } = new TransitionModel();
         public TransitionModel currentFalseTransitionModel { get; set; } = new TransitionModel();
 
+        public PlaceModel outputPortMainPagePlaceModel { get; set; } = new PlaceModel();
+        public PlaceModel outputPortSubPagePlaceModel  { get; set; } = new PlaceModel();
+
         //place, transition
         public string Type { get; set; }
 

@@ -7,7 +7,7 @@ namespace NestedFlowchart.Rules
 {
     public class ArcBaseRule
     {
-        public (ArcModel? arcModel, PreviousNode previousNode) CreateArcWithPreviousNode(
+        public (ArcModel?, ArcModel?, PreviousNode, int, int) CreateArcWithPreviousNode(
             TempArrow arrow, 
             string type,
             PositionManagements position, 
@@ -15,15 +15,66 @@ namespace NestedFlowchart.Rules
             List<PreviousNode> previousNodes, 
             bool isDeclaredI)
         {
+            string arcVariable;
+            string orientation;
+            ArcModel arcModel, arcModel2;
+
+
             bool IsUsePreviousFalse = false;
+            string outputPortPlaceIdSubPage = string.Empty;
+            string outputPortPlaceIdMainPage = string.Empty;
+
             //หาตัวแรกที่ id ตรงกับ Destination เพื่อเอามาสร้าง Arc ต่อกัน
             var sourceNode = previousNodes.FirstOrDefault(x => x.elementId == arrow.Source);
             var destinationNode = previousNodes.FirstOrDefault(x => x.elementId == arrow.Destination);
 
-            //กรณีอยู่หน้าแรก และยังไม่ประกาศ i ให้ใช้ arc variable array เฉยๆ นอกจากนั้นไป get ตาม page
-            string arcVariable = isDeclaredI ? DeclareArcVariable(arrayName, destinationNode.CurrentMainPage) : arrayName;
+            //ถ้า CurrentMainPage ของ destination - source = 1 แสดงว่าออกจาก Subpage ให้ลากใส่ Output port place ด้วย
+            if(sourceNode?.CurrentMainPage - destinationNode?.CurrentMainPage > 0)
+            {
+                //Create arc for output port place
+                outputPortPlaceIdMainPage = previousNodes.FirstOrDefault(x => x.CurrentMainPage == sourceNode?.CurrentMainPage &&
+                                                  x.outputPortSubPagePlaceModel != null).outputPortMainPagePlaceModel.Id1;
 
-            //กรณีลากใส่ CN2
+                //Create arc for output port place
+                outputPortPlaceIdSubPage = previousNodes.FirstOrDefault(x => x.CurrentMainPage == sourceNode?.CurrentMainPage &&
+                                                  x.outputPortSubPagePlaceModel != null).outputPortSubPagePlaceModel.Id1;
+
+
+                //กรณีอยู่หน้าแรก และยังไม่ประกาศ i ให้ใช้ arc variable array เฉยๆ นอกจากนั้นไป get ตาม page
+                arcVariable = isDeclaredI ? DeclareArcVariable(arrayName, destinationNode.CurrentMainPage) : arrayName;
+
+                arcModel = new ArcModel
+                {
+                    Id1 = IdManagements.GetlastestArcId(),
+                    Id2 = IdManagements.GetlastestArcId(),
+                    xPos = position.xArcPos,
+                    yPos = position.yArcPos == 84 ? position.yArcPos : position.GetLastestyArcPos(),
+                    TransEnd = destinationNode?.currentTransitionModel?.Id1,
+                    PlaceEnd = outputPortPlaceIdMainPage,
+                    Orientation = "PtoT",
+                    Type = arcVariable
+                };
+
+                arcModel2 = new ArcModel
+                {
+                    Id1 = IdManagements.GetlastestArcId(),
+                    Id2 = IdManagements.GetlastestArcId(),
+                    xPos = position.xArcPos,
+                    yPos = position.yArcPos == 84 ? position.yArcPos : position.GetLastestyArcPos(),
+                    TransEnd = sourceNode.currentFalseTransitionModel.Id1,
+                    PlaceEnd = outputPortPlaceIdSubPage,
+                    Orientation = "TtoP",
+                    Type = arcVariable
+                };
+
+                return (arcModel, arcModel2, destinationNode, 0, 1);
+            }
+
+
+            //กรณีอยู่หน้าแรก และยังไม่ประกาศ i ให้ใช้ arc variable array เฉยๆ นอกจากนั้นไป get ตาม page
+            arcVariable = isDeclaredI ? DeclareArcVariable(arrayName, destinationNode.CurrentMainPage) : arrayName;
+
+            //กรณีลากใส่ CN2 และ Output port place
             if (arrow.Id.Contains("3K-55"))
             {
                 IsUsePreviousFalse = true;
@@ -36,9 +87,9 @@ namespace NestedFlowchart.Rules
             }
 
             //ถ้าเป็น place ให้ใช้ PtoT, ถ้าเป็น transition ให้ใช้ TtoP
-            string orientation = (type == "place") ? "PtoT" : "TtoP";
+            orientation = (type == "place") ? "PtoT" : "TtoP";
 
-            ArcModel arcModel = new ArcModel
+            arcModel = new ArcModel
             {
                 Id1 = IdManagements.GetlastestArcId(),
                 Id2 = IdManagements.GetlastestArcId(),
@@ -59,27 +110,14 @@ namespace NestedFlowchart.Rules
                     sourceNode.currentFalseTransitionModel.Id1 :
                     sourceNode?.currentTransitionModel?.Id1;
 
-                arcModel.PlaceEnd = destinationNode?.currentPlaceModel?.Id1;
+                arcModel.PlaceEnd = !string.IsNullOrEmpty(outputPortPlaceIdSubPage) ? 
+                    outputPortPlaceIdSubPage : 
+                    destinationNode?.currentPlaceModel?.Id1;
             }
 
-            return (arcModel, destinationNode);
+            return (arcModel, null, destinationNode, destinationNode.CurrentMainPage, destinationNode.CurrentSubPage);
         }
 
-        public ArcModel CreateArcforOutputPortPlace(
-            PositionManagements position)
-        {
-            return new ArcModel
-            {
-                Id1 = IdManagements.GetlastestArcId(),
-                Id2 = IdManagements.GetlastestArcId(),
-                PlaceEnd = "ID1412948787", //P4
-                TransEnd = "ID1412848807", //GF2
-                xPos = position.xArcPos,
-                yPos = position.yArcPos == 84 ? position.yArcPos : position.GetLastestyArcPos(),
-                Orientation = "TtoP",
-                Type = "(i,array)"
-            };
-        }
 
         public ArcModel CreateArcforEndPlace(
         PositionManagements position)
@@ -94,22 +132,6 @@ namespace NestedFlowchart.Rules
                 yPos = position.yArcPos == 84 ? position.yArcPos : position.GetLastestyArcPos(),
                 Orientation = "TtoP",
                 Type = "array"
-            };
-        }
-
-        public ArcModel CreateArcforCN2(
-            PositionManagements position)
-        {
-            return new ArcModel
-            {
-                Id1 = IdManagements.GetlastestArcId(),
-                Id2 = IdManagements.GetlastestArcId(),
-                PlaceEnd = "ID1412948805", //CN2
-                TransEnd = "ID1412848817", //GF3
-                xPos = position.xArcPos,
-                yPos = position.yArcPos == 84 ? position.yArcPos : position.GetLastestyArcPos(),
-                Orientation = "TtoP",
-                Type = "(i,j,array)"
             };
         }
 
