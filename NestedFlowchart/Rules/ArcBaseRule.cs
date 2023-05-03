@@ -74,10 +74,20 @@ namespace NestedFlowchart.Rules
             //กรณีอยู่หน้าแรก และยังไม่ประกาศ i ให้ใช้ arc variable array เฉยๆ นอกจากนั้นไป get ตาม page
             arcVariable = isDeclaredI ? DeclareArcVariable(arrayName, destinationNode.CurrentMainPage) : arrayName;
 
-            //กรณีลากใส่ CN2
+            //กรณีลากใส่ CN2 (False)
             if (arrow.Id.Contains("3K-55"))
             {
                 IsUsePreviousFalse = true;
+            }
+            //กรณีลากไป CN2 (True)
+            else if (arrow.Id.Contains("KSG-24"))
+            {
+                arcVariable = "(i,j,array2)";
+            }
+            //กรณีลากไป CN1
+            else if (arrow.Id.Contains("KSG-17"))
+            {
+                arcVariable = "(i2,array)";
             }
             //กรณีลากใส่ End
             else if (arrow.Id.Contains("3K-39"))

@@ -139,6 +139,24 @@ namespace NestedFlowchart.Rules
                     Type = arcVariable
                 };
             }
+            else
+            {
+                //Arc from CN1 to GF1
+                a2 = new ArcModel()
+                {
+                    Id1 = IdManagements.GetlastestArcId(),
+                    Id2 = IdManagements.GetlastestArcId(),
+
+                    TransEnd = falseTransition.Id1,
+                    PlaceEnd = previousNode.currentPlaceModel.Id1 ,
+
+                    xPos = xPosArc + 34,
+                    yPos = yPosArc,
+
+                    Orientation = "PtoT", //Place to Transition
+                    Type = arcVariable
+                };
+            }
 
             return (ps3, falseTransition, trueTransition, a1, a2);
         }
