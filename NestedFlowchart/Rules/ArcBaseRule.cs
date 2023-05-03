@@ -74,10 +74,16 @@ namespace NestedFlowchart.Rules
             //กรณีอยู่หน้าแรก และยังไม่ประกาศ i ให้ใช้ arc variable array เฉยๆ นอกจากนั้นไป get ตาม page
             arcVariable = isDeclaredI ? DeclareArcVariable(arrayName, destinationNode.CurrentMainPage) : arrayName;
 
-            //กรณีลากใส่ CN2 และ Output port place
+            //กรณีลากใส่ CN2
             if (arrow.Id.Contains("3K-55"))
             {
                 IsUsePreviousFalse = true;
+            }
+            //กรณีลากใส่ End
+            else if (arrow.Id.Contains("3K-39"))
+            {
+                IsUsePreviousFalse = true;
+                arcVariable = "array";
             }
             //กรณีลากใส่ P5
             else if (arrow.Id.Contains("KSG-26"))
@@ -116,23 +122,6 @@ namespace NestedFlowchart.Rules
             }
 
             return (arcModel, null, destinationNode, destinationNode.CurrentMainPage, destinationNode.CurrentSubPage);
-        }
-
-
-        public ArcModel CreateArcforEndPlace(
-        PositionManagements position)
-        {
-            return new ArcModel
-            {
-                Id1 = IdManagements.GetlastestArcId(),
-                Id2 = IdManagements.GetlastestArcId(),
-                PlaceEnd = "ID1412948808", //End
-                TransEnd = "ID1412848787", //GF1
-                xPos = position.xArcPos,
-                yPos = position.yArcPos == 84 ? position.yArcPos : position.GetLastestyArcPos(),
-                Orientation = "TtoP",
-                Type = "array"
-            };
         }
 
         public string DeclareArcVariable(string arrayName, int countSubPage)

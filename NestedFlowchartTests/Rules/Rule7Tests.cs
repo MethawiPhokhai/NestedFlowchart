@@ -13,18 +13,14 @@ namespace NestedFlowchart.Rules.Tests
             PositionManagements page1Position = new PositionManagements();
             string arrayName = "array";
 
-
             //Act
             Rule7 rule7 = new Rule7();
-            var rule7Place = rule7.ApplyRule(
+            var endPlace = rule7.ApplyRule(
                        arrayName,
                        page1Position);
 
-            var rule7Arc1 = rule7.CreateArcforEndPlace(page1Position);
-
             //Assert
-            Assert.IsNotNull(rule7Place);
-            Assert.IsNotNull(rule7Arc1);
+            Assert.IsNotNull(endPlace);
 
         }
     }

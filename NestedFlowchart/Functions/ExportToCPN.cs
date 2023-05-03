@@ -72,76 +72,7 @@ namespace NestedFlowchart.Functions
                 {
                     if (arrows.Any())
                     {
-                        //Abandoned return arc
-                        if (!arrows.LastOrDefault().Id.Contains("KSG-17"))
-                        {
-                            var currentPreviousNode = previousNodes.LastOrDefault();
-
-                            // Toggle type of Rule 6 ถ้ามี condition ต่อกัน 2 อัน หรือ
-                            if ((currentPreviousNode.IsPreviousNodeCondition && previousNodes.ElementAtOrDefault(previousNodes.Count - 2).IsPreviousNodeCondition))
-                            {
-                                currentPreviousNode.Type = (currentPreviousNode.Type == "transition") ? "place" : "transition";
-                            }
-
-                            // Get page position from the page
-                            PositionManagements pagePosition = GetPagePositionByCountSubPage(currentPreviousNode.CurrentMainPage, page1Position, page2Position);
-
-                            // Create arc with previous node
-                            var (arc, arc2, pv, currentMain, currentSub) = CreateArcWithPreviousNode(arrows.LastOrDefault(), currentPreviousNode.Type, pagePosition, arrayName, previousNodes, isDeclaredI);
-
-                            // Create arc and page node
-                            var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], arc);
-                            CreatePageNodeByCountSubPage(currentMain, pages, arc1);
-
-                            // Create arc and page node
-                            var arc22 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], arc2);
-                            CreatePageNodeByCountSubPage(currentSub, pages, arc22);
-
-                            // If a subpage is created, continue with the subpage
-                            if (pv.IsCreateSubPage)
-                            {
-                                pv.CurrentMainPage = pv.CurrentSubPage;
-                                pv.currentPlaceModel = pv.previousPlaceModel; // Set previous place for the next node of the subpage
-
-                                // Toggle type of Rule3_2 if a place has been created in the subpage and Rule 6 checks for transitions
-                                if (pv.CurrentMainPage > 0)
-                                {
-                                    pv.Type = (pv.Type == "transition") ? "place" : "transition";
-                                }
-                            }
-
-
-                            //don't create for GF3
-                            //if (!arrows.LastOrDefault().Id.Contains("KSG-21"))
-                            //{
-                            //    //Create arc to GF
-                            //    if (sortedFlowcharts[i - 1].NodeType.ToLower() == "condition")
-                            //    {
-                            //        // Create arc with previous node
-                            //        var (arc2, pv2) = CreateArcforFalseCondition(arrows.LastOrDefault(), pagePosition, arrayName, previousNodes, isDeclaredI);
-
-                            //        // Create arc and page node
-                            //        var arc22 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], arc2);
-                            //        CreatePageNodeByCountSubPage(pv2.CurrentMainPage, pages, arc22);
-
-                            //        //Create arc to Output port place
-                            //        if (arrows.LastOrDefault().Id.Contains("KSG-30"))
-                            //        {
-                            //            var outputArc = CreateArcforOutputPortPlace(pagePosition);
-                            //            var outputArc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], outputArc);
-                            //            CreatePageNodeByCountSubPage(1, pages, outputArc1);
-                            //        }
-                            //    }
-
-                            //    //Create arc to Output port place
-                            //    if (arrows.LastOrDefault().Id.Contains("KSG-25"))
-                            //    {
-                            //        var GF3Arc = CreateArcforCN2(pagePosition);
-                            //        var GF3Arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], GF3Arc);
-                            //        CreatePageNodeByCountSubPage(1, pages, GF3Arc1);
-                            //    }
-                            //}
-                        }
+                        CreateArc(allTemplates, pages, previousNodes, isDeclaredI, arrayName, page1Position, page2Position, arrows);
                     }
 
                     // Store arrow in temp for the next element to use
@@ -460,17 +391,23 @@ namespace NestedFlowchart.Functions
                         arrayName,
                         page1Position);
 
-                    var rule7Arc1 = _rule7.CreateArcforEndPlace(page1Position);
+                    PreviousNode pv = new PreviousNode();
+                    pv.elementId = sortedFlowcharts[i].ID;
+                    pv.currentPlaceModel = rule7Place;
+                    pv.Type = "transition";
+                    previousNodes.Add(pv);
 
                     var place1 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule7Place);
-                    var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule7Arc1);
 
-                    var rule7String = place1 + arc1;
+                    var rule7String = place1;
 
                     CreatePageNodeByCountSubPage(countSubPage, pages, rule7String);
                     #endregion
                 }
             }
+
+            //Last Arc to End node
+            CreateArc(allTemplates, pages, previousNodes, isDeclaredI, arrayName, page1Position, page2Position, arrows);
 
             #endregion AppleRules
 
@@ -485,6 +422,44 @@ namespace NestedFlowchart.Functions
 
             //Write to CPN File
             File.WriteAllText(ResultPath + "Result.cpn", firstCPN);
+        }
+
+        private void CreateArc(string[] allTemplates, PageDeclare pages, List<PreviousNode> previousNodes, bool isDeclaredI, string arrayName, PositionManagements page1Position, PositionManagements page2Position, List<TempArrow> arrows)
+        {
+            var currentPreviousNode = previousNodes.LastOrDefault();
+
+            // Toggle type of Rule 6 ถ้ามี condition ต่อกัน 2 อัน หรือ
+            if ((currentPreviousNode.IsPreviousNodeCondition && previousNodes.ElementAtOrDefault(previousNodes.Count - 2).IsPreviousNodeCondition))
+            {
+                currentPreviousNode.Type = (currentPreviousNode.Type == "transition") ? "place" : "transition";
+            }
+
+            // Get page position from the page
+            PositionManagements pagePosition = GetPagePositionByCountSubPage(currentPreviousNode.CurrentMainPage, page1Position, page2Position);
+
+            // Create arc with previous node
+            var (arc, arc2, pv, currentMain, currentSub) = CreateArcWithPreviousNode(arrows.LastOrDefault(), currentPreviousNode.Type, pagePosition, arrayName, previousNodes, isDeclaredI);
+
+            // Create arc and page node
+            var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], arc);
+            CreatePageNodeByCountSubPage(currentMain, pages, arc1);
+
+            // Create arc and page node
+            var arc22 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], arc2);
+            CreatePageNodeByCountSubPage(currentSub, pages, arc22);
+
+            // If a subpage is created, continue with the subpage
+            if (pv.IsCreateSubPage)
+            {
+                pv.CurrentMainPage = pv.CurrentSubPage;
+                pv.currentPlaceModel = pv.previousPlaceModel; // Set previous place for the next node of the subpage
+
+                // Toggle type of Rule3_2 if a place has been created in the subpage and Rule 6 checks for transitions
+                if (pv.CurrentMainPage > 0)
+                {
+                    pv.Type = (pv.Type == "transition") ? "place" : "transition";
+                }
+            }
         }
 
         private string[] ReadAllTemplate(string? templatePath)
