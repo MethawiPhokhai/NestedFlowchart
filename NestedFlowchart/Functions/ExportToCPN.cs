@@ -421,7 +421,7 @@ namespace NestedFlowchart.Functions
                 allColorSet + allVar, allPage, allInstances);
 
             //Write to CPN File
-            File.WriteAllText(ResultPath + "Result.cpn", firstCPN);
+            File.WriteAllText(ResultPath + @"\Result.cpn", firstCPN);
         }
 
         private void CreateArc(string[] allTemplates, PageDeclare pages, List<PreviousNode> previousNodes, bool isDeclaredI, string arrayName, PositionManagements page1Position, PositionManagements page2Position, List<TempArrow> arrows)
