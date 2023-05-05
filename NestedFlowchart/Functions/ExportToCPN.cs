@@ -101,10 +101,11 @@ namespace NestedFlowchart.Functions
                 {
                     #region Rule2
                     //Set Initial Marking
-                    arrayName = _rule2.AssignInitialMarking(sortedFlowcharts, arrayName, previousNodes.LastOrDefault(), i);
+                    var (arcVar, cSeg) = _rule2.AssignInitialMarking(sortedFlowcharts, arrayName, previousNodes.LastOrDefault(), i);
+                    arrayName = arcVar;
 
                     //Apply Rule
-                    var (rule2Place, rule2Transition, rule2Arc1) = _rule2.ApplyRule(arrayName, page1Position);
+                    var (rule2Place, rule2Transition, rule2Arc1) = _rule2.ApplyRule(arrayName, cSeg, page1Position);
 
                     //Rule2 need to create Rule1 here because initial marking
                     var place1 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], previousNodes.LastOrDefault().currentPlaceModel);

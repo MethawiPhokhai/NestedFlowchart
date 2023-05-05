@@ -101,6 +101,11 @@ namespace NestedFlowchart.Rules
                 type = "transition";
                 arcVariable = "(i,j2,array)";
             }
+            //Nestedif start to T1
+            else if (arrow.Id.Contains("SwmT-1"))
+            {
+                arcVariable = "i";
+            }
 
             //ถ้าเป็น place ให้ใช้ PtoT, ถ้าเป็น transition ให้ใช้ TtoP
             orientation = (type == "place") ? "PtoT" : "TtoP";

@@ -189,7 +189,7 @@ namespace NestedFlowchart.Rules
             }
             else if (condition.Contains("="))
             {
-                return condition.Replace("=", "!=");
+                return condition.Replace("=", "&lt;&gt;");
             }
             else if (condition.Contains("!="))
             {

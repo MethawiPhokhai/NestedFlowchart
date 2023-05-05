@@ -44,7 +44,7 @@ namespace NestedFlowchart.Rules.Tests
 
             // Act
             Rule2 rule2 = new Rule2();
-            var (pl, tr, a1) = rule2.ApplyRule(arrayName, page1Position);
+            var (pl, tr, a1) = rule2.ApplyRule(arrayName, "", page1Position);
 
             // Assert
             Assert.IsNotNull(pl);

@@ -139,9 +139,22 @@ namespace NestedFlowchart.Functions
                 Text = "colset loopj = product INT*INT*INTs;"
             };
 
+            ColorSetModel colorSetProduct3 = new ColorSetModel()
+            {
+                Id = IdManagements.GetlastestColorSetId(),
+                Name = "aa",
+                Type = new List<string>()
+                {
+                    "INT",
+                    "INT"
+                },
+                Text = "colset aa = product INT*INT;"
+            };
+
             var col1 = approach.CreateColorSet(allTemplates[(int)TemplateEnum.ColorSetTemplate], colorSetProduct1);
             var col2 = approach.CreateColorSet(allTemplates[(int)TemplateEnum.ColorSetTemplate], colorSetProduct2);
-            var allColorSet = col1 + col2;
+            var col3 = approach.CreateColorSet(allTemplates[(int)TemplateEnum.ColorSetTemplate], colorSetProduct3);
+            var allColorSet = col1 + col2 + col3;
             return allColorSet;
         }
 
@@ -167,8 +180,8 @@ namespace NestedFlowchart.Functions
             {
                 Id = IdManagements.GetlastestVarId(),
                 Type = "INT",
-                Name = "i,i2,j,j2",
-                Layout = "var i,i2,j,j2: INT;"
+                Name = "i,i2,j,j2,x,y",
+                Layout = "var i,i2,j,j2,x,y: INT;"
             };
 
             var var1 = approach.CreateVar(allTemplates[(int)TemplateEnum.VarTemplate], var1Model);
