@@ -405,6 +405,10 @@ namespace NestedFlowchart.Functions
                     CreatePageNodeByCountSubPage(countSubPage, pages, rule7String);
                     #endregion
                 }
+                else if (flowchartType == "output")
+                {
+
+                }
             }
 
             //Last Arc to End node

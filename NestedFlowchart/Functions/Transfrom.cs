@@ -166,6 +166,10 @@ namespace NestedFlowchart.Functions
             {
                 return "Arrow";
             }
+            else if (flowChart.Style.Contains("shape=parallelogram;"))
+            {
+                return "Output";
+            }
             else
             {
                 return String.Empty;

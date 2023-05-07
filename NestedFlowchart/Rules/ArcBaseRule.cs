@@ -143,15 +143,29 @@ namespace NestedFlowchart.Rules
         {
             //arc variable
             string arcVariable = string.Empty;
-            switch (countSubPage)
+
+            if (arrayName.Contains("array"))
             {
-                case 0:
-                    arcVariable = $"(i,{arrayName})";
-                    break;
-                case 1:
-                    arcVariable = $"(i,j,{arrayName})";
-                    break;
+                switch (countSubPage)
+                {
+                    case 0:
+                        arcVariable = $"(i,{arrayName})";
+                        break;
+                    case 1:
+                        arcVariable = $"(i,j,{arrayName})";
+                        break;
+                }
             }
+            else
+            {
+                switch (countSubPage)
+                {
+                    case 0:
+                        arcVariable = $"{arrayName}";
+                        break;
+                }
+            }
+
 
             return arcVariable;
         }
