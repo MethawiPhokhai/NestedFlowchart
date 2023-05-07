@@ -26,7 +26,7 @@ namespace NestedFlowchart.Rules
                 Id2 = IdManagements.GetlastestPlaceId(),
                 Id3 = IdManagements.GetlastestPlaceId(),
                 Name = "End",
-                Type = "INTs",
+                Type = (arrayName == "array") ? "INTs" : "aa",
                 InitialMarking = string.Empty,
 
                 xPos1 = position.xPos1 - 4,

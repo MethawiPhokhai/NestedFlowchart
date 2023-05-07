@@ -75,7 +75,7 @@ namespace NestedFlowchart.Rules
             arcVariable = isDeclaredI ? DeclareArcVariable(arrayName, destinationNode.CurrentMainPage) : arrayName;
 
             //กรณีลากใส่ CN2 (False)
-            if (arrow.Id.Contains("3K-55"))
+            if (arrow.Id.Contains("3K-55") || arrow.Id.Contains("Rj-71"))
             {
                 IsUsePreviousFalse = true;
             }

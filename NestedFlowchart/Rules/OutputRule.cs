@@ -6,8 +6,7 @@ namespace NestedFlowchart.Rules
 {
     public class OutputRule : ArcBaseRule
     {
-        public (PlaceModel, TransitionModel, ArcModel)
-            ApplyRule(
+        public PlaceModel ApplyRule(
             string arrayName,
             PositionManagements position)
         {
@@ -28,36 +27,7 @@ namespace NestedFlowchart.Rules
                 Type = (arrayName == "array") ? "INTs" : "aa"
             };
 
-            TransitionModel tr = new TransitionModel()
-            {
-                Id1 = IdManagements.GetlastestTransitionId(),
-                Id2 = IdManagements.GetlastestTransitionId(),
-                Id3 = IdManagements.GetlastestTransitionId(),
-                Id4 = IdManagements.GetlastestTransitionId(),
-                Id5 = IdManagements.GetlastestTransitionId(),
-
-                Name = IdManagements.GetlastestTransitionName(),
-
-                xPos1 = position.xPos1,
-                yPos1 = position.GetLastestyPos1()
-            };
-
-            ArcModel a1 = new ArcModel()
-            {
-                Id1 = IdManagements.GetlastestArcId(),
-                Id2 = IdManagements.GetlastestArcId(),
-
-                TransEnd = tr.Id1,
-                PlaceEnd = pl.Id1,
-
-                xPos = position.GetLastestxArcPos(),
-                yPos = position.GetLastestyArcPos(),
-
-                Orientation = "PtoT",
-                Type = arrayName
-            };
-
-            return (pl, tr, a1);
+            return pl;
         }
     }
 }
