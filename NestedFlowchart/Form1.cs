@@ -131,8 +131,9 @@ namespace NestedFlowchart
                     Rule6 rule6 = new Rule6();
                     Rule7 rule7 = new Rule7();
                     TransformationApproach approach = new TransformationApproach();
+                    OutputRule outputRule = new OutputRule();
 
-                    var exportToCPN = new ExportToCPN(rule1, rule2, rule3, rule4, rule5, rule6, rule7, approach);
+                    var exportToCPN = new ExportToCPN(rule1, rule2, rule3, rule4, rule5, rule6, rule7, approach, outputRule);
                     exportToCPN.ExportFile(TemplatePath, txt_ReultPath.Text, sortedFlowcharts);
 
                     MessageBox.Show("Export Complete");

@@ -4,6 +4,7 @@ using NestedFlowchart.Position;
 using NestedFlowchart.Rules;
 using NestedFlowchart.Templates;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 
 namespace NestedFlowchart.Functions
@@ -18,9 +19,10 @@ namespace NestedFlowchart.Functions
         private readonly Rule6 _rule6;
         private readonly Rule7 _rule7;
         private readonly TransformationApproach _approach;
+        private readonly OutputRule _outputRule;
 
         public ExportToCPN(Rule1 rule1, Rule2 rule2, Rule3 rule3, Rule4 rule4
-            , Rule5 rule5, Rule6 rule6, Rule7 rule7, TransformationApproach approach)
+            , Rule5 rule5, Rule6 rule6, Rule7 rule7, TransformationApproach approach, OutputRule outputRule)
         {
             _rule1 = rule1;
             _rule2 = rule2;
@@ -30,6 +32,7 @@ namespace NestedFlowchart.Functions
             _rule6 = rule6;
             _rule7 = rule7;
             _approach = approach;
+            _outputRule = outputRule;
         }
 
         public void ExportFile(string? TemplatePath, string? ResultPath, List<XMLCellNode> sortedFlowcharts)
@@ -407,7 +410,23 @@ namespace NestedFlowchart.Functions
                 }
                 else if (flowchartType == "output")
                 {
+                    //Apply Rule
+                    var (outputRulePlace, outputRuleTransition, outputRuleArc1) = _outputRule.ApplyRule(arrayName, page1Position);
 
+                    //Set previous node for create arc next rule
+                    PreviousNode pv = new PreviousNode();
+                    pv.elementId = sortedFlowcharts[i].ID;
+                    pv.currentPlaceModel = outputRulePlace;
+                    pv.currentTransitionModel = outputRuleTransition;
+                    pv.Type = "transition";
+                    previousNodes.Add(pv);
+
+                    var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], outputRuleArc1);
+                    var transition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], outputRuleTransition);
+                    var place = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], outputRulePlace);
+                    var outputRuleString = place + transition + arc1;
+
+                    CreatePageNodeByCountSubPage(pv.CurrentSubPage, pages, outputRuleString);
                 }
             }
 
