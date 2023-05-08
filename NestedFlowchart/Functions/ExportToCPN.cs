@@ -461,6 +461,57 @@ namespace NestedFlowchart.Functions
             // Get page position from the page
             PositionManagements pagePosition = GetPagePositionByCountSubPage(currentPreviousNode.CurrentMainPage, page1Position, page2Position);
 
+
+
+
+            //ถ้า Destination ลากไป End แล้วไม่มี Transition ให้สร้าง Transition
+            var destinationNode = previousNodes.FirstOrDefault(x => x.elementId == arrows.LastOrDefault().Destination);
+            if (destinationNode.elementId.Contains("Rj-32"))
+            {
+                //Transition
+                TransitionModel tr = new TransitionModel()
+                {
+                    Id1 = IdManagements.GetlastestTransitionId(),
+                    Id2 = IdManagements.GetlastestTransitionId(),
+                    Id3 = IdManagements.GetlastestTransitionId(),
+                    Id4 = IdManagements.GetlastestTransitionId(),
+                    Id5 = IdManagements.GetlastestTransitionId(),
+
+                    Name = IdManagements.GetlastestTransitionName(),
+
+                    xPos1 = pagePosition.xPos1,
+                    yPos1 = pagePosition.GetLastestyPos1()
+                };
+
+                //Transition to End
+                ArcModel a1 = new ArcModel()
+                {
+                    Id1 = IdManagements.GetlastestArcId(),
+                    Id2 = IdManagements.GetlastestArcId(),
+
+                    TransEnd = tr.Id1,
+                    PlaceEnd = destinationNode.currentPlaceModel.Id1,
+
+                    xPos = pagePosition.GetLastestxArcPos(),
+                    yPos = pagePosition.GetLastestyArcPos(),
+
+                    Orientation = "TtoP", //Transition to Place
+                    Type = arrayName
+                };
+
+                var t1 = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], tr);
+                var aa1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], a1);
+
+                var s1 = t1 + aa1;
+
+                CreatePageNodeByCountSubPage(previousNodes.LastOrDefault().CurrentSubPage, pages, s1);
+
+                destinationNode.currentTransitionModel = tr;
+                destinationNode.IsConnectedEnd = true;
+            }
+            
+
+
             // Create arc with previous node
             var (arc, arc2, pv, currentMain, currentSub) = CreateArcWithPreviousNode(arrows.LastOrDefault(), currentPreviousNode.Type, pagePosition, arrayName, previousNodes, isDeclaredI);
 
