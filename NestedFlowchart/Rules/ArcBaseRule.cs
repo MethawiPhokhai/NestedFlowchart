@@ -75,7 +75,9 @@ namespace NestedFlowchart.Rules
             arcVariable = isDeclaredI ? DeclareArcVariable(arrayName, destinationNode.CurrentMainPage) : arrayName;
 
             //กรณีลากใส่ CN2 (False)
-            if (arrow.Id.Contains("3K-55"))
+            if (arrow.Id.Contains("3K-55") || arrow.Id.Contains("Rj-61") ||
+            arrow.Id.Contains("Rj-58") || arrow.Id.Contains("Rj-52") ||
+            arrow.Id.Contains("Rj-46") || arrow.Id.Contains("Rj-35"))
             {
                 IsUsePreviousFalse = true;
             }
@@ -105,6 +107,18 @@ namespace NestedFlowchart.Rules
             else if (arrow.Id.Contains("SwmT-1"))
             {
                 arcVariable = "i";
+            }
+
+            if (arrow.Id.Contains("Rj-61") ||
+                arrow.Id.Contains("Rj-58") || arrow.Id.Contains("Rj-52") ||
+                arrow.Id.Contains("Rj-46") || arrow.Id.Contains("Rj-35"))
+            {
+                type = "transition";
+            }
+
+            if (arrow.Id.Contains("Rj-71"))
+            {
+                type = "place";
             }
 
             //ถ้าเป็น place ให้ใช้ PtoT, ถ้าเป็น transition ให้ใช้ TtoP
