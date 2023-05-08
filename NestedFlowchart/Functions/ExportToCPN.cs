@@ -469,7 +469,7 @@ namespace NestedFlowchart.Functions
 
             //ถ้า Destination ลากไป End แล้วไม่มี Transition ให้สร้าง Transition
             var destinationNode = previousNodes.FirstOrDefault(x => x.elementId == arrows.LastOrDefault().Destination);
-            if (destinationNode.elementId.Contains("Rj-32"))
+            if (destinationNode.elementId.Contains("Rj-32") && currentPreviousNode.elementId.Contains("li-r-14"))
             {
                 //Transition
                 TransitionModel tr = new TransitionModel()
