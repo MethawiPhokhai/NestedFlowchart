@@ -462,8 +462,6 @@ namespace NestedFlowchart.Functions
             PositionManagements pagePosition = GetPagePositionByCountSubPage(currentPreviousNode.CurrentMainPage, page1Position, page2Position);
 
 
-
-
             //ถ้า Destination ลากไป End แล้วไม่มี Transition ให้สร้าง Transition
             var destinationNode = previousNodes.FirstOrDefault(x => x.elementId == arrows.LastOrDefault().Destination);
             if (destinationNode.elementId.Contains("Rj-32"))
