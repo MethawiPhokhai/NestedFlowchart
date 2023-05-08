@@ -3,9 +3,6 @@ using NestedFlowchart.Models;
 using NestedFlowchart.Position;
 using NestedFlowchart.Rules;
 using NestedFlowchart.Templates;
-using System.Linq;
-using System.Numerics;
-using System.Text;
 
 namespace NestedFlowchart.Functions
 {
@@ -398,7 +395,8 @@ namespace NestedFlowchart.Functions
                     #region Rule7
                     var rule7Place = _rule7.ApplyRule(
                         arrayName,
-                        page1Position);
+                        page1Position,
+                        previousNodes.LastOrDefault());
 
                     PreviousNode pv = new PreviousNode();
                     pv.elementId = sortedFlowcharts[i].ID;
@@ -427,7 +425,7 @@ namespace NestedFlowchart.Functions
                     pv.currentTransitionModel = previousNodes.LastOrDefault().currentTransitionModel;
                     pv.currentFalseTransitionModel = previousNodes.LastOrDefault().currentFalseTransitionModel;
 
-                    pv.Type = "transition";
+                    pv.Type = "place";
                     previousNodes.Add(pv);
 
                     var place = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], outputRulePlace);
@@ -467,6 +465,57 @@ namespace NestedFlowchart.Functions
 
             // Get page position from the page
             PositionManagements pagePosition = GetPagePositionByCountSubPage(currentPreviousNode.CurrentMainPage, page1Position, page2Position);
+
+
+
+
+            //ถ้า Destination ลากไป End แล้วไม่มี Transition ให้สร้าง Transition
+            var destinationNode = previousNodes.FirstOrDefault(x => x.elementId == arrows.LastOrDefault().Destination);
+            if (destinationNode.currentPlaceModel.Name.Contains("End") && 
+                (destinationNode.currentTransitionModel.Id1 == null || destinationNode.IsConnectedEnd))
+            {
+                //Transition
+                TransitionModel tr = new TransitionModel()
+                {
+                    Id1 = IdManagements.GetlastestTransitionId(),
+                    Id2 = IdManagements.GetlastestTransitionId(),
+                    Id3 = IdManagements.GetlastestTransitionId(),
+                    Id4 = IdManagements.GetlastestTransitionId(),
+                    Id5 = IdManagements.GetlastestTransitionId(),
+
+                    Name = IdManagements.GetlastestTransitionName(),
+
+                    xPos1 = pagePosition.xPos1,
+                    yPos1 = pagePosition.GetLastestyPos1()
+                };
+
+                //Transition to End
+                ArcModel a1 = new ArcModel()
+                {
+                    Id1 = IdManagements.GetlastestArcId(),
+                    Id2 = IdManagements.GetlastestArcId(),
+
+                    TransEnd = tr.Id1,
+                    PlaceEnd = destinationNode.currentPlaceModel.Id1,
+
+                    xPos = pagePosition.GetLastestxArcPos(),
+                    yPos = pagePosition.GetLastestyArcPos(),
+
+                    Orientation = "TtoP", //Transition to Place
+                    Type = arrayName
+                };
+
+                var t1 = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], tr);
+                var aa1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], a1);
+
+                var s1 = t1 + aa1;
+
+                CreatePageNodeByCountSubPage(previousNodes.LastOrDefault().CurrentSubPage, pages, s1);
+
+                destinationNode.currentTransitionModel = tr;
+                destinationNode.IsConnectedEnd = true;
+            }
+
 
             // Create arc with previous node
             var (arc, arc2, pv, currentMain, currentSub) = CreateArcWithPreviousNode(arrows.LastOrDefault(), currentPreviousNode.Type, pagePosition, arrayName, previousNodes, isDeclaredI);

@@ -12,12 +12,11 @@ namespace NestedFlowchart.Rules
         /// If previous node is transition => Create place connected by arc
         /// </summary>
         /// <param name="placeTemplate"></param>
-        /// <param name="arcTemplate"></param>
-        /// <param name="previousNode"></param>
         /// <returns></returns>
         public PlaceModel ApplyRule(
             string arrayName,
-            PositionManagements position)
+            PositionManagements position,
+            PreviousNode pv)
         {
             //End Place
             PlaceModel pl = new PlaceModel()
@@ -36,11 +35,11 @@ namespace NestedFlowchart.Rules
                 yPos2 = position.yPos2 - 167,
 
                 xPos3 = position.xPos3 - 4,
-                yPos3 = position.yPos3 - 167,
-
+                yPos3 = position.yPos3 - 167
             };
 
-            return (pl);
+            return pl;
+
         }
     }
 }
