@@ -1,15 +1,10 @@
 ﻿using NestedFlowchart.Functions;
 using NestedFlowchart.Models;
 using NestedFlowchart.Position;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NestedFlowchart.Rules
 {
-    public class Rule5
+    public class Rule5 : ArcBaseRule
     {
         /// <summary>
         /// Transform connector into transition andplace connected by arc
@@ -19,7 +14,7 @@ namespace NestedFlowchart.Rules
         /// <param name="arcTemplate"></param>
         /// <param name="previousPlace"></param>
         /// <returns></returns>
-        public (PlaceModel, TransitionModel?, ArcModel?, ArcModel?) ApplyRule(
+        public (PlaceModel, TransitionModel?, ArcModel?, string) ApplyRule(
             string arrayName,
 			PreviousNode previousNode,
             PositionManagements position,
@@ -29,6 +24,7 @@ namespace NestedFlowchart.Rules
 			TransitionModel tr = null;
 			PlaceModel pl = null;
 			ArcModel a1 = null, a2 = null;
+			string previousTypeReturn = string.Empty;
 
 			if (previousNode.Type == "place")
             {
@@ -68,24 +64,8 @@ namespace NestedFlowchart.Rules
 					Type = "loopi"
 				};
 
-				//Arc from P2 to T3
-				a1 = new ArcModel()
-				{
-					Id1 = IdManagements.GetlastestArcId(),
-					Id2 = IdManagements.GetlastestArcId(),
-
-					TransEnd = tr.Id1,
-					PlaceEnd = previousNode.previousPlaceModel.Id1,
-
-					xPos = position.GetLastestxArcPos(),
-					yPos = position.GetLastestyArcPos(),
-
-					Orientation = "PtoT", //Place to Transition
-					Type = arcVariable
-				};
-
 				//Arc from T3 to CN1
-				a2 = new ArcModel()
+				a1 = new ArcModel()
 				{
 					Id1 = IdManagements.GetlastestArcId(),
 					Id2 = IdManagements.GetlastestArcId(),
@@ -99,7 +79,10 @@ namespace NestedFlowchart.Rules
 					Orientation = "TtoP", //Transition to Place
 					Type = arcVariable
 				};
-			}
+
+				previousTypeReturn = "place";
+
+            }
 			else
 			{
 				//CN1 Place
@@ -120,42 +103,11 @@ namespace NestedFlowchart.Rules
 					Type = "loopj"
 				};
 
-				//Arc from T3 to CN1
-				a1 = new ArcModel()
-				{
-					Id1 = IdManagements.GetlastestArcId(),
-					Id2 = IdManagements.GetlastestArcId(),
+                previousTypeReturn = "transition";
 
-					TransEnd = previousNode.previousTransitionModel.Id1,
-					PlaceEnd = pl.Id1,
+            }
 
-					xPos = position.GetLastestxArcPos(),
-					yPos = position.GetLastestyArcPos(),
-
-					Orientation = "TtoP", //Transition to Place
-					Type = arcVariable
-				};
-
-			}
-
-			return (pl, tr, a1, a2);
+			return (pl, tr, a1, previousTypeReturn);
         }
-
-		private string DeclareArcVariable(string arrayName, int countSubPage)
-		{
-			//arc variable
-			string arcVariable = string.Empty;
-			switch (countSubPage)
-			{
-				case 0:
-					arcVariable = $"(i,{arrayName})";
-					break;
-				case 1:
-					arcVariable = $"(i,j,{arrayName})";
-					break;
-			}
-
-			return arcVariable;
-		}
 	}
 }

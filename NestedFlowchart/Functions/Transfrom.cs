@@ -51,19 +51,32 @@ namespace NestedFlowchart.Functions
                 #region Get All 2 Arrow (True, False)
                 //! Need to sorted the element to make sure it going to the right direction
                 var arrows = allFlowChartElements.FindAll(x => x.Source == target?.ID);
-                XMLCellNode? lastElement;
+                XMLCellNode? lastElement = null;
                 #endregion
 
-                #region First direction
-                sortedFlowcharts.Add(arrows.LastOrDefault());
-				lastElement = allFlowChartElements.Find(x => x.ID == arrows.LastOrDefault().Target);
-				sortedFlowcharts.Add(lastElement);
-				#endregion
+                //เอา ID ไปหาใน Parent เพื่อเอา Value Text True/False ออกมา
+                foreach(var arrow in arrows)
+                {
+                    arrow.ValueText = allFlowChartElements.Find(x => x.Parent == arrow.ID).ValueText;
+                }
 
-				#region Second Direction
-				//Keep in temp after finish first direction pop this to the last of the list
-				tempDecisionElements.Add(allFlowChartElements.Find(x => x.ID == arrows.FirstOrDefault().Target));
-				#endregion
+                foreach (var arrow in arrows)
+                {
+                    if (arrow.ValueText.ToLower() == "true")
+                    {
+                        //First Condition คือ True Condition
+                        sortedFlowcharts.Add(arrow);
+                        lastElement = allFlowChartElements.Find(x => x.ID == arrow.Target);
+                        sortedFlowcharts.Add(lastElement);
+                    }
+                    else
+                    {
+                        //Second Condition คือ False Condition
+                        //Keep in temp after finish first direction pop this to the last of the list
+                        tempDecisionElements.Add(arrow);
+                        tempDecisionElements.Add(allFlowChartElements.Find(x => x.ID == arrow.Target));
+                    }
+                }
 
                 return lastElement;
             }
@@ -94,6 +107,7 @@ namespace NestedFlowchart.Functions
                 }
                 else
                 {
+                    #region Decision Element
                     var lastTemp = tempDecisionElements.LastOrDefault();
 
                     if (!sortedFlowcharts.Contains(lastTemp))
@@ -103,6 +117,20 @@ namespace NestedFlowchart.Functions
 
                     //If used, remove it
                     tempDecisionElements.Remove(lastTemp);
+                    #endregion
+
+                    #region Arrow
+                    var arrowTemp = tempDecisionElements.LastOrDefault();
+
+                    if (!sortedFlowcharts.Contains(arrowTemp))
+                    {
+                        sortedFlowcharts.Add(arrowTemp);
+                    }
+
+                    //If used, remove it
+                    tempDecisionElements.Remove(arrowTemp);
+                    #endregion
+
                     return lastTemp;
                 }
 				#endregion
@@ -134,9 +162,13 @@ namespace NestedFlowchart.Functions
             {
                 return "End";
             }
-            else if (flowChart.Style.Contains("edgeStyle=orthogonalEdgeStyle"))
+            else if (flowChart.Style.Contains("edgeStyle=orthogonalEdgeStyle") || flowChart.Style.Contains("endArrow=classic;"))
             {
                 return "Arrow";
+            }
+            else if (flowChart.Style.Contains("shape=parallelogram;"))
+            {
+                return "Output";
             }
             else
             {

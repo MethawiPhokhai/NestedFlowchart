@@ -99,37 +99,53 @@ namespace NestedFlowchart
             }
         }
 
+        private void btn_browse_Click(object sender, EventArgs e)
+        {
+            if(folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+            {
+                txt_ReultPath.Text = folderBrowserDialog1.SelectedPath;
+            }
+        }
+
         private void btn_ExportToCPN_Click(object sender, EventArgs e)
         {
             try
             {
-                #region Read all template
-                var TemplatePath = ConfigurationManager.AppSettings["TemplatePath"];
-                var ResultPath = ConfigurationManager.AppSettings["ResultPath"];
-                #endregion
+                if (string.IsNullOrEmpty(txt_ReultPath.Text))
+                {
+                    MessageBox.Show("Please select a result path");
+                }
+                else
+                {
+                    #region Read all template
+                    var TemplatePath = ConfigurationManager.AppSettings["TemplatePath"];
+                    #endregion
 
-                #region Write Result Path
-                txt_ReultPath.Text = ResultPath;
-                #endregion
 
-                #region Export to CPN Tools file
-                Rule1 rule1 = new Rule1();
-                Rule2 rule2 = new Rule2();
-                Rule3 rule3 = new Rule3();
-                Rule4 rule4 = new Rule4();
-                Rule5 rule5 = new Rule5();
-                Rule6 rule6 = new Rule6();
-                Rule7 rule7 = new Rule7();
-                TransformationApproach approach = new TransformationApproach();
+                    #region Export to CPN Tools file
+                    Rule1 rule1 = new Rule1();
+                    Rule2 rule2 = new Rule2();
+                    Rule3 rule3 = new Rule3();
+                    Rule4 rule4 = new Rule4();
+                    Rule5 rule5 = new Rule5();
+                    Rule6 rule6 = new Rule6();
+                    Rule7 rule7 = new Rule7();
+                    TransformationApproach approach = new TransformationApproach();
+                    OutputRule outputRule = new OutputRule();
 
-                var exportToCPN = new ExportToCPN(rule1, rule2, rule3, rule4, rule5, rule6, rule7, approach);
-                exportToCPN.ExportFile(TemplatePath, ResultPath, sortedFlowcharts);
-                #endregion
+                    var exportToCPN = new ExportToCPN(rule1, rule2, rule3, rule4, rule5, rule6, rule7, approach, outputRule);
+                    exportToCPN.ExportFile(TemplatePath, txt_ReultPath.Text, sortedFlowcharts);
+
+                    MessageBox.Show("Export Complete");
+                    #endregion
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show("3. Export to CPN Error : " + ex.Message, "Error");
             }
         }
+
+
     }
 }

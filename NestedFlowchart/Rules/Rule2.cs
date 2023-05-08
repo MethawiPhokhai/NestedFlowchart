@@ -1,20 +1,20 @@
 ﻿using NestedFlowchart.Functions;
 using NestedFlowchart.Models;
 using NestedFlowchart.Position;
+using System.Xml.Linq;
 
 namespace NestedFlowchart.Rules
 {
     /// <summary>
     /// Transform Initialize Process into transition and place connected by arc
     /// </summary>
-    public class Rule2 : BaseRule
+    public class Rule2 : ArcBaseRule
     {
-        public (PlaceModel, TransitionModel, ArcModel?, ArcModel)
+        public (PlaceModel, TransitionModel, ArcModel)
             ApplyRule(
-            List<PreviousNode> previousNodes,
             string arrayName,
-            PositionManagements position,
-            TempArrow arrow)
+            string cSeg,
+            PositionManagements position)
         {
             TransitionModel tr = new TransitionModel()
             {
@@ -28,6 +28,7 @@ namespace NestedFlowchart.Rules
 
                 xPos1 = position.xPos1,
                 yPos1 = position.GetLastestyPos1(),
+                CodeSegment = cSeg
             };
 
             PlaceModel pl = new PlaceModel()
@@ -44,12 +45,10 @@ namespace NestedFlowchart.Rules
                 xPos2 = position.GetLastestxPos2(),
                 yPos2 = position.GetLastestyPos2(),
 
-                Type = "INTs"
+                Type = (arrayName == "array") ? "INTs" : "aa"
             };
 
-            var a1 = CreateArcWithPreviousNode(arrow, position, arrayName, tr, previousNodes);
-
-            ArcModel a2 = new ArcModel()
+            ArcModel a1 = new ArcModel()
             {
                 Id1 = IdManagements.GetlastestArcId(),
                 Id2 = IdManagements.GetlastestArcId(),
@@ -64,25 +63,51 @@ namespace NestedFlowchart.Rules
                 Type = arrayName
             };
 
-            return (pl, tr, a1, a2);
+            return (pl, tr, a1);
         }
 
-        public string AssignInitialMarking(
+        public (string, string) AssignInitialMarking(
             List<XMLCellNode> sortedFlowcharts, 
-            string arrayName,
+            string arcVariable,
             PreviousNode previousNode, 
             int i)
         {
+            string cSeg = string.Empty;
+
             if (sortedFlowcharts[i].ValueText.Contains('['))
             {
-                arrayName = SubstringBefore(sortedFlowcharts[i].ValueText.Trim(), '=').Trim();
+                arcVariable = SubstringBefore(sortedFlowcharts[i].ValueText.Trim(), '=').Trim();
                 var arrayValue = SubstringAfter(sortedFlowcharts[i].ValueText.Trim(), '=');
 
-                previousNode.previousPlaceModel.Type = "INTs";
-                previousNode.previousPlaceModel.InitialMarking = arrayValue;
+                previousNode.currentPlaceModel.Type = "INTs";
+                previousNode.currentPlaceModel.InitialMarking = arrayValue;
+            }
+            else
+            {
+                string arrayValue = string.Empty;
+                var arrayValues = sortedFlowcharts[i].ValueText.Split("<br>");
+                foreach ( var val in arrayValues )
+                {
+                    arrayValue += SubstringBefore(val, '=').Trim();
+                    arrayValue += ",";
+                }
+
+                var arcVar = string.Format("({0})", arrayValue.Remove(arrayValue.Length - 1));
+
+
+                previousNode.currentPlaceModel.Type = "INT";
+                previousNode.currentPlaceModel.InitialMarking = "1";
+                arcVariable = arcVar; //For arc
+                cSeg = string.Format("input (); \r\n " +
+                    "output{1}; \r\n " +
+                    "action\r\n " +
+                    "let \r\n {0} \r\n" +
+                    "in \r\n" +
+                    "{2} \r\n" +
+                    "end", "val " + sortedFlowcharts[i].ValueText.Replace("<br>", "\r\nval "), arcVar, arcVar);
             }
 
-            return arrayName;
+            return (arcVariable, cSeg);
         }
 
         private string SubstringBefore(string str, char ch)

@@ -28,278 +28,290 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.label2 = new System.Windows.Forms.Label();
-            this.txt_InputPreview = new System.Windows.Forms.TextBox();
-            this.txt_InputPath = new System.Windows.Forms.TextBox();
-            this.lbl_Input = new System.Windows.Forms.Label();
-            this.btn_ImportXML = new System.Windows.Forms.Button();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.dg_ElementPreview = new System.Windows.Forms.DataGridView();
-            this.lnk_CPNTools = new System.Windows.Forms.LinkLabel();
-            this.label5 = new System.Windows.Forms.Label();
-            this.lbl_CPNTools = new System.Windows.Forms.Label();
-            this.btn_Transfrom = new System.Windows.Forms.Button();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.lbl_ResultLabel = new System.Windows.Forms.Label();
-            this.txt_ReultPath = new System.Windows.Forms.TextBox();
-            this.btn_ExportToCPN = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.btn_close = new System.Windows.Forms.Label();
-            this.panel1.SuspendLayout();
-            this.panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dg_ElementPreview)).BeginInit();
-            this.panel3.SuspendLayout();
-            this.SuspendLayout();
+            panel1 = new Panel();
+            label2 = new Label();
+            txt_InputPreview = new TextBox();
+            txt_InputPath = new TextBox();
+            lbl_Input = new Label();
+            btn_ImportXML = new Button();
+            panel2 = new Panel();
+            dg_ElementPreview = new DataGridView();
+            lnk_CPNTools = new LinkLabel();
+            label5 = new Label();
+            lbl_CPNTools = new Label();
+            btn_Transfrom = new Button();
+            panel3 = new Panel();
+            btn_browse = new Button();
+            lbl_ResultLabel = new Label();
+            txt_ReultPath = new TextBox();
+            btn_ExportToCPN = new Button();
+            label3 = new Label();
+            label4 = new Label();
+            label1 = new Label();
+            btn_close = new Label();
+            folderBrowserDialog1 = new FolderBrowserDialog();
+            panel1.SuspendLayout();
+            panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dg_ElementPreview).BeginInit();
+            panel3.SuspendLayout();
+            SuspendLayout();
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.label2);
-            this.panel1.Controls.Add(this.txt_InputPreview);
-            this.panel1.Controls.Add(this.txt_InputPath);
-            this.panel1.Location = new System.Drawing.Point(36, 103);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(497, 509);
-            this.panel1.TabIndex = 0;
+            panel1.Controls.Add(label2);
+            panel1.Controls.Add(txt_InputPreview);
+            panel1.Controls.Add(txt_InputPath);
+            panel1.Location = new Point(36, 103);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(497, 509);
+            panel1.TabIndex = 0;
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(19, 448);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(62, 15);
-            this.label2.TabIndex = 5;
-            this.label2.Text = "Input Path";
+            label2.AutoSize = true;
+            label2.Location = new Point(19, 448);
+            label2.Name = "label2";
+            label2.Size = new Size(62, 15);
+            label2.TabIndex = 5;
+            label2.Text = "Input Path";
             // 
             // txt_InputPreview
             // 
-            this.txt_InputPreview.Location = new System.Drawing.Point(19, 23);
-            this.txt_InputPreview.Multiline = true;
-            this.txt_InputPreview.Name = "txt_InputPreview";
-            this.txt_InputPreview.Size = new System.Drawing.Size(461, 422);
-            this.txt_InputPreview.TabIndex = 4;
+            txt_InputPreview.Location = new Point(19, 23);
+            txt_InputPreview.Multiline = true;
+            txt_InputPreview.Name = "txt_InputPreview";
+            txt_InputPreview.Size = new Size(461, 422);
+            txt_InputPreview.TabIndex = 4;
             // 
             // txt_InputPath
             // 
-            this.txt_InputPath.Location = new System.Drawing.Point(19, 466);
-            this.txt_InputPath.Name = "txt_InputPath";
-            this.txt_InputPath.Size = new System.Drawing.Size(461, 23);
-            this.txt_InputPath.TabIndex = 3;
+            txt_InputPath.Location = new Point(19, 466);
+            txt_InputPath.Name = "txt_InputPath";
+            txt_InputPath.Size = new Size(461, 23);
+            txt_InputPath.TabIndex = 3;
             // 
             // lbl_Input
             // 
-            this.lbl_Input.AutoSize = true;
-            this.lbl_Input.BackColor = System.Drawing.Color.Transparent;
-            this.lbl_Input.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.lbl_Input.Location = new System.Drawing.Point(36, 78);
-            this.lbl_Input.Name = "lbl_Input";
-            this.lbl_Input.Size = new System.Drawing.Size(118, 21);
-            this.lbl_Input.TabIndex = 1;
-            this.lbl_Input.Text = "Input Preview";
+            lbl_Input.AutoSize = true;
+            lbl_Input.BackColor = Color.Transparent;
+            lbl_Input.Font = new Font("Century Gothic", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            lbl_Input.Location = new Point(36, 78);
+            lbl_Input.Name = "lbl_Input";
+            lbl_Input.Size = new Size(118, 21);
+            lbl_Input.TabIndex = 1;
+            lbl_Input.Text = "Input Preview";
             // 
             // btn_ImportXML
             // 
-            this.btn_ImportXML.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.btn_ImportXML.FlatAppearance.BorderColor = System.Drawing.SystemColors.ActiveBorder;
-            this.btn_ImportXML.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btn_ImportXML.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.btn_ImportXML.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.btn_ImportXML.Location = new System.Drawing.Point(210, 618);
-            this.btn_ImportXML.Name = "btn_ImportXML";
-            this.btn_ImportXML.Size = new System.Drawing.Size(149, 44);
-            this.btn_ImportXML.TabIndex = 2;
-            this.btn_ImportXML.Text = "1. Import XML";
-            this.btn_ImportXML.UseVisualStyleBackColor = false;
-            this.btn_ImportXML.Click += new System.EventHandler(this.btn_ImportXML_Click);
+            btn_ImportXML.BackColor = SystemColors.ControlLight;
+            btn_ImportXML.FlatAppearance.BorderColor = SystemColors.ActiveBorder;
+            btn_ImportXML.FlatStyle = FlatStyle.Flat;
+            btn_ImportXML.Font = new Font("Century Gothic", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            btn_ImportXML.ForeColor = SystemColors.ActiveCaptionText;
+            btn_ImportXML.Location = new Point(210, 618);
+            btn_ImportXML.Name = "btn_ImportXML";
+            btn_ImportXML.Size = new Size(149, 44);
+            btn_ImportXML.TabIndex = 2;
+            btn_ImportXML.Text = "1. Import XML";
+            btn_ImportXML.UseVisualStyleBackColor = false;
+            btn_ImportXML.Click += btn_ImportXML_Click;
             // 
             // panel2
             // 
-            this.panel2.Controls.Add(this.dg_ElementPreview);
-            this.panel2.Controls.Add(this.lnk_CPNTools);
-            this.panel2.Controls.Add(this.label5);
-            this.panel2.Controls.Add(this.lbl_CPNTools);
-            this.panel2.Location = new System.Drawing.Point(549, 103);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(476, 509);
-            this.panel2.TabIndex = 3;
+            panel2.Controls.Add(dg_ElementPreview);
+            panel2.Controls.Add(lnk_CPNTools);
+            panel2.Controls.Add(label5);
+            panel2.Controls.Add(lbl_CPNTools);
+            panel2.Location = new Point(549, 103);
+            panel2.Name = "panel2";
+            panel2.Size = new Size(476, 509);
+            panel2.TabIndex = 3;
             // 
             // dg_ElementPreview
             // 
-            this.dg_ElementPreview.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dg_ElementPreview.Location = new System.Drawing.Point(19, 53);
-            this.dg_ElementPreview.Name = "dg_ElementPreview";
-            this.dg_ElementPreview.RowHeadersWidth = 51;
-            this.dg_ElementPreview.RowTemplate.Height = 25;
-            this.dg_ElementPreview.Size = new System.Drawing.Size(437, 392);
-            this.dg_ElementPreview.TabIndex = 11;
+            dg_ElementPreview.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dg_ElementPreview.Location = new Point(19, 53);
+            dg_ElementPreview.Name = "dg_ElementPreview";
+            dg_ElementPreview.RowHeadersWidth = 51;
+            dg_ElementPreview.RowTemplate.Height = 25;
+            dg_ElementPreview.Size = new Size(437, 392);
+            dg_ElementPreview.TabIndex = 11;
             // 
             // lnk_CPNTools
             // 
-            this.lnk_CPNTools.AutoSize = true;
-            this.lnk_CPNTools.LinkVisited = true;
-            this.lnk_CPNTools.Location = new System.Drawing.Point(279, 469);
-            this.lnk_CPNTools.Name = "lnk_CPNTools";
-            this.lnk_CPNTools.Size = new System.Drawing.Size(30, 15);
-            this.lnk_CPNTools.TabIndex = 9;
-            this.lnk_CPNTools.TabStop = true;
-            this.lnk_CPNTools.Text = "here";
-            this.lnk_CPNTools.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnk_CPNTools_LinkClicked);
+            lnk_CPNTools.AutoSize = true;
+            lnk_CPNTools.LinkVisited = true;
+            lnk_CPNTools.Location = new Point(279, 469);
+            lnk_CPNTools.Name = "lnk_CPNTools";
+            lnk_CPNTools.Size = new Size(30, 15);
+            lnk_CPNTools.TabIndex = 9;
+            lnk_CPNTools.TabStop = true;
+            lnk_CPNTools.Text = "here";
+            lnk_CPNTools.LinkClicked += lnk_CPNTools_LinkClicked;
             // 
             // label5
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(19, 23);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(94, 15);
-            this.label5.TabIndex = 9;
-            this.label5.Text = "Element Preview";
+            label5.AutoSize = true;
+            label5.Location = new Point(19, 23);
+            label5.Name = "label5";
+            label5.Size = new Size(94, 15);
+            label5.TabIndex = 9;
+            label5.Text = "Element Preview";
             // 
             // lbl_CPNTools
             // 
-            this.lbl_CPNTools.AutoSize = true;
-            this.lbl_CPNTools.Location = new System.Drawing.Point(19, 469);
-            this.lbl_CPNTools.Name = "lbl_CPNTools";
-            this.lbl_CPNTools.Size = new System.Drawing.Size(264, 15);
-            this.lbl_CPNTools.TabIndex = 8;
-            this.lbl_CPNTools.Text = "If don\'t have CPN Tools software, Download free ";
+            lbl_CPNTools.AutoSize = true;
+            lbl_CPNTools.Location = new Point(19, 469);
+            lbl_CPNTools.Name = "lbl_CPNTools";
+            lbl_CPNTools.Size = new Size(264, 15);
+            lbl_CPNTools.TabIndex = 8;
+            lbl_CPNTools.Text = "If don't have CPN Tools software, Download free ";
             // 
             // btn_Transfrom
             // 
-            this.btn_Transfrom.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.btn_Transfrom.FlatAppearance.BorderColor = System.Drawing.SystemColors.ActiveBorder;
-            this.btn_Transfrom.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btn_Transfrom.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.btn_Transfrom.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.btn_Transfrom.Location = new System.Drawing.Point(710, 618);
-            this.btn_Transfrom.Name = "btn_Transfrom";
-            this.btn_Transfrom.Size = new System.Drawing.Size(149, 44);
-            this.btn_Transfrom.TabIndex = 4;
-            this.btn_Transfrom.Text = "2. Transform XML";
-            this.btn_Transfrom.UseVisualStyleBackColor = false;
-            this.btn_Transfrom.Click += new System.EventHandler(this.btn_Transfrom_Click);
+            btn_Transfrom.BackColor = SystemColors.ControlLight;
+            btn_Transfrom.FlatAppearance.BorderColor = SystemColors.ActiveBorder;
+            btn_Transfrom.FlatStyle = FlatStyle.Flat;
+            btn_Transfrom.Font = new Font("Century Gothic", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            btn_Transfrom.ForeColor = SystemColors.ActiveCaptionText;
+            btn_Transfrom.Location = new Point(710, 618);
+            btn_Transfrom.Name = "btn_Transfrom";
+            btn_Transfrom.Size = new Size(149, 44);
+            btn_Transfrom.TabIndex = 4;
+            btn_Transfrom.Text = "2. Transform XML";
+            btn_Transfrom.UseVisualStyleBackColor = false;
+            btn_Transfrom.Click += btn_Transfrom_Click;
             // 
             // panel3
             // 
-            this.panel3.Controls.Add(this.lbl_ResultLabel);
-            this.panel3.Controls.Add(this.txt_ReultPath);
-            this.panel3.Location = new System.Drawing.Point(1040, 103);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(495, 509);
-            this.panel3.TabIndex = 5;
+            panel3.Controls.Add(btn_browse);
+            panel3.Controls.Add(lbl_ResultLabel);
+            panel3.Controls.Add(txt_ReultPath);
+            panel3.Location = new Point(1040, 103);
+            panel3.Name = "panel3";
+            panel3.Size = new Size(495, 509);
+            panel3.TabIndex = 5;
+            // 
+            // btn_browse
+            // 
+            btn_browse.Location = new Point(415, 203);
+            btn_browse.Name = "btn_browse";
+            btn_browse.Size = new Size(64, 23);
+            btn_browse.TabIndex = 8;
+            btn_browse.Text = "browse";
+            btn_browse.UseVisualStyleBackColor = true;
+            btn_browse.Click += btn_browse_Click;
             // 
             // lbl_ResultLabel
             // 
-            this.lbl_ResultLabel.AutoSize = true;
-            this.lbl_ResultLabel.Location = new System.Drawing.Point(16, 185);
-            this.lbl_ResultLabel.Name = "lbl_ResultLabel";
-            this.lbl_ResultLabel.Size = new System.Drawing.Size(66, 15);
-            this.lbl_ResultLabel.TabIndex = 7;
-            this.lbl_ResultLabel.Text = "Result Path";
+            lbl_ResultLabel.AutoSize = true;
+            lbl_ResultLabel.Location = new Point(16, 185);
+            lbl_ResultLabel.Name = "lbl_ResultLabel";
+            lbl_ResultLabel.Size = new Size(66, 15);
+            lbl_ResultLabel.TabIndex = 7;
+            lbl_ResultLabel.Text = "Result Path";
             // 
             // txt_ReultPath
             // 
-            this.txt_ReultPath.Location = new System.Drawing.Point(16, 203);
-            this.txt_ReultPath.Name = "txt_ReultPath";
-            this.txt_ReultPath.Size = new System.Drawing.Size(449, 23);
-            this.txt_ReultPath.TabIndex = 6;
+            txt_ReultPath.Location = new Point(16, 203);
+            txt_ReultPath.Name = "txt_ReultPath";
+            txt_ReultPath.Size = new Size(393, 23);
+            txt_ReultPath.TabIndex = 6;
             // 
             // btn_ExportToCPN
             // 
-            this.btn_ExportToCPN.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.btn_ExportToCPN.FlatAppearance.BorderColor = System.Drawing.SystemColors.ActiveBorder;
-            this.btn_ExportToCPN.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btn_ExportToCPN.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.btn_ExportToCPN.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.btn_ExportToCPN.Location = new System.Drawing.Point(1209, 618);
-            this.btn_ExportToCPN.Name = "btn_ExportToCPN";
-            this.btn_ExportToCPN.Size = new System.Drawing.Size(149, 44);
-            this.btn_ExportToCPN.TabIndex = 6;
-            this.btn_ExportToCPN.Text = "3. Export to CPN";
-            this.btn_ExportToCPN.UseVisualStyleBackColor = false;
-            this.btn_ExportToCPN.Click += new System.EventHandler(this.btn_ExportToCPN_Click);
+            btn_ExportToCPN.BackColor = SystemColors.ControlLight;
+            btn_ExportToCPN.FlatAppearance.BorderColor = SystemColors.ActiveBorder;
+            btn_ExportToCPN.FlatStyle = FlatStyle.Flat;
+            btn_ExportToCPN.Font = new Font("Century Gothic", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            btn_ExportToCPN.ForeColor = SystemColors.ActiveCaptionText;
+            btn_ExportToCPN.Location = new Point(1209, 618);
+            btn_ExportToCPN.Name = "btn_ExportToCPN";
+            btn_ExportToCPN.Size = new Size(149, 44);
+            btn_ExportToCPN.TabIndex = 6;
+            btn_ExportToCPN.Text = "3. Export to CPN";
+            btn_ExportToCPN.UseVisualStyleBackColor = false;
+            btn_ExportToCPN.Click += btn_ExportToCPN_Click;
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.BackColor = System.Drawing.Color.Transparent;
-            this.label3.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label3.Location = new System.Drawing.Point(549, 78);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(85, 21);
-            this.label3.TabIndex = 7;
-            this.label3.Text = "Transform";
+            label3.AutoSize = true;
+            label3.BackColor = Color.Transparent;
+            label3.Font = new Font("Century Gothic", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            label3.Location = new Point(549, 78);
+            label3.Name = "label3";
+            label3.Size = new Size(85, 21);
+            label3.TabIndex = 7;
+            label3.Text = "Transform";
             // 
             // label4
             // 
-            this.label4.AutoSize = true;
-            this.label4.BackColor = System.Drawing.Color.Transparent;
-            this.label4.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label4.Location = new System.Drawing.Point(1040, 78);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(69, 21);
-            this.label4.TabIndex = 8;
-            this.label4.Text = "Output";
+            label4.AutoSize = true;
+            label4.BackColor = Color.Transparent;
+            label4.Font = new Font("Century Gothic", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            label4.Location = new Point(1040, 78);
+            label4.Name = "label4";
+            label4.Size = new Size(69, 21);
+            label4.TabIndex = 8;
+            label4.Text = "Output";
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.BackColor = System.Drawing.Color.Transparent;
-            this.label1.Font = new System.Drawing.Font("Century Gothic", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label1.Location = new System.Drawing.Point(36, 22);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(522, 25);
-            this.label1.TabIndex = 9;
-            this.label1.Text = "Nested Flowchart into Colured Petri Nets Converter";
+            label1.AutoSize = true;
+            label1.BackColor = Color.Transparent;
+            label1.Font = new Font("Century Gothic", 15.75F, FontStyle.Bold, GraphicsUnit.Point);
+            label1.Location = new Point(36, 22);
+            label1.Name = "label1";
+            label1.Size = new Size(522, 25);
+            label1.TabIndex = 9;
+            label1.Text = "Nested Flowchart into Colured Petri Nets Converter";
             // 
             // btn_close
             // 
-            this.btn_close.AutoSize = true;
-            this.btn_close.BackColor = System.Drawing.Color.Transparent;
-            this.btn_close.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.btn_close.Location = new System.Drawing.Point(1532, 7);
-            this.btn_close.Name = "btn_close";
-            this.btn_close.Size = new System.Drawing.Size(19, 21);
-            this.btn_close.TabIndex = 10;
-            this.btn_close.Text = "X";
-            this.btn_close.Click += new System.EventHandler(this.btn_close_Click);
-            this.btn_close.MouseLeave += new System.EventHandler(this.btn_close_MouseLeave);
-            this.btn_close.MouseHover += new System.EventHandler(this.btn_close_MouseHover);
+            btn_close.AutoSize = true;
+            btn_close.BackColor = Color.Transparent;
+            btn_close.Font = new Font("Century Gothic", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            btn_close.Location = new Point(1532, 7);
+            btn_close.Name = "btn_close";
+            btn_close.Size = new Size(19, 21);
+            btn_close.TabIndex = 10;
+            btn_close.Text = "X";
+            btn_close.Click += btn_close_Click;
+            btn_close.MouseLeave += btn_close_MouseLeave;
+            btn_close.MouseHover += btn_close_MouseHover;
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackgroundImage = global::NestedFlowchart.Properties.Resources.background;
-            this.ClientSize = new System.Drawing.Size(1562, 673);
-            this.Controls.Add(this.btn_close);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.btn_ExportToCPN);
-            this.Controls.Add(this.panel3);
-            this.Controls.Add(this.btn_Transfrom);
-            this.Controls.Add(this.panel2);
-            this.Controls.Add(this.btn_ImportXML);
-            this.Controls.Add(this.lbl_Input);
-            this.Controls.Add(this.panel1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.Name = "Form1";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Nested Flowchart Converter";
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dg_ElementPreview)).EndInit();
-            this.panel3.ResumeLayout(false);
-            this.panel3.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            BackgroundImage = Properties.Resources.background;
+            ClientSize = new Size(1562, 673);
+            Controls.Add(btn_close);
+            Controls.Add(label1);
+            Controls.Add(label4);
+            Controls.Add(label3);
+            Controls.Add(btn_ExportToCPN);
+            Controls.Add(panel3);
+            Controls.Add(btn_Transfrom);
+            Controls.Add(panel2);
+            Controls.Add(btn_ImportXML);
+            Controls.Add(lbl_Input);
+            Controls.Add(panel1);
+            FormBorderStyle = FormBorderStyle.None;
+            MaximizeBox = false;
+            MinimizeBox = false;
+            Name = "Form1";
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "Nested Flowchart Converter";
+            panel1.ResumeLayout(false);
+            panel1.PerformLayout();
+            panel2.ResumeLayout(false);
+            panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)dg_ElementPreview).EndInit();
+            panel3.ResumeLayout(false);
+            panel3.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -324,5 +336,7 @@
         private LinkLabel lnk_CPNTools;
         private Label lbl_CPNTools;
         private Label btn_close;
+        private Button btn_browse;
+        private FolderBrowserDialog folderBrowserDialog1;
     }
 }

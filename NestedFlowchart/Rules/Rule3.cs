@@ -4,19 +4,11 @@ using NestedFlowchart.Position;
 
 namespace NestedFlowchart.Rules
 {
-    public class Rule3 : BaseRule
+    public class Rule3 : ArcBaseRule
     {
         /// <summary>
         /// Transform process into place and transition connected by arc
         /// </summary>
-        /// <param name="transitionTemplate"></param>
-        /// <param name="placeTemplate"></param>
-        /// <param name="arcTemplate"></param>
-        /// <param name="subStrTemplate"></param>
-        /// <param name="portTemplate"></param>
-        /// <param name="previousNode"></param>
-        /// <param name="page2Id"></param>
-        /// <param name="CodeSegmentValue"></param>
         /// <returns></returns>
         public (PlaceModel, PlaceModel, PlaceModel, PlaceModel, PlaceModel,
             TransitionModel, TransitionModel,
@@ -45,34 +37,6 @@ namespace NestedFlowchart.Rules
             var p4SubPageId = IdManagements.GetlastestPlaceId();
 
             #region Main Page
-
-            var a0 = new ArcModel();
-
-            //TODO: if node before is place create transition
-            if (previousNode.Type == "place")
-            {
-                //TODO: create Transition
-
-                //TODO: connect arc to P3old
-            }
-            else
-            {
-                a0 = new ArcModel()
-                {
-                    Id1 = IdManagements.GetlastestArcId(),
-                    Id2 = IdManagements.GetlastestArcId(),
-
-                    TransEnd = previousNode.previousTransitionModel.Id1,
-                    PlaceEnd = p3MainPageId,
-
-                    xPos = position1.xArcPos,
-                    yPos = position1.yArcPos,
-
-                    Orientation = "TtoP", //Transition to Place
-                    Type = $"(i,{arrayName})"
-                };
-            }
-
             //P3 Place (Input port place) old page
             PlaceModel p3InputPlace = new PlaceModel()
             {
@@ -185,8 +149,6 @@ namespace NestedFlowchart.Rules
             #region SubPage
 
 
-            //TODO : ใช้ position2 แทน previousnode ในการระบุ position
-
             var p3InputPort = new HierarchyPortModel()
             {
                 Id = IdManagements.GetlastestPortId(),
@@ -297,51 +259,46 @@ namespace NestedFlowchart.Rules
                 Type = $"(i,j,{arrayName})"
             };
 
-            //TODO: After finish create output port
 
-            //var p4OutputPort = new HierarchyPortModel()
-            //{
-            //    Id = IdManagements.GetlastestPortId(),
-            //    Type = "Out",
-            //    xPos = -4,
-            //    yPos = -168
-            //};
+            var p4OutputPort = new HierarchyPortModel()
+            {
+                Id = IdManagements.GetlastestPortId(),
+                Type = "Out",
+                xPos = -4,
+                yPos = -168
+            };
 
-            ////P4 Place (output port place) new page
-            //PlaceModel p4SubPageOutputPlace = new PlaceModel()
-            //{
-            //    Id1 = p4SubPageId,
-            //    Id2 = IdManagements.GetlastestPlaceId(),
-            //    Id3 = IdManagements.GetlastestPlaceId(),
-            //    Name = outoutPortPlaceName,
+            //P4 Place (output port place) new page
+            PlaceModel p4SubPageOutputPlace = new PlaceModel()
+            {
+                Id1 = p4SubPageId,
+                Id2 = IdManagements.GetlastestPlaceId(),
+                Id3 = IdManagements.GetlastestPlaceId(),
+                Name = outoutPortPlaceName,
 
-            //    xPos1 = previousNode.previousPlaceModel.xPos1 - 4,
-            //    yPos1 = previousNode.previousPlaceModel.yPos1 - 168,
+                xPos1 = position2.xPos1 - 100,
+                yPos1 = position2.yPos1,
 
-            //    xPos2 = previousNode.previousPlaceModel.xPos2 - 4,
-            //    yPos2 = previousNode.previousPlaceModel.yPos2 - 167,
+                xPos2 = position2.xPos2,
+                yPos2 = position2.yPos2,
 
-            //    xPos3 = previousNode.previousPlaceModel.xPos3 - 4,
-            //    yPos3 = previousNode.previousPlaceModel.yPos3 - 167,
+                xPos3 = position2.xPos3,
+                yPos3 = position2.yPos3,
 
-            //    Type = "loopi",
-            //    Port = approach.CreateHierarchyPort(portTemplate, p4OutputPort)
-            //};
-
-
+                Type = "loopi",
+                Port = approach.CreateHierarchyPort(portTemplate, p4OutputPort)
+            };
 
             #endregion SubPage
 
 
-            return (p3InputPlace, p4OutputPlace, p3SubPageInputPlace, null/*p4SubPageOutputPlace*/, ps2, tr_subpage, ts1, a0, a1, a2, a3, a4);
+            return (p3InputPlace, p4OutputPlace, p3SubPageInputPlace, p4SubPageOutputPlace, ps2, tr_subpage, ts1, null, a1, a2, a3, a4);
         }
 
-        public (PlaceModel, TransitionModel, ArcModel, ArcModel) ApplyRuleWithoutHierarchy(
+        public (PlaceModel, TransitionModel, ArcModel) ApplyRuleWithoutHierarchy(
             string CodeSegmentValue,
             string arrayName,
-            List<PreviousNode> previousNodes,
-            PositionManagements position,
-            TempArrow arrow
+            PositionManagements position
             )
         {
             //T2 Code Segment Inscription
@@ -393,12 +350,8 @@ namespace NestedFlowchart.Rules
                 Type = "loopi"
             };
 
-            //Arc from P1 to T2
-            var a1 = CreateArcWithPreviousNode(arrow, position, arrayName, tr, previousNodes);
-
-
             //Arc from T2 to P2
-            ArcModel a2 = new ArcModel()
+            ArcModel a1 = new ArcModel()
             {
                 Id1 = IdManagements.GetlastestArcId(),
                 Id2 = IdManagements.GetlastestArcId(),
@@ -413,7 +366,7 @@ namespace NestedFlowchart.Rules
                 Type = $"(i,{arrayName})"
             };
 
-            return (pl, tr, a1, a2);
+            return (pl, tr, a1);
         }
     }
 }
