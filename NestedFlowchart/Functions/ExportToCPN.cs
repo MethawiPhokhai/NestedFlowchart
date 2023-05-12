@@ -47,14 +47,11 @@ namespace NestedFlowchart.Functions
             PageDeclare pages = new PageDeclare();
             List<PreviousNode> previousNodes = new List<PreviousNode>();
 
-            #region Array Name
-            /*
-             * Declare Array name for arc
-             */
+            //Declare ArrayName for arc
             bool isDeclaredI = false;
             string arrayName = string.Empty;
             string arrayName2 = "array2";
-            #endregion
+
 
             //Declare page position
             PositionManagements page1Position = new PositionManagements();
@@ -73,6 +70,7 @@ namespace NestedFlowchart.Functions
                 //Arrow
                 if (flowchartType == "arrow")
                 {
+                    #region Arrow
                     if (arrows.Any())
                     {
                         CreateArc(allTemplates, pages, previousNodes, isDeclaredI, arrayName, page1Position, page2Position, arrows);
@@ -86,6 +84,7 @@ namespace NestedFlowchart.Functions
                         Destination = sortedFlowcharts[i].Target
                     };
                     arrows.Add(arrow);
+                    #endregion
                 }
                 //Rule1 : Start
                 else if (flowchartType == "start")
@@ -415,6 +414,7 @@ namespace NestedFlowchart.Functions
                 }
                 else if (flowchartType == "output")
                 {
+                    #region Output
                     //Apply Rule
                     var (outputRulePlace, outputRuleTransition, outputRuleArc1) = _outputRule.ApplyRule(arrayName, page1Position, previousNodes.LastOrDefault());
 
@@ -432,6 +432,7 @@ namespace NestedFlowchart.Functions
                     var outputRuleString = place + transition + arc1;
 
                     CreatePageNodeByCountSubPage(pv.CurrentSubPage, pages, outputRuleString);
+                    #endregion
                 }
             }
 

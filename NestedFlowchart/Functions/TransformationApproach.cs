@@ -231,7 +231,7 @@ namespace NestedFlowchart.Functions
 
             var instances = approach.CreateHierarchyInstance(allTemplates[(int)TemplateEnum.InstanceTemplate], inst);
 
-            //Check empty, if more than two => Create otherwise leave it as empty
+            //Create instance for j
             string instances2 = string.Empty;
             if (!string.IsNullOrEmpty(definejTransition.Id1))
             {
