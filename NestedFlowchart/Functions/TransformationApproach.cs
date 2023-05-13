@@ -15,24 +15,35 @@ namespace NestedFlowchart.Functions
 
         public string CreateColorSet(string colorTemplate, ColorSetModel model)
         {
-            string newName = string.Empty;
-            foreach (var item in model.Type)
+            if(model != null)
             {
-                newName += "<id>" + item + "</id>\n";
+                string newName = string.Empty;
+                foreach (var item in model.Type)
+                {
+                    newName += "<id>" + item + "</id>\n";
+                }
+
+                return string.Format(colorTemplate, model.Id, model.Name, newName, model.Text, model.ColsetType);
             }
 
-            return string.Format(colorTemplate, model.Id, model.Name, newName, model.Text);
+            return string.Empty;
         }
 
         public string CreateVar(string varTemplate, VarModel model)
         {
-            string newName = string.Empty;
-            var name = model.Name.Split(',');
-            foreach (var item in name)
+            if(model != null)
             {
-                newName += "<id>" + item + "</id>\n";
+                string newName = string.Empty;
+                var name = model.Name.Split(',');
+                foreach (var item in name)
+                {
+                    newName += "<id>" + item + "</id>\n";
+                }
+                return string.Format(varTemplate, model.Id, model.Type, newName, model.Layout);
             }
-            return string.Format(varTemplate, model.Id, model.Type, newName, model.Layout);
+
+            return string.Empty;
+            
         }
 
         public string CreatePlace(string placeTemplate, PlaceModel? model)
@@ -112,62 +123,92 @@ namespace NestedFlowchart.Functions
 
         #region Create All
 
-        public string CreateAllColorSets(TransformationApproach approach, string[] allTemplates)
+        public string CreateAllColorSets(TransformationApproach approach, string[] allTemplates, int declareType)
         {
-            ColorSetModel colorSetProduct1 = new ColorSetModel()
-            {
-                Id = IdManagements.GetlastestColorSetId(),
-                Name = "loopi",
-                Type = new List<string>()
-                {
-                    "INT",
-                    "INTs"
-                },
-                Text = "colset loopi = product INT*INTs;"
-            };
+            ColorSetModel colorSetProduct1 = null;
+            ColorSetModel colorSetProduct2 = null;
+            ColorSetModel colorSetProduct3 = null;
 
-            ColorSetModel colorSetProduct2 = new ColorSetModel()
+            if (declareType == (int)eDeclareType.IsNone)
             {
-                Id = IdManagements.GetlastestColorSetId(),
-                Name = "loopj",
-                Type = new List<string>()
+                colorSetProduct1 = new ColorSetModel()
                 {
-                    "INT",
-                    "INT",
-                    "INTs"
-                },
-                Text = "colset loopj = product INT*INT*INTs;"
-            };
+                    Id = IdManagements.GetlastestColorSetId(),
+                    Name = "loopi",
+                    Type = new List<string>()
+                    {
+                        "INT"
+                    },
+                    Text = "colset loopi = int;",
+                    ColsetType = "int"
+                };
+            }
+            else if(declareType == (int)eDeclareType.IsInteger)
+            {
+                colorSetProduct1 = new ColorSetModel()
+                {
+                    Id = IdManagements.GetlastestColorSetId(),
+                    Name = "aa",
+                    Type = new List<string>()
+                    {
+                        "INT",
+                        "INT"
+                    },
+                    Text = "colset aa = product INT*INT;",
+                    ColsetType = "product"
+                };
+            }
+            else
+            {
+                colorSetProduct1 = new ColorSetModel()
+                {
+                    Id = IdManagements.GetlastestColorSetId(),
+                    Name = "loopi",
+                    Type = new List<string>()
+                    {
+                        "INT",
+                        "INTs"
+                    },
+                    Text = "colset loopi = product INT*INTs;",
+                    ColsetType = "product"
+                };
 
-            ColorSetModel colorSetProduct3 = new ColorSetModel()
-            {
-                Id = IdManagements.GetlastestColorSetId(),
-                Name = "aa",
-                Type = new List<string>()
+                colorSetProduct2 = new ColorSetModel()
                 {
-                    "INT",
-                    "INT"
-                },
-                Text = "colset aa = product INT*INT;"
-            };
+                    Id = IdManagements.GetlastestColorSetId(),
+                    Name = "loopj",
+                    Type = new List<string>()
+                    {
+                        "INT",
+                        "INT",
+                        "INTs"
+                    },
+                    Text = "colset loopj = product INT*INT*INTs;",
+                    ColsetType = "product"
+                };
+            }
+            
 
             var col1 = approach.CreateColorSet(allTemplates[(int)TemplateEnum.ColorSetTemplate], colorSetProduct1);
             var col2 = approach.CreateColorSet(allTemplates[(int)TemplateEnum.ColorSetTemplate], colorSetProduct2);
-            var col3 = approach.CreateColorSet(allTemplates[(int)TemplateEnum.ColorSetTemplate], colorSetProduct3);
-            var allColorSet = col1 + col2 + col3;
+            var allColorSet = col1 + col2;
             return allColorSet;
         }
 
-        public string CreateAllVariables(TransformationApproach approach, string[] allTemplates, string arrayName, string arrayName2)
+        public string CreateAllVariables(TransformationApproach approach, string[] allTemplates, string arrayName, string arrayName2, int declareType)
         {
-            VarModel var1Model = new VarModel()
+            VarModel var1Model = null;
+            if (declareType == (int)eDeclareType.IsArray)
             {
-                Id = IdManagements.GetlastestVarId(),
-                Type = "INTs",
-                Name = arrayName,
-                Layout = $"var {arrayName}: INTs;"
-            };
-
+                var1Model = new VarModel()
+                {
+                    Id = IdManagements.GetlastestVarId(),
+                    Type = "INTs",
+                    Name = arrayName,
+                    Layout = $"var {arrayName}: INTs;"
+                };
+            }
+            
 			VarModel var2Model = new VarModel()
 			{
 				Id = IdManagements.GetlastestVarId(),
@@ -176,18 +217,63 @@ namespace NestedFlowchart.Functions
 				Layout = $"var {arrayName2}: INTs;"
 			};
 
-			VarModel var3Model = new VarModel()
+            VarModel var3Model = new VarModel()
             {
                 Id = IdManagements.GetlastestVarId(),
                 Type = "INT",
-                Name = "i,i2,j,j2,x,y",
-                Layout = "var i,i2,j,j2,x,y: INT;"
+                Name = "x,y",
+                Layout = "var x,y: INT;"
+            };
+
+            VarModel var4Model = new VarModel()
+            {
+                Id = IdManagements.GetlastestVarId(),
+                Type = "INT",
+                Name = "i,i2",
+                Layout = "var i,i2: INT;"
+            };
+
+            VarModel var5Model = new VarModel()
+            {
+                Id = IdManagements.GetlastestVarId(),
+                Type = "INT",
+                Name = "j,j2",
+                Layout = "var j,j2: INT;"
+            };
+
+            VarModel var6Model = new VarModel()
+            {
+                Id = IdManagements.GetlastestVarId(),
+                Type = "INT",
+                Name = "k,k2",
+                Layout = "var k,k2: INT;"
+            };
+
+            VarModel var7Model = new VarModel()
+            {
+                Id = IdManagements.GetlastestVarId(),
+                Type = "INT",
+                Name = "l,l2",
+                Layout = "var l,l2: INT;"
+            };
+
+            VarModel var8Model = new VarModel()
+            {
+                Id = IdManagements.GetlastestVarId(),
+                Type = "INT",
+                Name = "m,m2",
+                Layout = "var m,m2: INT;"
             };
 
             var var1 = approach.CreateVar(allTemplates[(int)TemplateEnum.VarTemplate], var1Model);
             var var2 = approach.CreateVar(allTemplates[(int)TemplateEnum.VarTemplate], var2Model);
 			var var3 = approach.CreateVar(allTemplates[(int)TemplateEnum.VarTemplate], var3Model);
-			var allVar = var1 + var2 + var3;
+            var var4 = approach.CreateVar(allTemplates[(int)TemplateEnum.VarTemplate], var4Model);
+            var var5 = approach.CreateVar(allTemplates[(int)TemplateEnum.VarTemplate], var5Model);
+            var var6 = approach.CreateVar(allTemplates[(int)TemplateEnum.VarTemplate], var6Model);
+            var var7 = approach.CreateVar(allTemplates[(int)TemplateEnum.VarTemplate], var7Model);
+            var var8 = approach.CreateVar(allTemplates[(int)TemplateEnum.VarTemplate], var8Model);
+            var allVar = var1 + var2 + var3 + var4 + var5 + var6 + var7 + var8;
             return allVar;
         }
 

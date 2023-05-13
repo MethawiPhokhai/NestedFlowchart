@@ -39,10 +39,9 @@ namespace NestedFlowchart.Functions
         {
             string[] allTemplates = ReadAllTemplate(TemplatePath);
 
-            string allColorSet = _approach.CreateAllColorSets(_approach, allTemplates);
-
             #region AppleRules
 
+            int declareType = 0;
             int countSubPage = 0;
             PageDeclare pages = new PageDeclare();
             List<PreviousNode> previousNodes = new List<PreviousNode>();
@@ -102,30 +101,67 @@ namespace NestedFlowchart.Functions
                 else if (flowchartType == "process" && sortedFlowcharts[i - 2].NodeType.ToLower() == "start")
                 {
                     #region Rule2
-                    //Set Initial Marking
-                    var (arcVar, cSeg) = _rule2.AssignInitialMarking(sortedFlowcharts, arrayName, previousNodes.LastOrDefault(), i);
-                    arrayName = arcVar;
 
-                    //Apply Rule
-                    var (rule2Place, rule2Transition, rule2Arc1) = _rule2.ApplyRule(arrayName, cSeg, page1Position);
+                    //ถ้าไม่มี Initialize process แล้ว element ต่อไปเป็น i
+                    if ((flowchartValue.ToLower().Trim().Contains("i =")))
+                    {
+                        //Set Initial Marking
+                        (var arcVar, _, declareType) = _rule2.AssignInitialMarking(sortedFlowcharts, arrayName, previousNodes.LastOrDefault(), i);
+                        arrayName = arcVar;
 
-                    //Rule2 need to create Rule1 here because initial marking
-                    var place1 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], previousNodes.LastOrDefault().currentPlaceModel);
+                        //Create Start place
+                        var startPlace = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], previousNodes.LastOrDefault().currentPlaceModel);
 
-                    //Set previous node for create arc next rule
-                    PreviousNode pv = new PreviousNode();
-                    pv.elementId = sortedFlowcharts[i].ID;
-                    pv.currentPlaceModel = rule2Place;
-                    pv.currentTransitionModel = rule2Transition;
-                    pv.Type = "place";
-                    previousNodes.Add(pv);
+                        //เรียกไปหา Rule3 (สร้าง Transition i)
+                        #region rule3_1
+                        //In case declare more than 1 line
+                        var code = sortedFlowcharts[i].ValueText.Replace("<br>", "\n").ToLower().Replace("int", "").Replace(";", "");
 
-                    var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule2Arc1);
-                    var transition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule2Transition);
-                    var place2 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule2Place);
-                    var rule2String = place1 + place2 + transition + arc1;
+                        var (rule3Place, rule3Transition, rule3Arc1) = _rule3.ApplyRuleWithoutHierarchy(code, arrayName, page1Position, previousNodes.LastOrDefault());
 
-                    CreatePageNodeByCountSubPage(pv.CurrentSubPage, pages, rule2String);
+                        PreviousNode pv = new PreviousNode();
+                        pv.elementId = sortedFlowcharts[i].ID;
+                        pv.currentPlaceModel = rule3Place;
+                        pv.currentTransitionModel = rule3Transition;
+                        pv.Type = "place";
+                        previousNodes.Add(pv);
+
+                        var place1 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule3Place);
+                        var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule3Arc1);
+                        var transition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule3Transition);
+
+                        var rule3OldString = startPlace + place1 + transition + arc1;
+
+                        CreatePageNodeByCountSubPage(pv.CurrentSubPage, pages, rule3OldString);
+                        #endregion
+                    }
+                    else
+                    {
+                        //Set Initial Marking
+                        (var arcVar, var cSeg, declareType) = _rule2.AssignInitialMarking(sortedFlowcharts, arrayName, previousNodes.LastOrDefault(), i);
+                        arrayName = arcVar;
+
+                        //Apply Rule
+                        var (rule2Place, rule2Transition, rule2Arc1) = _rule2.ApplyRule(arrayName, cSeg, page1Position);
+
+                        //Rule2 need to create Rule1 here because initial marking
+                        var place1 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], previousNodes.LastOrDefault().currentPlaceModel);
+
+                        //Set previous node for create arc next rule
+                        PreviousNode pv = new PreviousNode();
+                        pv.elementId = sortedFlowcharts[i].ID;
+                        pv.currentPlaceModel = rule2Place;
+                        pv.currentTransitionModel = rule2Transition;
+                        pv.Type = "place";
+                        previousNodes.Add(pv);
+
+                        var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], rule2Arc1);
+                        var transition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule2Transition);
+                        var place2 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule2Place);
+                        var rule2String = place1 + place2 + transition + arc1;
+
+                        CreatePageNodeByCountSubPage(pv.CurrentSubPage, pages, rule2String);
+                    }                   
                     #endregion
 
                 }
@@ -139,7 +175,7 @@ namespace NestedFlowchart.Functions
                         //In case declare more than 1 line
                         var code = sortedFlowcharts[i].ValueText.Replace("<br>", "\n").ToLower().Replace("int", "").Replace(";", "");
 
-                        var (rule3Place, rule3Transition, rule3Arc1) = _rule3.ApplyRuleWithoutHierarchy(code, arrayName, page1Position);
+                        var (rule3Place, rule3Transition, rule3Arc1) = _rule3.ApplyRuleWithoutHierarchy(code, arrayName, page1Position, previousNodes.LastOrDefault());
 
                         PreviousNode pv = new PreviousNode();
                         pv.elementId = sortedFlowcharts[i].ID;
@@ -441,7 +477,9 @@ namespace NestedFlowchart.Functions
 
             #endregion AppleRules
 
-            string allVar = _approach.CreateAllVariables(_approach, allTemplates, arrayName, arrayName2);
+            string allColorSet = _approach.CreateAllColorSets(_approach, allTemplates, declareType);
+
+            string allVar = _approach.CreateAllVariables(_approach, allTemplates, arrayName, arrayName2, declareType);
 
             string allPage = _approach.CreateAllPages(_approach, allTemplates, pages);
 

@@ -179,7 +179,15 @@ namespace NestedFlowchart.Rules
 
         public string CreateFalseDecision(string condition)
         {
-            if (condition.Contains("&gt;"))
+            if (condition.Contains("&gt;="))
+            {
+                return condition.Replace("&gt;=", "&lt;");
+            }
+            else if (condition.Contains("&lt;="))
+            {
+                return condition.Replace("&lt;=", "&gt;");
+            }
+            else if (condition.Contains("&gt;"))
             {
                 return condition.Replace("&gt;", "&lt;=");
             }

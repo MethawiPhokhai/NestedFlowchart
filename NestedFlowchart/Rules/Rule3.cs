@@ -298,9 +298,12 @@ namespace NestedFlowchart.Rules
         public (PlaceModel, TransitionModel, ArcModel) ApplyRuleWithoutHierarchy(
             string CodeSegmentValue,
             string arrayName,
-            PositionManagements position
+            PositionManagements position,
+            PreviousNode previousNode
             )
         {
+            string arcVariable = DeclareArcVariable(arrayName, previousNode.CurrentMainPage);
+
             //T2 Code Segment Inscription
             //Define i=1 in Code Segment Inscription
             var codeSeg = "input (); \n " +
@@ -363,7 +366,7 @@ namespace NestedFlowchart.Rules
                 yPos = position.GetLastestyArcPos(),
 
                 Orientation = "TtoP", //Transition to Place
-                Type = $"(i,{arrayName})"
+                Type = arcVariable
             };
 
             return (pl, tr, a1);
