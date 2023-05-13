@@ -128,6 +128,8 @@ namespace NestedFlowchart.Functions
             ColorSetModel colorSetProduct1 = null;
             ColorSetModel colorSetProduct2 = null;
             ColorSetModel colorSetProduct3 = null;
+            ColorSetModel colorSetProduct4 = null;
+            ColorSetModel colorSetProduct5 = null;
 
             if (declareType == (int)eDeclareType.IsNone)
             {
@@ -141,6 +143,64 @@ namespace NestedFlowchart.Functions
                     },
                     Text = "colset loopi = int;",
                     ColsetType = "int"
+                };
+
+                colorSetProduct2 = new ColorSetModel()
+                {
+                    Id = IdManagements.GetlastestColorSetId(),
+                    Name = "loopj",
+                    Type = new List<string>()
+                    {
+                        "INT",
+                        "INT"
+                    },
+                    Text = "colset loopj = product INT*INT;",
+                    ColsetType = "product"
+                };
+
+                colorSetProduct3 = new ColorSetModel()
+                {
+                    Id = IdManagements.GetlastestColorSetId(),
+                    Name = "loopk",
+                    Type = new List<string>()
+                    {
+                        "INT",
+                        "INT",
+                        "INT"
+                    },
+                    Text = "colset loopj = product INT*INT*INT;",
+                    ColsetType = "product"
+                };
+
+                colorSetProduct4 = new ColorSetModel()
+                {
+                    Id = IdManagements.GetlastestColorSetId(),
+                    Name = "loopl",
+                    Type = new List<string>()
+                    {
+                        "INT",
+                        "INT",
+                        "INT",
+                        "INT"
+                    },
+                    Text = "colset loopk = product INT*INT*INT*INT;",
+                    ColsetType = "product"
+                };
+
+                colorSetProduct5 = new ColorSetModel()
+                {
+                    Id = IdManagements.GetlastestColorSetId(),
+                    Name = "loopm",
+                    Type = new List<string>()
+                    {
+                        "INT",
+                        "INT",
+                        "INT",
+                        "INT",
+                        "INT"
+                    },
+                    Text = "colset loopl = product INT*INT*INT*INT*INT;",
+                    ColsetType = "product"
                 };
             }
             else if(declareType == (int)eDeclareType.IsInteger)

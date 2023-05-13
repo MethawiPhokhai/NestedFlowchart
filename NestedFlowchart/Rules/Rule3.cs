@@ -12,7 +12,8 @@ namespace NestedFlowchart.Rules
         /// <returns></returns>
         public (PlaceModel, PlaceModel, PlaceModel, PlaceModel, PlaceModel,
             TransitionModel, TransitionModel,
-            ArcModel, ArcModel, ArcModel, ArcModel, ArcModel)
+            ArcModel, ArcModel, ArcModel, ArcModel, ArcModel,
+            TransitionModel, ArcModel)
             ApplyRuleWithHierarchy
             (
             string subStrTemplate,
@@ -37,27 +38,78 @@ namespace NestedFlowchart.Rules
             var p4SubPageId = IdManagements.GetlastestPlaceId();
 
             #region Main Page
-            //P3 Place (Input port place) old page
-            PlaceModel p3InputPlace = new PlaceModel()
+
+            PlaceModel p3InputPlace = null;
+            TransitionModel tr = null;
+            ArcModel a5 = null;
+
+            if (previousNode.currentTransitionModel == null)
             {
-                Id1 = p3MainPageId,
-                Id2 = IdManagements.GetlastestPlaceId(),
-                Id3 = IdManagements.GetlastestPlaceId(),
+                tr = new TransitionModel()
+                {
+                    Id1 = IdManagements.GetlastestTransitionId(),
+                    Id2 = IdManagements.GetlastestTransitionId(),
+                    Id3 = IdManagements.GetlastestTransitionId(),
+                    Id4 = IdManagements.GetlastestTransitionId(),
+                    Id5 = IdManagements.GetlastestTransitionId(),
 
-                Name = inputPortPlaceName,
+                    Name = IdManagements.GetlastestTransitionName(),
 
-                xPos1 = position1.xPos1,
-                yPos1 = position1.GetLastestyPos1(),
+                    xPos1 = position1.xPos1,
+                    yPos1 = position1.GetLastestyPos1(),
+                };
 
-                xPos2 = position1.GetLastestxPos2(),
-                yPos2 = position1.GetLastestyPos2(),
+                //P3 Place (Input port place) old page
+                p3InputPlace = new PlaceModel()
+                {
+                    Id1 = p3MainPageId,
+                    Id2 = IdManagements.GetlastestPlaceId(),
+                    Id3 = IdManagements.GetlastestPlaceId(),
 
-                Type = "loopi"
-            };
+                    Name = inputPortPlaceName,
 
-            if (previousNode.Type == "place")
+                    xPos1 = position1.xPos1,
+                    yPos1 = position1.GetLastestyPos1(),
+
+                    xPos2 = position1.GetLastestxPos2(),
+                    yPos2 = position1.GetLastestyPos2(),
+
+                    Type = "loopi"
+                };
+
+                a5 = new ArcModel()
+                {
+                    Id1 = IdManagements.GetlastestArcId(),
+                    Id2 = IdManagements.GetlastestArcId(),
+
+                    TransEnd = tr.Id1,
+                    PlaceEnd = p3InputPlace.Id1,
+
+                    xPos = position1.GetLastestxArcPos(),
+                    yPos = position1.GetLastestyArcPos(),
+
+                    Orientation = "TtoP", //Transition to Place
+                    Type = arrayName
+                };
+            }
+            else
             {
-                //TODO: Connect arc to P3 Place
+                p3InputPlace = new PlaceModel()
+                {
+                    Id1 = p3MainPageId,
+                    Id2 = IdManagements.GetlastestPlaceId(),
+                    Id3 = IdManagements.GetlastestPlaceId(),
+
+                    Name = inputPortPlaceName,
+
+                    xPos1 = position1.xPos1,
+                    yPos1 = position1.GetLastestyPos1(),
+
+                    xPos2 = position1.GetLastestxPos2(),
+                    yPos2 = position1.GetLastestyPos2(),
+
+                    Type = "loopi"
+                };
             }
 
             var tr_subpage_yPos = position1.GetLastestyPos1();
@@ -292,7 +344,7 @@ namespace NestedFlowchart.Rules
             #endregion SubPage
 
 
-            return (p3InputPlace, p4OutputPlace, p3SubPageInputPlace, p4SubPageOutputPlace, ps2, tr_subpage, ts1, null, a1, a2, a3, a4);
+            return (p3InputPlace, p4OutputPlace, p3SubPageInputPlace, p4SubPageOutputPlace, ps2, tr_subpage, ts1, null, a1, a2, a3, a4, tr, a5);
         }
 
         public (PlaceModel, TransitionModel, ArcModel) ApplyRuleWithoutHierarchy(
