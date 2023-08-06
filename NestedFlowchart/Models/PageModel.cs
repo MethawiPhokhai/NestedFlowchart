@@ -5,5 +5,6 @@
         public string Id { get; set; }
         public string Name { get; set; }
         public string Node { get; set; }
+        public string SubPageTransitionId { get; set; }
     }
 }

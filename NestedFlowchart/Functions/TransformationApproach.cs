@@ -366,12 +366,12 @@ namespace NestedFlowchart.Functions
             return allPage;
         }
 
-        public string CreateAllInstances(TransformationApproach approach, string[] allTemplates, TransitionModel definejTransition)
+        public string CreateAllInstances(TransformationApproach approach, string[] allTemplates, PageDeclare page)
         {
             HierarchyInstanceModel inst = new HierarchyInstanceModel()
             {
                 Id = IdManagements.GetlastestInstanceId(),
-                Text = !string.IsNullOrEmpty(definejTransition.Id1) ? "page=\"ID6\">" : "page=\"ID6\" />",
+                Text = !string.IsNullOrEmpty(page.subPageModel1.SubPageTransitionId) ? "page=\"ID6\">" : "page=\"ID6\" />",
                 Closer = "{0}"
             };
 
@@ -379,20 +379,78 @@ namespace NestedFlowchart.Functions
 
             //Create instance for j
             string instances2 = string.Empty;
-            if (!string.IsNullOrEmpty(definejTransition.Id1))
+            if (!string.IsNullOrEmpty(page.subPageModel1.SubPageTransitionId))
             {
                 HierarchyInstanceModel inst2 = new HierarchyInstanceModel()
                 {
                     Id = IdManagements.GetlastestInstanceId(),
-                    Text = "trans=\"" + definejTransition.Id1 + "\"",
-                    Closer = "/></instance>"
+                    Text = "trans=\"" + page.subPageModel1.SubPageTransitionId + "\"",
+                    Closer = !string.IsNullOrEmpty(page.subPageModel2.SubPageTransitionId) ? "> {0}" : "/></instance>"
                 };
 
 
                 instances2 = approach.CreateHierarchyInstance(allTemplates[(int)TemplateEnum.InstanceTemplate], inst2);
             }
-            
-            var allInstances = string.Format(instances, instances2);
+
+            //Create instance for k
+            string instances3 = string.Empty;
+            if (!string.IsNullOrEmpty(page.subPageModel2.SubPageTransitionId))
+            {
+                HierarchyInstanceModel inst3 = new HierarchyInstanceModel()
+                {
+                    Id = IdManagements.GetlastestInstanceId(),
+                    Text = "trans=\"" + page.subPageModel2.SubPageTransitionId + "\"",
+                    Closer = !string.IsNullOrEmpty(page.subPageModel3.SubPageTransitionId) ? "> {0}" : "/></instance></instance>"
+                };
+
+
+                instances3 = approach.CreateHierarchyInstance(allTemplates[(int)TemplateEnum.InstanceTemplate], inst3);
+            }
+
+            //Create instance for l
+            string instances4 = string.Empty;
+            if (!string.IsNullOrEmpty(page.subPageModel3.SubPageTransitionId))
+            {
+                HierarchyInstanceModel inst4 = new HierarchyInstanceModel()
+                {
+                    Id = IdManagements.GetlastestInstanceId(),
+                    Text = "trans=\"" + page.subPageModel3.SubPageTransitionId + "\"",
+                    Closer = !string.IsNullOrEmpty(page.subPageModel4.SubPageTransitionId) ? "> {0}" : "/></instance></instance></instance>"
+                };
+
+
+                instances4 = approach.CreateHierarchyInstance(allTemplates[(int)TemplateEnum.InstanceTemplate], inst4);
+            }
+
+            //Create instance for m
+            string instances5 = string.Empty;
+            if (!string.IsNullOrEmpty(page.subPageModel4.SubPageTransitionId))
+            {
+                HierarchyInstanceModel inst5 = new HierarchyInstanceModel()
+                {
+                    Id = IdManagements.GetlastestInstanceId(),
+                    Text = "trans=\"" + page.subPageModel4.SubPageTransitionId + "\"",
+                    Closer = "/></instance></instance></instance></instance>"
+                };
+
+
+                instances5 = approach.CreateHierarchyInstance(allTemplates[(int)TemplateEnum.InstanceTemplate], inst5);
+            }
+
+            //m to l
+            var mtol = string.Format(instances4, instances5);
+
+            //l to k
+            var ltok = string.Format(instances3, mtol);
+
+            //k to j
+            var ktoj = string.Format(instances2, ltok);
+
+            //j to i
+            var jtoi = string.Format(instances, ktoj);
+
+
+            var allInstances = jtoi;
             return allInstances;
         }
 

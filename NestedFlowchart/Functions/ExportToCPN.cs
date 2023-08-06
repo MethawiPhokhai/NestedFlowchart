@@ -59,8 +59,6 @@ namespace NestedFlowchart.Functions
             PositionManagements page4Position = new PositionManagements();
             PositionManagements page5Position = new PositionManagements();
 
-            TransitionModel definejTransition = new TransitionModel();
-
             List<TempArrow> arrows = new List<TempArrow>();
 
             for (int i = 0; i < sortedFlowcharts.Count; i++)
@@ -201,13 +199,34 @@ namespace NestedFlowchart.Functions
                         || flowchartValue.ToLower().Trim().Contains("l =") || flowchartValue.ToLower().Trim().Contains("m ="))
                     {
                         #region Rule3_2
+
+                        //Get subpage by current page id
+                        string subPageId = pages.subPageModel1.Id;
+                        string subPageName = pages.subPageModel1.Name;
+                        switch (previousNodes.LastOrDefault().CurrentSubPage)
+                        {
+                            case 1:
+                                subPageId = pages.subPageModel2.Id;
+                                subPageName = pages.subPageModel2.Name;
+                                break;
+                            case 2:
+                                subPageId = pages.subPageModel3.Id;
+                                subPageName = pages.subPageModel3.Name;
+                                break;
+                            case 3:
+                                subPageId = pages.subPageModel4.Id;
+                                subPageName = pages.subPageModel4.Name;
+                                break;
+                        }
+
                         var (rule3InputPlace, rule3OutputPlace, rule3InputPlace2, rule3OutputPlace2, rule3PS2,
                                                     rule3Transition, rule3Transition2,
                                                     rule3Arc1, rule3Arc2, rule3Arc3, rule3Arc4, rule3Arc5,
                                                     rule3Transition3, rule3Arc6) = _rule3.ApplyRuleWithHierarchy(
                                                     allTemplates[(int)TemplateEnum.SubStrTemplate],
                                                     allTemplates[(int)TemplateEnum.PortTemplate],
-                                                    pages.subPageModel1.Id,
+                                                    subPageId,
+                                                    subPageName,
                                                     sortedFlowcharts[i].ValueText,
                                                     arrayName,
                                                     previousNodes.LastOrDefault(),
@@ -225,8 +244,29 @@ namespace NestedFlowchart.Functions
                         pv.outputPortMainPagePlaceModel = rule3OutputPlace;
                         pv.outputPortSubPagePlaceModel = rule3OutputPlace2;
 
-                        definejTransition = rule3Transition;
+                        //Set TransitionId for page instance
+                        switch (previousNodes.LastOrDefault().CurrentSubPage)
+                        {
+                            case 0:
+                                pages.subPageModel1.SubPageTransitionId = rule3Transition.Id1;
+                                break;
+                            case 1:
+                                pages.subPageModel2.SubPageTransitionId = rule3Transition.Id1;
+                                break;
+                            case 2:
+                                pages.subPageModel3.SubPageTransitionId = rule3Transition.Id1;
+                                break;
+                            case 3:
+                                pages.subPageModel4.SubPageTransitionId = rule3Transition.Id1;
+                                break;
+                        }
+
                         pv.Type = (rule3Transition3 == null) ? "transition" : "place";
+
+                        //Set lastest page
+                        pv.CurrentMainPage = previousNodes.LastOrDefault().CurrentMainPage;
+                        pv.CurrentSubPage = previousNodes.LastOrDefault().CurrentSubPage;
+
                         previousNodes.Add(pv);
 
 
@@ -498,7 +538,7 @@ namespace NestedFlowchart.Functions
 
             string allPage = _approach.CreateAllPages(_approach, allTemplates, pages);
 
-            string allInstances = _approach.CreateAllInstances(_approach, allTemplates, definejTransition);
+            string allInstances = _approach.CreateAllInstances(_approach, allTemplates, pages);
 
             string firstCPN = string.Format(allTemplates[(int)TemplateEnum.EmptyCPNTemplate],
                 allColorSet + allVar, allPage, allInstances);

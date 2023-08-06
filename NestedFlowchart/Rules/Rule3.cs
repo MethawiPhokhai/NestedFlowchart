@@ -18,7 +18,8 @@ namespace NestedFlowchart.Rules
             (
             string subStrTemplate,
             string portTemplate,
-            string page2Id,
+            string subpageId,
+            string subpageName,
             string CodeSegmentValue,
             string arrayName,
             PreviousNode previousNode,
@@ -115,7 +116,7 @@ namespace NestedFlowchart.Rules
             var tr_subpage_yPos = position1.GetLastestyPos1();
             var subst = new HierarchySubStModel()
             {
-                SubPageId = page2Id,
+                SubPageId = subpageId,
                 NewInputPlaceId = p3SubPageId,
                 OldInputPlaceId = p3MainPageId,
 
@@ -123,7 +124,7 @@ namespace NestedFlowchart.Rules
                 OldOutputPlaceId = p4OldPageId,
 
                 Id = IdManagements.GetlastestSubStrId(),
-                Name = "New Subpage",
+                Name = subpageName,
 
                 xPos = position1.xPos1,
                 yPos = tr_subpage_yPos + 30
@@ -138,7 +139,7 @@ namespace NestedFlowchart.Rules
                 Id4 = IdManagements.GetlastestTransitionId(),
                 Id5 = IdManagements.GetlastestTransitionId(),
 
-                Name = "New Subpage",
+                Name = subpageName,
 
                 xPos1 = position1.xPos1,
                 yPos1 = tr_subpage_yPos,

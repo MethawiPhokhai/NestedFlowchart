@@ -46,6 +46,7 @@ namespace NestedFlowchart.Rules.Tests
                             "Hierarchy_SubPageTransition.txt",
                             "Hierarchy_Port.txt",
                             "ID1412950867",
+                            "New Subpage1",
                             "j = 0",
                             arrayName,
                             previousNodes.LastOrDefault(),
