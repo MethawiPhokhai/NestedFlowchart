@@ -23,8 +23,8 @@ namespace NestedFlowchart.Rules
             string CodeSegmentValue,
             string arrayName,
             PreviousNode previousNode,
-            PositionManagements position1,
-            PositionManagements position2)
+            PositionManagements mainPagePosition,
+            PositionManagements subPagePosition)
 
         {
             TransformationApproach approach = new TransformationApproach();
@@ -56,8 +56,8 @@ namespace NestedFlowchart.Rules
 
                     Name = IdManagements.GetlastestTransitionName(),
 
-                    xPos1 = position1.xPos1,
-                    yPos1 = position1.GetLastestyPos1(),
+                    xPos1 = mainPagePosition.xPos1,
+                    yPos1 = mainPagePosition.GetLastestyPos1(),
                 };
 
                 //P3 Place (Input port place) old page
@@ -69,11 +69,11 @@ namespace NestedFlowchart.Rules
 
                     Name = inputPortPlaceName,
 
-                    xPos1 = position1.xPos1,
-                    yPos1 = position1.GetLastestyPos1(),
+                    xPos1 = mainPagePosition.xPos1,
+                    yPos1 = mainPagePosition.GetLastestyPos1(),
 
-                    xPos2 = position1.GetLastestxPos2(),
-                    yPos2 = position1.GetLastestyPos2(),
+                    xPos2 = mainPagePosition.GetLastestxPos2(),
+                    yPos2 = mainPagePosition.GetLastestyPos2(),
 
                     Type = "loopi"
                 };
@@ -86,8 +86,8 @@ namespace NestedFlowchart.Rules
                     TransEnd = tr.Id1,
                     PlaceEnd = p3InputPlace.Id1,
 
-                    xPos = position1.GetLastestxArcPos(),
-                    yPos = position1.GetLastestyArcPos(),
+                    xPos = mainPagePosition.GetLastestxArcPos(),
+                    yPos = mainPagePosition.GetLastestyArcPos(),
 
                     Orientation = "TtoP", //Transition to Place
                     Type = arrayName
@@ -103,17 +103,17 @@ namespace NestedFlowchart.Rules
 
                     Name = inputPortPlaceName,
 
-                    xPos1 = position1.xPos1,
-                    yPos1 = position1.GetLastestyPos1(),
+                    xPos1 = mainPagePosition.xPos1,
+                    yPos1 = mainPagePosition.GetLastestyPos1(),
 
-                    xPos2 = position1.GetLastestxPos2(),
-                    yPos2 = position1.GetLastestyPos2(),
+                    xPos2 = mainPagePosition.GetLastestxPos2(),
+                    yPos2 = mainPagePosition.GetLastestyPos2(),
 
                     Type = "loopi"
                 };
             }
 
-            var tr_subpage_yPos = position1.GetLastestyPos1();
+            var tr_subpage_yPos = mainPagePosition.GetLastestyPos1();
             var subst = new HierarchySubStModel()
             {
                 SubPageId = subpageId,
@@ -126,7 +126,7 @@ namespace NestedFlowchart.Rules
                 Id = IdManagements.GetlastestSubStrId(),
                 Name = subpageName,
 
-                xPos = position1.xPos1,
+                xPos = mainPagePosition.xPos1,
                 yPos = tr_subpage_yPos + 30
             };
 
@@ -141,11 +141,11 @@ namespace NestedFlowchart.Rules
 
                 Name = subpageName,
 
-                xPos1 = position1.xPos1,
+                xPos1 = mainPagePosition.xPos1,
                 yPos1 = tr_subpage_yPos,
 
-                xPos2 = position1.GetLastestxPos2(),
-                yPos2 = position1.GetLastestyPos2(),
+                xPos2 = mainPagePosition.GetLastestxPos2(),
+                yPos2 = mainPagePosition.GetLastestyPos2(),
 
                 SubsitutetionTransition = approach.CreateHierarchySubSt(subStrTemplate, subst)
             };
@@ -158,11 +158,11 @@ namespace NestedFlowchart.Rules
                 Id3 = IdManagements.GetlastestPlaceId(),
                 Name = outoutPortPlaceName,
 
-                xPos1 = position1.xPos1,
-                yPos1 = position1.GetLastestyPos1(),
+                xPos1 = mainPagePosition.xPos1,
+                yPos1 = mainPagePosition.GetLastestyPos1(),
 
-                xPos2 = position1.GetLastestxPos2(),
-                yPos2 = position1.GetLastestyPos2(),
+                xPos2 = mainPagePosition.GetLastestxPos2(),
+                yPos2 = mainPagePosition.GetLastestyPos2(),
 
                 Type = "loopi"
             };
@@ -175,8 +175,8 @@ namespace NestedFlowchart.Rules
                 TransEnd = tr_subpage.Id1,
                 PlaceEnd = p3MainPageId,
 
-                xPos = position1.xArcPos,
-                yPos = position1.yArcPos,
+                xPos = mainPagePosition.xArcPos,
+                yPos = mainPagePosition.yArcPos,
 
                 Orientation = "PtoT", //Place to Transition
                 Type = $"(i,{arrayName})"
@@ -190,8 +190,8 @@ namespace NestedFlowchart.Rules
                 TransEnd = tr_subpage.Id1,
                 PlaceEnd = p4OldPageId,
 
-                xPos = position1.GetLastestxArcPos(),
-                yPos = position1.GetLastestyArcPos(),
+                xPos = mainPagePosition.GetLastestxArcPos(),
+                yPos = mainPagePosition.GetLastestyArcPos(),
 
                 Orientation = "TtoP", //Transition to Place
                 Type = $"(i,{arrayName})"
@@ -206,8 +206,8 @@ namespace NestedFlowchart.Rules
             {
                 Id = IdManagements.GetlastestPortId(),
                 Type = "In",
-                xPos = position2.xPos1 - 20,
-                yPos = position2.yPos1 - 10
+                xPos = subPagePosition.xPos1 - 20,
+                yPos = subPagePosition.yPos1 - 10
             };
 
             //P3 Place (Input port place) new page
@@ -218,14 +218,14 @@ namespace NestedFlowchart.Rules
                 Id3 = IdManagements.GetlastestPlaceId(),
                 Name = inputPortPlaceName,
 
-                xPos1 = position2.xPos1,
-                yPos1 = position2.yPos1,
+                xPos1 = subPagePosition.xPos1,
+                yPos1 = subPagePosition.yPos1,
 
-                xPos2 = position2.xPos2,
-                yPos2 = position2.yPos2,
+                xPos2 = subPagePosition.xPos2,
+                yPos2 = subPagePosition.yPos2,
 
-                xPos3 = position2.xPos3,
-                yPos3 = position2.yPos3,
+                xPos3 = subPagePosition.xPos3,
+                yPos3 = subPagePosition.yPos3,
 
                 Type = "loopi",
                 Port = approach.CreateHierarchyPort(portTemplate, p3InputPort)
@@ -252,14 +252,14 @@ namespace NestedFlowchart.Rules
 
                 Name = IdManagements.GetlastestSubPageTransitionName(),
 
-                xPos1 = position2.xPos1,
-                yPos1 = position2.GetLastestyPos1(),
+                xPos1 = subPagePosition.xPos1,
+                yPos1 = subPagePosition.GetLastestyPos1(),
 
-                xPos2 = position2.xPos2,
-                yPos2 = position2.GetLastestyPos2(),
+                xPos2 = subPagePosition.xPos2,
+                yPos2 = subPagePosition.GetLastestyPos2(),
 
-                xPos4 = position2.xPos4 + 85,
-                yPos4= position2.yPos4 - 80,
+                xPos4 = subPagePosition.xPos4 + 85,
+                yPos4= subPagePosition.yPos4 - 80,
 
                 CodeSegment = codeSeg
             };
@@ -272,8 +272,8 @@ namespace NestedFlowchart.Rules
                 TransEnd = ts1.Id1,
                 PlaceEnd = p3SubPageId,
 
-                xPos = position2.xArcPos,
-                yPos = position2.yArcPos,
+                xPos = subPagePosition.xArcPos,
+                yPos = subPagePosition.yArcPos,
 
                 Orientation = "PtoT", //Place to Transition
                 Type = $"(i,{arrayName})"
@@ -288,11 +288,11 @@ namespace NestedFlowchart.Rules
 
                 Name = IdManagements.GetlastestPlaceName(),
 
-                xPos1 = position2.xPos1,
-                yPos1 = position2.GetLastestyPos1(),
+                xPos1 = subPagePosition.xPos1,
+                yPos1 = subPagePosition.GetLastestyPos1(),
 
-                xPos2 = position2.GetLastestxPos2(),
-                yPos2 = position2.GetLastestyPos2() + 170,
+                xPos2 = subPagePosition.GetLastestxPos2(),
+                yPos2 = subPagePosition.GetLastestyPos2() + 170,
 
                 Type = "loopj"
             };
@@ -305,8 +305,8 @@ namespace NestedFlowchart.Rules
                 TransEnd = ts1.Id1,
                 PlaceEnd = ps2.Id1,
 
-                xPos = position2.xArcPos,
-                yPos = position2.GetLastestyArcPos(),
+                xPos = subPagePosition.xArcPos,
+                yPos = subPagePosition.GetLastestyArcPos(),
 
                 Orientation = "TtoP", //Transition to Place
                 Type = $"(i,j,{arrayName})"
@@ -329,14 +329,14 @@ namespace NestedFlowchart.Rules
                 Id3 = IdManagements.GetlastestPlaceId(),
                 Name = outoutPortPlaceName,
 
-                xPos1 = position2.xPos1 - 100,
-                yPos1 = position2.yPos1,
+                xPos1 = subPagePosition.xPos1 - 100,
+                yPos1 = subPagePosition.yPos1,
 
-                xPos2 = position2.xPos2,
-                yPos2 = position2.yPos2,
+                xPos2 = subPagePosition.xPos2,
+                yPos2 = subPagePosition.yPos2,
 
-                xPos3 = position2.xPos3,
-                yPos3 = position2.yPos3,
+                xPos3 = subPagePosition.xPos3,
+                yPos3 = subPagePosition.yPos3,
 
                 Type = "loopi",
                 Port = approach.CreateHierarchyPort(portTemplate, p4OutputPort)

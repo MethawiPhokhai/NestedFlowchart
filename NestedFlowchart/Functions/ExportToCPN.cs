@@ -200,6 +200,9 @@ namespace NestedFlowchart.Functions
                     {
                         #region Rule3_2
 
+                        PositionManagements mainPagePosition = GetPagePositionByCountSubPage(previousNodes.LastOrDefault().CurrentMainPage, page1Position, page2Position, page3Position, page4Position, page5Position);
+                        PositionManagements subPagePosition = GetPagePositionByCountSubPage(previousNodes.LastOrDefault().CurrentSubPage + 1, page1Position, page2Position, page3Position, page4Position, page5Position); //Need +1 
+
                         //Get subpage by current page id
                         string subPageId = pages.subPageModel1.Id;
                         string subPageName = pages.subPageModel1.Name;
@@ -230,8 +233,8 @@ namespace NestedFlowchart.Functions
                                                     sortedFlowcharts[i].ValueText,
                                                     arrayName,
                                                     previousNodes.LastOrDefault(),
-                                                    page1Position,
-                                                    page2Position
+                                                    mainPagePosition,
+                                                    subPagePosition
                                                     );
 
                         //Going to subpage page first
