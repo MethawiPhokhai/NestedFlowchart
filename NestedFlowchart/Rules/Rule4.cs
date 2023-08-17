@@ -173,19 +173,18 @@ namespace NestedFlowchart.Rules
 			return (pl, tr, a1);
         }
 
-        //j++
+        //j++, k++, l++, m++
         public TransitionModel ApplyRuleWithCodeSegment2(
-        string arrayName,
-        PreviousNode previousNode,
+        string loopVariable,
         PositionManagements position)
         {
-            var codeSeg = "input (j);\r\n" +
-                "output (j2);\r\n" +
+            var codeSeg = $"input ({loopVariable});\r\n" +
+                $"output ({loopVariable}2);\r\n" +
                 "action\r\n" +
                 "let\r\n" +
-                "val j2 = j+1\r\n" +
+                $"val {loopVariable}2 = {loopVariable}+1\r\n" +
                 "in\r\n " +
-                "j2\r\n" +
+                $"{loopVariable}2\r\n" +
                 "end";
 
             TransitionModel tr = new TransitionModel()

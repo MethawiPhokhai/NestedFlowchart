@@ -65,6 +65,7 @@ namespace NestedFlowchart.Functions
             {
                 var flowchartType = sortedFlowcharts[i].NodeType.ToLower();
                 var flowchartValue = sortedFlowcharts[i].ValueText;
+                var flowchartValueRemoveSpace = flowchartValue.Replace(" ", string.Empty).Trim();
                 System.Diagnostics.Debug.WriteLine(flowchartValue);
 
                 //Arrow
@@ -170,7 +171,7 @@ namespace NestedFlowchart.Functions
                 else if (flowchartType == "process")
                 {
                     //Case Not Nested => Define i
-                    if (flowchartValue.ToLower().Trim().Contains("i ="))
+                    if (flowchartValueRemoveSpace.ToLower().Trim().Contains("i="))
                     {
                         #region rule3_1
                         //In case declare more than 1 line
@@ -195,8 +196,8 @@ namespace NestedFlowchart.Functions
                         #endregion
                     }
                     //Case Nested => Create Hierachy Tool
-                    else if (flowchartValue.ToLower().Trim().Contains("j =") || flowchartValue.ToLower().Trim().Contains("k =")
-                        || flowchartValue.ToLower().Trim().Contains("l =") || flowchartValue.ToLower().Trim().Contains("m ="))
+                    else if (flowchartValueRemoveSpace.ToLower().Trim().Contains("j=") || flowchartValueRemoveSpace.ToLower().Trim().Contains("k=")
+                        || flowchartValueRemoveSpace.ToLower().Trim().Contains("l=") || flowchartValueRemoveSpace.ToLower().Trim().Contains("m="))
                     {
                         #region Rule3_2
 
@@ -308,7 +309,7 @@ namespace NestedFlowchart.Functions
                     }
                     else
                     {
-                        if (flowchartValue.Contains("temp = array[ j+1]"))
+                        if (flowchartValueRemoveSpace.Contains("temp=array[j+1]"))
                         {
                             #region Rule4_1
                             PositionManagements pagePosition = GetPagePositionByCountSubPage(previousNodes.LastOrDefault().CurrentMainPage, page1Position, page2Position, page3Position, page4Position, page5Position);
@@ -337,13 +338,16 @@ namespace NestedFlowchart.Functions
                             CreatePageNodeByCountSubPage(previousNodes.LastOrDefault().CurrentMainPage, pages, rule4String);
                             #endregion
                         }
-                        else if (flowchartValue.Contains("j ++"))
+                        else if (flowchartValueRemoveSpace.Contains("j++") || flowchartValueRemoveSpace.Contains("k++") ||
+                            flowchartValueRemoveSpace.Contains("l++") || flowchartValueRemoveSpace.Contains("m++"))
                         {
                             #region Rule4_2
+
+                            var loopVariable = flowchartValue.Replace('+', ' ').Trim();
+
                             PositionManagements pagePosition = GetPagePositionByCountSubPage(previousNodes.LastOrDefault().CurrentMainPage, page1Position, page2Position, page3Position, page4Position, page5Position);
                             var rule4Transition = _rule4.ApplyRuleWithCodeSegment2(
-                                                                    arrayName,
-                                                                    previousNodes.LastOrDefault(),
+                                                                    loopVariable,
                                                                     pagePosition);
 
                             PreviousNode pv = new PreviousNode();
@@ -363,7 +367,7 @@ namespace NestedFlowchart.Functions
                             CreatePageNodeByCountSubPage(previousNodes.LastOrDefault().CurrentMainPage, pages, rule4String);
                             #endregion
                         }
-                        else if (flowchartValue.Contains("i ++"))
+                        else if (flowchartValueRemoveSpace.Contains("i++"))
                         {
                             #region Rule4_3
                             //Set back to main page
