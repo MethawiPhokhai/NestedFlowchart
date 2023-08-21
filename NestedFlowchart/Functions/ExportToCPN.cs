@@ -388,10 +388,11 @@ namespace NestedFlowchart.Functions
                                 previousNodes.LastOrDefault().IsBacktoPreviousPage = false;
                             }
 
+                            var loopVariable = flowchartValue.Replace('+', ' ').Trim();
+
                             PositionManagements pagePosition = GetPagePositionByCountSubPage(previousNodes.LastOrDefault().CurrentMainPage, page1Position, page2Position, page3Position, page4Position, page5Position);
-                            var (rule4Transition, rule4Arc1, rule4Arc2) = _rule4.ApplyRuleWithCodeSegment3(
-                                                                    arrayName,
-                                                                    previousNodes.LastOrDefault(),
+                            var rule4Transition = _rule4.ApplyRuleWithCodeSegment2(
+                                                                    loopVariable,
                                                                     pagePosition);
 
                             PreviousNode pv = new PreviousNode();

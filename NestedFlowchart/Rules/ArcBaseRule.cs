@@ -67,7 +67,10 @@ namespace NestedFlowchart.Rules
                     Type = arcVariable
                 };
 
-                return (arcModel, arcModel2, destinationNode, destinationNode.CurrentMainPage, destinationNode.CurrentSubPage);
+                var mainPage = destinationNode.CurrentMainPage;
+                var subPage = destinationNode.CurrentSubPage;
+                destinationNode.CurrentSubPage--;
+                return (arcModel, arcModel2, destinationNode, mainPage, subPage);
             }
 
 
@@ -77,7 +80,8 @@ namespace NestedFlowchart.Rules
             //กรณีลากใส่ CN2 (False)
             if (arrow.Id.Contains("3K-55") || arrow.Id.Contains("Rj-61") ||
             arrow.Id.Contains("Rj-58") || arrow.Id.Contains("Rj-52") ||
-            arrow.Id.Contains("Rj-46") || arrow.Id.Contains("Rj-35"))
+            arrow.Id.Contains("Rj-46") || arrow.Id.Contains("Rj-35") ||
+            arrow.Id.Contains("5a-94") /* End NestedLoop */)
             {
                 IsUsePreviousFalse = true;
             }
@@ -112,7 +116,10 @@ namespace NestedFlowchart.Rules
             if (arrow.Id.Contains("Rj-61") ||
                 arrow.Id.Contains("Rj-58") || arrow.Id.Contains("Rj-52") ||
                 arrow.Id.Contains("Rj-46") || arrow.Id.Contains("Rj-35") ||
-                arrow.Id.Contains("5a-39") /*NestedLoop T11 to CN5*/)
+                arrow.Id.Contains("5a-39") || /*NestedLoop T11 to CN5*/
+                arrow.Id.Contains("5a-73") ||/*NestedLoop T12 to CN4*/
+                arrow.Id.Contains("5a-79") || /*NestedLoop T13 to CN3*/
+                arrow.Id.Contains("5a-85") /*NestedLoop T14 to CN2*/)
             {
                 type = "transition";
             }

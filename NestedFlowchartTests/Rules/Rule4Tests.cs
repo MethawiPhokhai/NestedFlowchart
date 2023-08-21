@@ -33,14 +33,12 @@ namespace NestedFlowchart.Rules.Tests
                 }
             };
             previousNodes.Add(previousNode);
-
-            var arrayName = "array";
+            var loopVariable = "i";
 
             // Act
             Rule4 rule4 = new Rule4();
-            var (rule4Transition, rule4Arc1, rule4Arc2) = rule4.ApplyRuleWithCodeSegment3(
-                                                    arrayName,
-                                                    previousNodes.LastOrDefault(),
+            var rule4Transition = rule4.ApplyRuleWithCodeSegment2(
+                                                    loopVariable,
                                                     page1Position);
 
             // Assert

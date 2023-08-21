@@ -173,7 +173,7 @@ namespace NestedFlowchart.Rules
 			return (pl, tr, a1);
         }
 
-        //j++, k++, l++, m++
+        //i++ j++, k++, l++, m++
         public TransitionModel ApplyRuleWithCodeSegment2(
         string loopVariable,
         PositionManagements position)
@@ -210,70 +210,6 @@ namespace NestedFlowchart.Rules
             };
 
             return (tr);
-        }
-
-        //i++
-        public (TransitionModel, ArcModel, ArcModel) ApplyRuleWithCodeSegment3(
-        string arrayName,
-        PreviousNode previousNode,
-        PositionManagements position)
-        {
-            var codeSeg = "input (i);\r\n" +
-                "output (i2);\r\n" +
-                "action\r\n" +
-                "let\r\n" +
-                "val i2 = i+1\r\n" +
-                "in\r\n " +
-                "i2\r\n" +
-                "end";
-
-            TransitionModel tr = new TransitionModel()
-            {
-                Id1 = IdManagements.GetlastestTransitionId(),
-                Id2 = IdManagements.GetlastestTransitionId(),
-                Id3 = IdManagements.GetlastestTransitionId(),
-                Id4 = IdManagements.GetlastestTransitionId(),
-                Id5 = IdManagements.GetlastestTransitionId(),
-
-                Name = IdManagements.GetlastestTransitionName(),
-
-                xPos1 = position.xPos1,
-                yPos1 = position.GetLastestyPos1(),
-
-                xPos2 = position.xPos2,
-                yPos2 = position.GetLastestyPos2(),
-
-                xPos4 = position.xPos4 + 40,
-                yPos4 = position.GetLastestyPos4() - 290,
-
-                CodeSegment = codeSeg
-            };
-
-            ArcModel a1 = new ArcModel
-            {
-                Id1 = IdManagements.GetlastestArcId(),
-                Id2 = IdManagements.GetlastestArcId(),
-                xPos = position.xArcPos,
-                yPos = position.yArcPos == 84 ? position.yArcPos : position.GetLastestyArcPos(),
-                Orientation = "TtoP",
-                Type = "(i2,array)",
-                TransEnd = "ID1412848837", //T6
-                PlaceEnd = "ID1412948781"  //CN1
-            };
-
-            ArcModel a2 = new ArcModel
-            {
-                Id1 = IdManagements.GetlastestArcId(),
-                Id2 = IdManagements.GetlastestArcId(),
-                xPos = position.xArcPos,
-                yPos = position.yArcPos == 84 ? position.yArcPos : position.GetLastestyArcPos(),
-                Orientation = "PtoT",
-                Type = "(i,array)",
-                TransEnd = "ID1412848837", //T6
-                PlaceEnd = "ID1412948786"  //P4
-            };
-
-            return (tr, a1, a2);
         }
     }
 }
