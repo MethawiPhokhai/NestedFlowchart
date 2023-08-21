@@ -342,6 +342,12 @@ namespace NestedFlowchart.Functions
                             flowchartValueRemoveSpace.Contains("l++") || flowchartValueRemoveSpace.Contains("m++"))
                         {
                             #region Rule4_2
+                            //ลบ page เพื่อกลับไปหน้าก่อนหน้า
+                            if (previousNodes.LastOrDefault().IsBacktoPreviousPage)
+                            {
+                                previousNodes.LastOrDefault().CurrentMainPage--;
+                                previousNodes.LastOrDefault().IsBacktoPreviousPage = false;
+                            }
 
                             var loopVariable = flowchartValue.Replace('+', ' ').Trim();
 
@@ -359,19 +365,28 @@ namespace NestedFlowchart.Functions
                             pv.CurrentMainPage = previousNodes.LastOrDefault().CurrentMainPage;
                             pv.CurrentSubPage = previousNodes.LastOrDefault().CurrentSubPage;
 
+                            pv.IsBacktoPreviousPage = true; //Set เพื่อให้ arc ต่อไป ยังอยู่หน้าเดิม แต่หลังจากสร้าง Arc แล้ว ให้กลับไป page ก่อนหน้า
+
                             previousNodes.Add(pv);
 
                             var transition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], rule4Transition);
 
                             var rule4String = transition;
                             CreatePageNodeByCountSubPage(previousNodes.LastOrDefault().CurrentMainPage, pages, rule4String);
+
+
                             #endregion
                         }
                         else if (flowchartValueRemoveSpace.Contains("i++"))
                         {
                             #region Rule4_3
-                            //Set back to main page
-                            previousNodes.LastOrDefault().CurrentMainPage--;
+
+                            //ลบ page เพื่อกลับไปหน้าก่อนหน้า
+                            if (previousNodes.LastOrDefault().IsBacktoPreviousPage)
+                            {
+                                previousNodes.LastOrDefault().CurrentMainPage--;
+                                previousNodes.LastOrDefault().IsBacktoPreviousPage = false;
+                            }
 
                             PositionManagements pagePosition = GetPagePositionByCountSubPage(previousNodes.LastOrDefault().CurrentMainPage, page1Position, page2Position, page3Position, page4Position, page5Position);
                             var (rule4Transition, rule4Arc1, rule4Arc2) = _rule4.ApplyRuleWithCodeSegment3(
@@ -631,7 +646,7 @@ namespace NestedFlowchart.Functions
             {
                 pv.CurrentMainPage = pv.CurrentSubPage;
                 pv.currentPlaceModel = pv.previousPlaceModel; // Set previous place for the next node of the subpage
-            }
+            }            
         }
 
         private string[] ReadAllTemplate(string? templatePath)

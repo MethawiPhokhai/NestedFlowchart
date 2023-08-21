@@ -18,6 +18,7 @@
 
         public int CurrentMainPage { get; set; }
         public int CurrentSubPage { get; set; }
+        public bool IsBacktoPreviousPage { get; set; }
         public bool IsCreateSubPage { get; set; }
         public bool IsPreviousNodeCondition { get; set; }
         public bool IsConnectedEnd { get; set; }

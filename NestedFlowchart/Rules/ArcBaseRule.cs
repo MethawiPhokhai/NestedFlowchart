@@ -67,7 +67,7 @@ namespace NestedFlowchart.Rules
                     Type = arcVariable
                 };
 
-                return (arcModel, arcModel2, destinationNode, 0, 1);
+                return (arcModel, arcModel2, destinationNode, destinationNode.CurrentMainPage, destinationNode.CurrentSubPage);
             }
 
 
@@ -111,7 +111,8 @@ namespace NestedFlowchart.Rules
 
             if (arrow.Id.Contains("Rj-61") ||
                 arrow.Id.Contains("Rj-58") || arrow.Id.Contains("Rj-52") ||
-                arrow.Id.Contains("Rj-46") || arrow.Id.Contains("Rj-35"))
+                arrow.Id.Contains("Rj-46") || arrow.Id.Contains("Rj-35") ||
+                arrow.Id.Contains("5a-39") /*NestedLoop T11 to CN5*/)
             {
                 type = "transition";
             }
