@@ -1,4 +1,6 @@
-﻿namespace NestedFlowchart.Models
+﻿using NestedFlowchart.Declaration;
+
+namespace NestedFlowchart.Models
 {
     public class PreviousNode
     {
@@ -15,6 +17,10 @@
 
         //place, transition
         public string Type { get; set; }
+
+        //declare type
+        public int InitialMarkingType { get; set; }
+        public string ArrayName { get; set; } = string.Empty;
 
         public int CurrentMainPage { get; set; }
         public int CurrentSubPage { get; set; }

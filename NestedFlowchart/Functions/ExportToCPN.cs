@@ -75,6 +75,12 @@ namespace NestedFlowchart.Functions
                     if (arrows.Any())
                     {
                         CreateArc(allTemplates, pages, previousNodes, isDeclaredI, arrayName, page1Position, page2Position, page3Position, page4Position, page5Position, arrows);
+
+                        // if initial marking เป็น type none, ให้เอาตัวแปรมาแทน x เช่น i แทน x ในหน้า main
+                        if (previousNodes.LastOrDefault().InitialMarkingType == (int)eDeclareType.IsNone)
+                        {
+                            arrayName = previousNodes.LastOrDefault().ArrayName;
+                        }
                     }
 
                     // Store arrow in temp for the next element to use
@@ -105,6 +111,7 @@ namespace NestedFlowchart.Functions
                     #region Rule2
 
                     //ถ้าไม่มี Initialize process แล้ว element ต่อไปเป็น i
+                    //Nested-Loop
                     if ((flowchartValue.ToLower().Trim().Contains("i =")))
                     {
                         //Set Initial Marking
@@ -126,6 +133,8 @@ namespace NestedFlowchart.Functions
                         pv.currentPlaceModel = rule3Place;
                         pv.currentTransitionModel = rule3Transition;
                         pv.Type = "place";
+                        pv.InitialMarkingType = declareType;
+                        pv.ArrayName = flowchartValue.ToLower().Trim().Substring(0,1).Trim();
                         previousNodes.Add(pv);
 
                         var place1 = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], rule3Place);
@@ -137,6 +146,7 @@ namespace NestedFlowchart.Functions
                         CreatePageNodeByCountSubPage(pv.CurrentSubPage, pages, rule3OldString);
                         #endregion
                     }
+                    //BubbleSort/Nested-If
                     else
                     {
                         //Set Initial Marking
@@ -647,7 +657,7 @@ namespace NestedFlowchart.Functions
             {
                 pv.CurrentMainPage = pv.CurrentSubPage;
                 pv.currentPlaceModel = pv.previousPlaceModel; // Set previous place for the next node of the subpage
-            }            
+            }
         }
 
         private string[] ReadAllTemplate(string? templatePath)
