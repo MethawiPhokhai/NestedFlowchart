@@ -6,18 +6,21 @@ namespace NestedFlowchart.Rules
 {
     public class Rule7 : ArcBaseRule
     {
+        private readonly ITypeBaseRule _typeBaseRule;
+
+        public Rule7()
+        {
+            _typeBaseRule = new TypeBaseRule();
+        }
+
         /// <summary>
         /// Transform end into place or transition, place connected by arc
-        /// If previous node is place => Create Transition and then create place connected by arc
-        /// If previous node is transition => Create place connected by arc
         /// </summary>
-        /// <param name="placeTemplate"></param>
-        /// <param name="arcTemplate"></param>
-        /// <param name="previousNode"></param>
         /// <returns></returns>
         public PlaceModel ApplyRule(
-            string arrayName,
-            PositionManagements position)
+            PositionManagements position,
+            int type,
+            int page)
         {
             //End Place
             PlaceModel pl = new PlaceModel()
@@ -26,7 +29,7 @@ namespace NestedFlowchart.Rules
                 Id2 = IdManagements.GetlastestPlaceId(),
                 Id3 = IdManagements.GetlastestPlaceId(),
                 Name = "End",
-                Type = (arrayName == "array") ? "INTs" : "aa",
+                Type = _typeBaseRule.GetTypeByInitialMarkingType(type, page),
                 InitialMarking = string.Empty,
 
                 xPos1 = position.xPos1 - 4,
@@ -37,11 +40,9 @@ namespace NestedFlowchart.Rules
 
                 xPos3 = position.xPos3 - 4,
                 yPos3 = position.yPos3 - 167,
-
             };
 
             return (pl);
         }
     }
 }
-

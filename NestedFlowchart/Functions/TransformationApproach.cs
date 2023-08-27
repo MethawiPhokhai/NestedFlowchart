@@ -251,7 +251,10 @@ namespace NestedFlowchart.Functions
 
             var col1 = approach.CreateColorSet(allTemplates[(int)TemplateEnum.ColorSetTemplate], colorSetProduct1);
             var col2 = approach.CreateColorSet(allTemplates[(int)TemplateEnum.ColorSetTemplate], colorSetProduct2);
-            var allColorSet = col1 + col2;
+            var col3 = approach.CreateColorSet(allTemplates[(int)TemplateEnum.ColorSetTemplate], colorSetProduct3);
+            var col4 = approach.CreateColorSet(allTemplates[(int)TemplateEnum.ColorSetTemplate], colorSetProduct4);
+            var col5 = approach.CreateColorSet(allTemplates[(int)TemplateEnum.ColorSetTemplate], colorSetProduct5);
+            var allColorSet = col1 + col2 + col3 + col4 + col5;
             return allColorSet;
         }
 

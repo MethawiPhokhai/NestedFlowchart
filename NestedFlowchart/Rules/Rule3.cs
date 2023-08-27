@@ -6,6 +6,11 @@ namespace NestedFlowchart.Rules
 {
     public class Rule3 : ArcBaseRule
     {
+        private readonly ITypeBaseRule _typeBaseRule;
+        public Rule3()
+        {
+            _typeBaseRule = new TypeBaseRule();
+        }
         /// <summary>
         /// Transform process into place and transition connected by arc
         /// </summary>
@@ -75,7 +80,7 @@ namespace NestedFlowchart.Rules
                     xPos2 = mainPagePosition.GetLastestxPos2(),
                     yPos2 = mainPagePosition.GetLastestyPos2(),
 
-                    Type = "loopi"
+                    Type = _typeBaseRule.GetTypeByPageOnly(previousNode.CurrentMainPage)
                 };
 
                 a5 = new ArcModel()
@@ -109,7 +114,7 @@ namespace NestedFlowchart.Rules
                     xPos2 = mainPagePosition.GetLastestxPos2(),
                     yPos2 = mainPagePosition.GetLastestyPos2(),
 
-                    Type = "loopi"
+                    Type = _typeBaseRule.GetTypeByPageOnly(previousNode.CurrentMainPage)
                 };
             }
 
@@ -164,7 +169,7 @@ namespace NestedFlowchart.Rules
                 xPos2 = mainPagePosition.GetLastestxPos2(),
                 yPos2 = mainPagePosition.GetLastestyPos2(),
 
-                Type = "loopi"
+                Type = _typeBaseRule.GetTypeByPageOnly(previousNode.CurrentMainPage)
             };
 
             ArcModel a1 = new ArcModel()
@@ -227,7 +232,7 @@ namespace NestedFlowchart.Rules
                 xPos3 = subPagePosition.xPos3,
                 yPos3 = subPagePosition.yPos3,
 
-                Type = "loopi",
+                Type = _typeBaseRule.GetTypeByPageOnly(previousNode.CurrentMainPage),
                 Port = approach.CreateHierarchyPort(portTemplate, p3InputPort)
             };
 
@@ -294,7 +299,7 @@ namespace NestedFlowchart.Rules
                 xPos2 = subPagePosition.GetLastestxPos2(),
                 yPos2 = subPagePosition.GetLastestyPos2() + 170,
 
-                Type = "loopj"
+                Type = _typeBaseRule.GetTypeByPageOnly(previousNode.CurrentSubPage + 1)
             };
 
             ArcModel a4 = new ArcModel()
@@ -338,7 +343,7 @@ namespace NestedFlowchart.Rules
                 xPos3 = subPagePosition.xPos3,
                 yPos3 = subPagePosition.yPos3,
 
-                Type = "loopi",
+                Type = _typeBaseRule.GetTypeByPageOnly(previousNode.CurrentMainPage),
                 Port = approach.CreateHierarchyPort(portTemplate, p4OutputPort)
             };
 

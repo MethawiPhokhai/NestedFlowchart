@@ -245,8 +245,7 @@ namespace NestedFlowchart.Functions
                                                     arrayName,
                                                     previousNodes.LastOrDefault(),
                                                     mainPagePosition,
-                                                    subPagePosition
-                                                    );
+                                                    subPagePosition);
 
                         //Going to subpage page first
                         PreviousNode pv = new PreviousNode();
@@ -432,8 +431,7 @@ namespace NestedFlowchart.Functions
                     var (rule5Place, rule5Transition, rule5Arc1, previousTypeReturn) = _rule5.ApplyRule(
                                     arrayName,
                                     previousNodes.LastOrDefault(),
-                                    pagePosition,
-                                    countSubPage);
+                                    pagePosition);
 
 
                     PreviousNode pv = new PreviousNode();
@@ -514,8 +512,9 @@ namespace NestedFlowchart.Functions
                 {
                     #region Rule7
                     var rule7Place = _rule7.ApplyRule(
-                        arrayName,
-                        page1Position);
+                        page1Position,
+                        declareType,
+                        countSubPage);
 
                     PreviousNode pv = new PreviousNode();
                     pv.elementId = sortedFlowcharts[i].ID;
@@ -535,7 +534,7 @@ namespace NestedFlowchart.Functions
                     #region Output
                     PositionManagements pagePosition = GetPagePositionByCountSubPage(previousNodes.LastOrDefault().CurrentMainPage, page1Position, page2Position, page3Position, page4Position, page5Position);
                     //Apply Rule
-                    var (outputRulePlace, outputRuleTransition, outputRuleArc1) = _outputRule.ApplyRule(arrayName, pagePosition, previousNodes.LastOrDefault());
+                    var (outputRulePlace, outputRuleTransition, outputRuleArc1) = _outputRule.ApplyRule(arrayName, pagePosition, previousNodes.LastOrDefault(), declareType);
 
                     //Set previous node for create arc next rule
                     PreviousNode pv = new PreviousNode();

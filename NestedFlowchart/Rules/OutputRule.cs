@@ -6,11 +6,19 @@ namespace NestedFlowchart.Rules
 {
     public class OutputRule : ArcBaseRule
     {
+        private readonly ITypeBaseRule _typeBaseRule; 
+
+        public OutputRule()
+        {
+            _typeBaseRule = new TypeBaseRule(); ;
+        }
+
         public (PlaceModel, TransitionModel, ArcModel)
             ApplyRule(
             string arrayName,
             PositionManagements position,
-            PreviousNode pv)
+            PreviousNode pv,
+            int type)
         {
             PlaceModel pl = new PlaceModel()
             {
@@ -26,7 +34,7 @@ namespace NestedFlowchart.Rules
                 xPos2 = position.GetLastestxPos2(),
                 yPos2 = position.GetLastestyPos2(),
 
-                Type = (arrayName == "array") ? "INTs" : "aa"
+                Type = _typeBaseRule.GetTypeByInitialMarkingType(type, pv.CurrentMainPage)
             };
 
             if (!pv.IsPreviousNodeCondition)
@@ -64,7 +72,6 @@ namespace NestedFlowchart.Rules
             }
 
             return (pl, null, null);
-
         }
     }
 }

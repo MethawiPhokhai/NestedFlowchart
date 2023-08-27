@@ -41,8 +41,7 @@ namespace NestedFlowchart.Rules.Tests
             var (rule5Place, rule5Transition, rule5Arc1, previousTypeReturn) = rule5.ApplyRule(
                             arrayName,
                             previousNodes.LastOrDefault(),
-                            page1Position,
-                            0);
+                            page1Position);
 
             // Assert
             Assert.IsNotNull(rule5Place);
