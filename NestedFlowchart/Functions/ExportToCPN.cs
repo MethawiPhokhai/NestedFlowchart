@@ -126,7 +126,7 @@ namespace NestedFlowchart.Functions
                         //In case declare more than 1 line
                         var code = sortedFlowcharts[i].ValueText.Replace("<br>", "\n").ToLower().Replace("int", "").Replace(";", "");
 
-                        var (rule3Place, rule3Transition, rule3Arc1) = _rule3.ApplyRuleWithoutHierarchy(code, arrayName, page1Position, previousNodes.LastOrDefault());
+                        var (rule3Place, rule3Transition, rule3Arc1) = _rule3.ApplyRuleWithoutHierarchy(code, arrayName, page1Position, previousNodes.LastOrDefault(), declareType);
 
                         PreviousNode pv = new PreviousNode();
                         pv.elementId = sortedFlowcharts[i].ID;
@@ -187,7 +187,7 @@ namespace NestedFlowchart.Functions
                         //In case declare more than 1 line
                         var code = sortedFlowcharts[i].ValueText.Replace("<br>", "\n").ToLower().Replace("int", "").Replace(";", "");
 
-                        var (rule3Place, rule3Transition, rule3Arc1) = _rule3.ApplyRuleWithoutHierarchy(code, arrayName, page1Position, previousNodes.LastOrDefault());
+                        var (rule3Place, rule3Transition, rule3Arc1) = _rule3.ApplyRuleWithoutHierarchy(code, arrayName, page1Position, previousNodes.LastOrDefault(), declareType);
 
                         PreviousNode pv = new PreviousNode();
                         pv.elementId = sortedFlowcharts[i].ID;

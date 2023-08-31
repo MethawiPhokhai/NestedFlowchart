@@ -362,20 +362,19 @@ namespace NestedFlowchart.Rules
             string CodeSegmentValue,
             string arrayName,
             PositionManagements position,
-            PreviousNode previousNode
-            )
+            PreviousNode previousNode,
+            int type)
         {
-            string arcVariable = DeclareArcVariable(arrayName, previousNode.CurrentMainPage);
+            int currentMainPage = previousNode.CurrentMainPage;
 
-            //T2 Code Segment Inscription
-            //Define i=1 in Code Segment Inscription
+            var cSegVariable = GetArcVariableOnlyOne(currentMainPage);
             var codeSeg = "input (); \n " +
-                "output(i); \n " +
+                $"output({cSegVariable}); \n " +
                 "action \n " +
                 "let \n" +
                 "val " + CodeSegmentValue + " \n" +
                 "in \n" +
-                "(i) \n" +
+                $"({cSegVariable}) \n" +
                 "end";
 
             //T2 Transition
@@ -429,7 +428,7 @@ namespace NestedFlowchart.Rules
                 yPos = position.GetLastestyArcPos(),
 
                 Orientation = "TtoP", //Transition to Place
-                Type = arcVariable
+                Type = GetArcVariableByPageAndType(arrayName, currentMainPage, type)
             };
 
             return (pl, tr, a1);
