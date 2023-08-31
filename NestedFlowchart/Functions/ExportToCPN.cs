@@ -245,7 +245,8 @@ namespace NestedFlowchart.Functions
                                                     arrayName,
                                                     previousNodes.LastOrDefault(),
                                                     mainPagePosition,
-                                                    subPagePosition);
+                                                    subPagePosition,
+                                                    declareType);
 
                         //Going to subpage page first
                         PreviousNode pv = new PreviousNode();

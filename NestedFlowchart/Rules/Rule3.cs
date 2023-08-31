@@ -29,7 +29,8 @@ namespace NestedFlowchart.Rules
             string arrayName,
             PreviousNode previousNode,
             PositionManagements mainPagePosition,
-            PositionManagements subPagePosition)
+            PositionManagements subPagePosition,
+            int type)
 
         {
             TransformationApproach approach = new TransformationApproach();
@@ -42,6 +43,10 @@ namespace NestedFlowchart.Rules
 
             var p4OldPageId = IdManagements.GetlastestPlaceId();
             var p4SubPageId = IdManagements.GetlastestPlaceId();
+
+            int currentMainPage = previousNode.CurrentMainPage;
+            int currentSubPage = previousNode.CurrentSubPage + 1;
+            
 
             #region Main Page
 
@@ -80,7 +85,7 @@ namespace NestedFlowchart.Rules
                     xPos2 = mainPagePosition.GetLastestxPos2(),
                     yPos2 = mainPagePosition.GetLastestyPos2(),
 
-                    Type = _typeBaseRule.GetTypeByPageOnly(previousNode.CurrentMainPage)
+                    Type = _typeBaseRule.GetTypeByPageOnly(currentMainPage)
                 };
 
                 a5 = new ArcModel()
@@ -114,7 +119,7 @@ namespace NestedFlowchart.Rules
                     xPos2 = mainPagePosition.GetLastestxPos2(),
                     yPos2 = mainPagePosition.GetLastestyPos2(),
 
-                    Type = _typeBaseRule.GetTypeByPageOnly(previousNode.CurrentMainPage)
+                    Type = _typeBaseRule.GetTypeByPageOnly(currentMainPage)
                 };
             }
 
@@ -169,7 +174,7 @@ namespace NestedFlowchart.Rules
                 xPos2 = mainPagePosition.GetLastestxPos2(),
                 yPos2 = mainPagePosition.GetLastestyPos2(),
 
-                Type = _typeBaseRule.GetTypeByPageOnly(previousNode.CurrentMainPage)
+                Type = _typeBaseRule.GetTypeByPageOnly(currentMainPage)
             };
 
             ArcModel a1 = new ArcModel()
@@ -184,7 +189,7 @@ namespace NestedFlowchart.Rules
                 yPos = mainPagePosition.yArcPos,
 
                 Orientation = "PtoT", //Place to Transition
-                Type = $"(i,{arrayName})"
+                Type = GetArcVariableByPageAndType(arrayName, currentMainPage, type)
             };
 
             ArcModel a2 = new ArcModel()
@@ -199,7 +204,7 @@ namespace NestedFlowchart.Rules
                 yPos = mainPagePosition.GetLastestyArcPos(),
 
                 Orientation = "TtoP", //Transition to Place
-                Type = $"(i,{arrayName})"
+                Type = GetArcVariableByPageAndType(arrayName, currentMainPage, type)
             };
 
             #endregion Main Page
@@ -232,18 +237,18 @@ namespace NestedFlowchart.Rules
                 xPos3 = subPagePosition.xPos3,
                 yPos3 = subPagePosition.yPos3,
 
-                Type = _typeBaseRule.GetTypeByPageOnly(previousNode.CurrentMainPage),
+                Type = _typeBaseRule.GetTypeByPageOnly(currentMainPage),
                 Port = approach.CreateHierarchyPort(portTemplate, p3InputPort)
             };
 
-            //Define i=1 in Code Segment Inscription
+            var cSegVariable = GetArcVariableOnlyOne(currentSubPage);
             var codeSeg = "input (); \n " +
-                "output(j); \n " +
+                $"output({cSegVariable}); \n " +
                 "action \n " +
                 "let \n" +
                 "val " + CodeSegmentValue + " \n" +
                 "in \n" +
-                "(j) \n" +
+                $"({cSegVariable}) \n" +
                 "end";
 
             //TS1 transition
@@ -281,7 +286,7 @@ namespace NestedFlowchart.Rules
                 yPos = subPagePosition.yArcPos,
 
                 Orientation = "PtoT", //Place to Transition
-                Type = $"(i,{arrayName})"
+                Type = GetArcVariableByPageAndType(arrayName, currentMainPage, type)
             };
 
             //PS2 Place
@@ -299,7 +304,7 @@ namespace NestedFlowchart.Rules
                 xPos2 = subPagePosition.GetLastestxPos2(),
                 yPos2 = subPagePosition.GetLastestyPos2() + 170,
 
-                Type = _typeBaseRule.GetTypeByPageOnly(previousNode.CurrentSubPage + 1)
+                Type = _typeBaseRule.GetTypeByPageOnly(currentSubPage)
             };
 
             ArcModel a4 = new ArcModel()
@@ -314,7 +319,7 @@ namespace NestedFlowchart.Rules
                 yPos = subPagePosition.GetLastestyArcPos(),
 
                 Orientation = "TtoP", //Transition to Place
-                Type = $"(i,j,{arrayName})"
+                Type = GetArcVariableByPageAndType(arrayName, currentSubPage, type)
             };
 
 
@@ -343,7 +348,7 @@ namespace NestedFlowchart.Rules
                 xPos3 = subPagePosition.xPos3,
                 yPos3 = subPagePosition.yPos3,
 
-                Type = _typeBaseRule.GetTypeByPageOnly(previousNode.CurrentMainPage),
+                Type = _typeBaseRule.GetTypeByPageOnly(currentMainPage),
                 Port = approach.CreateHierarchyPort(portTemplate, p4OutputPort)
             };
 

@@ -51,8 +51,8 @@ namespace NestedFlowchart.Rules.Tests
                             arrayName,
                             previousNodes.LastOrDefault(),
                             page1Position,
-                            page2Position
-                            );
+                            page2Position,
+                            0);
 
             // Assert
             //Main page

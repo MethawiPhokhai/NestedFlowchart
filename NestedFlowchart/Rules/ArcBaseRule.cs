@@ -1,4 +1,5 @@
-﻿using NestedFlowchart.Functions;
+﻿using NestedFlowchart.Declaration;
+using NestedFlowchart.Functions;
 using NestedFlowchart.Models;
 using NestedFlowchart.Position;
 using System.Windows.Forms;
@@ -161,6 +162,61 @@ namespace NestedFlowchart.Rules
             return (arcModel, null, destinationNode, destinationNode.CurrentMainPage, destinationNode.CurrentSubPage);
         }
 
+        //new
+        public string GetArcVariableByPageAndType(string arrayName, int page, int type)
+        {
+            if(type == (int)eDeclareType.IsArray)
+            {
+                return page switch
+                {
+                    0 => $"(i,{arrayName})",
+                    1 => $"(i,j,{arrayName})",
+                    2 => "(i,j,k)",
+                    3 => "(i,j,k,l)",
+                    4 => "(i,j,k,l,m)",
+                    _ => string.Empty
+                };
+            }
+            else if(type == (int)eDeclareType.IsNone || type == (int)eDeclareType.IsInteger)
+            {
+                return page switch
+                {
+                    0 => "i",
+                    1 => "(i,j)",
+                    2 => "(i,j,k)",
+                    3 => "(i,j,k,l)",
+                    4 => "(i,j,k,l,m)",
+                    _ => string.Empty
+                };
+            }
+
+            return string.Empty;
+            
+        }
+
+        public string GetArcVariableOnlyOne(int page)
+        {
+            switch (page)
+            {
+                case 0:
+                    return "i";
+                case 1:
+                    return "j";
+                case 2:
+                    return "k";
+                case 3:
+                    return "l";
+                case 4:
+                    return "m";
+                default:
+                    return string.Empty;
+            }
+        }
+
+
+
+
+        //old
         public string DeclareArcVariable(string arrayName, int countSubPage)
         {
             //arc variable
