@@ -324,9 +324,10 @@ namespace NestedFlowchart.Functions
                             #region Rule4_1
                             PositionManagements pagePosition = GetPagePositionByCountSubPage(previousNodes.LastOrDefault().CurrentMainPage, page1Position, page2Position, page3Position, page4Position, page5Position);
                             var (rule4Place, rule4Transition, rule4Arc) = _rule4.ApplyRuleWithCodeSegment(
-                                                                                            arrayName,
-                                                                                            previousNodes.LastOrDefault(),
-                                                                                            pagePosition);
+                                                                          arrayName,
+                                                                          previousNodes.LastOrDefault(),
+                                                                          pagePosition,
+                                                                          declareType);
 
                             PreviousNode pv = new PreviousNode();
                             pv.elementId = sortedFlowcharts[i].ID;

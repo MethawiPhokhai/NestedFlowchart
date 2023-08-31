@@ -94,9 +94,10 @@ namespace NestedFlowchart.Rules
         public (PlaceModel, TransitionModel, ArcModel) ApplyRuleWithCodeSegment(
             string arrayName,
             PreviousNode previousNode,
-            PositionManagements position)
+            PositionManagements position,
+            int type)
         {
-            string arcVariable = DeclareArcVariable(arrayName, previousNode.CurrentMainPage);
+            int currentMainPage = previousNode.CurrentMainPage;
 
             //PS4
             PlaceModel pl = new PlaceModel()
@@ -113,7 +114,7 @@ namespace NestedFlowchart.Rules
                 xPos2 = position.GetLastestxPos2(),
                 yPos2 = position.GetLastestyPos2(),
 
-                Type = "loopj"
+                Type = _typeBaseRule.GetTypeByPageOnly(currentMainPage)
             };
 
             var codeSeg = "input (array,j);\r\n" +
@@ -174,7 +175,7 @@ namespace NestedFlowchart.Rules
                 yPos = position.GetLastestyArcPos(),
 
                 Orientation = "PtoT", //Place to Transition
-                Type = arcVariable
+                Type = GetArcVariableByPageAndType(arrayName, currentMainPage, type)
             };
 
             return (pl, tr, a1);
