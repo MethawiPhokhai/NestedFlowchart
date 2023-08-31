@@ -432,7 +432,8 @@ namespace NestedFlowchart.Functions
                     var (rule5Place, rule5Transition, rule5Arc1, previousTypeReturn) = _rule5.ApplyRule(
                                     arrayName,
                                     previousNodes.LastOrDefault(),
-                                    pagePosition);
+                                    pagePosition,
+                                    declareType);
 
 
                     PreviousNode pv = new PreviousNode();

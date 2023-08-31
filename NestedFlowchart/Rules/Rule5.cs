@@ -24,13 +24,15 @@ namespace NestedFlowchart.Rules
         public (PlaceModel, TransitionModel?, ArcModel?, string) ApplyRule(
             string arrayName,
             PreviousNode previousNode,
-            PositionManagements position)
+            PositionManagements position,
+            int type)
         {
-            var arcVariable = DeclareArcVariable(arrayName, previousNode.CurrentMainPage);
             TransitionModel tr = null;
             PlaceModel pl = null;
-            ArcModel a1 = null, a2 = null;
+            ArcModel a1 = null;
             string previousTypeReturn = string.Empty;
+
+            int currentMainPage = previousNode.CurrentMainPage;
 
             if (previousNode.Type == "place")
             {
@@ -65,7 +67,7 @@ namespace NestedFlowchart.Rules
                     xPos2 = position.GetLastestxPos2(),
                     yPos2 = position.GetLastestyPos2(),
 
-                    Type = _typeBaseRule.GetTypeByPageOnly(previousNode.CurrentMainPage)
+                    Type = _typeBaseRule.GetTypeByPageOnly(currentMainPage)
                 };
 
                 a1 = new ArcModel()
@@ -80,7 +82,7 @@ namespace NestedFlowchart.Rules
                     yPos = position.GetLastestyArcPos(),
 
                     Orientation = "TtoP", //Transition to Place
-                    Type = arcVariable
+                    Type = GetArcVariableByPageAndType(arrayName, currentMainPage, type)
                 };
 
                 previousTypeReturn = "place";
@@ -101,7 +103,7 @@ namespace NestedFlowchart.Rules
                     xPos2 = position.GetLastestxPos2(),
                     yPos2 = position.GetLastestyPos2(),
 
-                    Type = _typeBaseRule.GetTypeByPageOnly(previousNode.CurrentMainPage)
+                    Type = _typeBaseRule.GetTypeByPageOnly(currentMainPage)
                 };
 
                 previousTypeReturn = "transition";
