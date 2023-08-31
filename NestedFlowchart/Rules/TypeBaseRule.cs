@@ -18,7 +18,7 @@ namespace NestedFlowchart.Rules
             }
             else if (type == (int)eDeclareType.IsNone)
             {
-                return GetTypeByCountSubPage(page);
+                return GetTypeByPageOnly(page);
             }
             else if (type == (int)eDeclareType.IsInteger)
             {
@@ -31,11 +31,6 @@ namespace NestedFlowchart.Rules
         }
 
         public string GetTypeByPageOnly(int page)
-        {
-            return GetTypeByCountSubPage(page);
-        }
-
-        private string GetTypeByCountSubPage(int page)
         {
             return page switch
             {

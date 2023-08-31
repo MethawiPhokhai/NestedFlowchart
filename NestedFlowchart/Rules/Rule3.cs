@@ -412,7 +412,7 @@ namespace NestedFlowchart.Rules
                 xPos2 = position.GetLastestxPos2(),
                 yPos2 = position.GetLastestyPos2(),
 
-                Type = "loopi"
+                Type = _typeBaseRule.GetTypeByPageOnly(currentMainPage)
             };
 
             //Arc from T2 to P2
