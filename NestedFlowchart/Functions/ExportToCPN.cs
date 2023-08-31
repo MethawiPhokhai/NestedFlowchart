@@ -477,7 +477,8 @@ namespace NestedFlowchart.Functions
                         trueCondition,
                         falseCondition,
                         arrayName,
-                        pagePosition);
+                        pagePosition,
+                        declareType);
 
 
                     PreviousNode pv = new PreviousNode();

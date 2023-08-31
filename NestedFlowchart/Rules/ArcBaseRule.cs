@@ -177,7 +177,7 @@ namespace NestedFlowchart.Rules
                     _ => string.Empty
                 };
             }
-            else if(type == (int)eDeclareType.IsNone || type == (int)eDeclareType.IsInteger)
+            else if(type == (int)eDeclareType.IsNone)
             {
                 return page switch
                 {
@@ -188,6 +188,10 @@ namespace NestedFlowchart.Rules
                     4 => "(i,j,k,l,m)",
                     _ => string.Empty
                 };
+            }
+            else if(type == (int)eDeclareType.IsInteger)
+            {
+                return arrayName;
             }
 
             return string.Empty;
