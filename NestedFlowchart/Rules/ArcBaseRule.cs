@@ -77,7 +77,10 @@ namespace NestedFlowchart.Rules
 
 
             //กรณีอยู่หน้าแรก และยังไม่ประกาศ i ให้ใช้ arc variable array เฉยๆ นอกจากนั้นไป get ตาม page
-            arcVariable = isDeclaredI ? DeclareArcVariable(arrayName, destinationNode.CurrentMainPage) : arrayName;
+            arcVariable = isDeclaredI ? GetArcVariableByPageAndType(arrayName, destinationNode.CurrentMainPage, type) : arrayName;
+
+            //When have increment, use another arc variable
+            arcVariable = GetArcVariableAfterIncrement(arcVariable, sourceNode?.currentTransitionModel?.CodeSegment);
 
             //กรณีลากใส่ CN2 (False)
             if (arrow.Id.Contains("3K-55") || arrow.Id.Contains("Rj-61") ||
@@ -87,27 +90,11 @@ namespace NestedFlowchart.Rules
             {
                 IsUsePreviousFalse = true;
             }
-            //กรณีลากไป CN2 (True)
-            else if (arrow.Id.Contains("KSG-24"))
-            {
-                arcVariable = "(i,j,array2)";
-            }
-            //กรณีลากไป CN1
-            else if (arrow.Id.Contains("KSG-17"))
-            {
-                arcVariable = "(i2,array)";
-            }
             //กรณีลากใส่ End
             else if (arrow.Id.Contains("3K-39"))
             {
                 IsUsePreviousFalse = true;
                 arcVariable = "array";
-            }
-            //กรณีลากใส่ P5
-            else if (arrow.Id.Contains("KSG-26"))
-            {
-                elementType = "transition";
-                arcVariable = "(i,j2,array)";
             }
             //Nestedif start to T1
             else if (arrow.Id.Contains("SwmT-1"))
@@ -115,7 +102,8 @@ namespace NestedFlowchart.Rules
                 arcVariable = "i";
             }
 
-            if (arrow.Id.Contains("Rj-61") ||
+            if (arrow.Id.Contains("KSG-26") || //Bubble sort into P5
+                arrow.Id.Contains("Rj-61") ||
                 arrow.Id.Contains("Rj-58") || arrow.Id.Contains("Rj-52") ||
                 arrow.Id.Contains("Rj-46") || arrow.Id.Contains("Rj-35") ||
                 arrow.Id.Contains("5a-39") || /*NestedLoop T11 to CN5*/
@@ -163,7 +151,7 @@ namespace NestedFlowchart.Rules
             return (arcModel, null, destinationNode, destinationNode.CurrentMainPage, destinationNode.CurrentSubPage);
         }
 
-        //new
+
         public string GetArcVariableByPageAndType(string arrayName, int page, int type)
         {
             if(type == (int)eDeclareType.IsArray)
@@ -172,9 +160,9 @@ namespace NestedFlowchart.Rules
                 {
                     0 => $"(i,{arrayName})",
                     1 => $"(i,j,{arrayName})",
-                    2 => "(i,j,k)",
-                    3 => "(i,j,k,l)",
-                    4 => "(i,j,k,l,m)",
+                    2 => "(i,j,k,{arrayName})",
+                    3 => "(i,j,k,l,{arrayName})",
+                    4 => "(i,j,k,l,m,{arrayName})",
                     _ => string.Empty
                 };
             }
@@ -218,39 +206,23 @@ namespace NestedFlowchart.Rules
             }
         }
 
-
-
-
-        //old
-        public string DeclareArcVariable(string arrayName, int countSubPage)
+        public string GetArcVariableAfterIncrement(string arrayName, string incVar)
         {
-            //arc variable
-            string arcVariable = string.Empty;
-
-            if (arrayName.Contains("array"))
+            if(incVar != null)
             {
-                switch (countSubPage)
+                return incVar switch
                 {
-                    case 0:
-                        arcVariable = $"(i,{arrayName})";
-                        break;
-                    case 1:
-                        arcVariable = $"(i,j,{arrayName})";
-                        break;
-                }
-            }
-            else
-            {
-                switch (countSubPage)
-                {
-                    case 0:
-                        arcVariable = $"{arrayName}";
-                        break;
-                }
+                    var str when str.Contains("i2") => arrayName.Replace("i","i2"),
+                    var str when str.Contains("j2") => arrayName.Replace("j", "j2"),
+                    var str when str.Contains("k2") => arrayName.Replace("k", "k2"),
+                    var str when str.Contains("l2") => arrayName.Replace("l", "l2"),
+                    var str when str.Contains("m2") => arrayName.Replace("m", "m2"),
+                    var str when str.Contains("array2") => arrayName.Replace("array", "array2"),
+                    _ => arrayName,
+                };
             }
 
-
-            return arcVariable;
+            return arrayName;
         }
 
     }

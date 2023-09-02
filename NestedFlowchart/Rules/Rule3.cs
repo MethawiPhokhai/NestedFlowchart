@@ -100,7 +100,7 @@ namespace NestedFlowchart.Rules
                     yPos = mainPagePosition.GetLastestyArcPos(),
 
                     Orientation = "TtoP", //Transition to Place
-                    Type = arrayName
+                    Type = GetArcVariableByPageAndType(arrayName, currentMainPage, type)
                 };
             }
             else
