@@ -2,25 +2,23 @@
 using NestedFlowchart.Functions;
 using NestedFlowchart.Models;
 using NestedFlowchart.Position;
-using System.Windows.Forms;
 
 namespace NestedFlowchart.Rules
 {
     public class ArcBaseRule
     {
         public (ArcModel?, ArcModel?, PreviousNode, int, int) CreateArcWithPreviousNode(
-            TempArrow arrow, 
+            TempArrow arrow,
             string elementType,
-            PositionManagements position, 
+            PositionManagements position,
             string arrayName,
-            List<PreviousNode> previousNodes, 
+            List<PreviousNode> previousNodes,
             bool isDeclaredI,
             int type)
         {
             string arcVariable;
             string orientation;
             ArcModel arcModel, arcModel2;
-
 
             bool IsUsePreviousFalse = false;
             string outputPortPlaceIdSubPage = string.Empty;
@@ -31,7 +29,7 @@ namespace NestedFlowchart.Rules
             var destinationNode = previousNodes.FirstOrDefault(x => x.elementId == arrow.Destination);
 
             //ถ้า CurrentMainPage ของ destination - source = 1 แสดงว่าออกจาก Subpage ให้ลากใส่ Output port place ด้วย
-            if(sourceNode?.CurrentMainPage - destinationNode?.CurrentMainPage > 0)
+            if (sourceNode?.CurrentMainPage - destinationNode?.CurrentMainPage > 0)
             {
                 //Create arc for output port place
                 outputPortPlaceIdMainPage = previousNodes.FirstOrDefault(x => x.CurrentMainPage == sourceNode?.CurrentMainPage &&
@@ -40,7 +38,6 @@ namespace NestedFlowchart.Rules
                 //Create arc for output port place
                 outputPortPlaceIdSubPage = previousNodes.FirstOrDefault(x => x.CurrentMainPage == sourceNode?.CurrentMainPage &&
                                                   x.outputPortSubPagePlaceModel != null).outputPortSubPagePlaceModel.Id1;
-
 
                 //กรณีอยู่หน้าแรก และยังไม่ประกาศ i ให้ใช้ arc variable array เฉยๆ นอกจากนั้นไป get ตาม page
                 arcVariable = isDeclaredI ? GetArcVariableByPageAndType(arrayName, destinationNode.CurrentMainPage, type) : arrayName;
@@ -74,7 +71,6 @@ namespace NestedFlowchart.Rules
                 destinationNode.CurrentSubPage--;
                 return (arcModel, arcModel2, destinationNode, mainPage, subPage);
             }
-
 
             //กรณีอยู่หน้าแรก และยังไม่ประกาศ i ให้ใช้ arc variable array เฉยๆ นอกจากนั้นไป get ตาม page
             arcVariable = isDeclaredI ? GetArcVariableByPageAndType(arrayName, destinationNode.CurrentMainPage, type) : arrayName;
@@ -139,22 +135,21 @@ namespace NestedFlowchart.Rules
             }
             else
             {
-                arcModel.TransEnd = IsUsePreviousFalse ? 
+                arcModel.TransEnd = IsUsePreviousFalse ?
                     sourceNode.currentFalseTransitionModel.Id1 :
                     sourceNode?.currentTransitionModel?.Id1;
 
-                arcModel.PlaceEnd = !string.IsNullOrEmpty(outputPortPlaceIdSubPage) ? 
-                    outputPortPlaceIdSubPage : 
+                arcModel.PlaceEnd = !string.IsNullOrEmpty(outputPortPlaceIdSubPage) ?
+                    outputPortPlaceIdSubPage :
                     destinationNode?.currentPlaceModel?.Id1;
             }
 
             return (arcModel, null, destinationNode, destinationNode.CurrentMainPage, destinationNode.CurrentSubPage);
         }
 
-
         public string GetArcVariableByPageAndType(string arrayName, int page, int type)
         {
-            if(type == (int)eDeclareType.IsArray)
+            if (type == (int)eDeclareType.IsArray)
             {
                 return page switch
                 {
@@ -166,7 +161,7 @@ namespace NestedFlowchart.Rules
                     _ => string.Empty
                 };
             }
-            else if(type == (int)eDeclareType.IsNone)
+            else if (type == (int)eDeclareType.IsNone)
             {
                 return page switch
                 {
@@ -178,13 +173,12 @@ namespace NestedFlowchart.Rules
                     _ => string.Empty
                 };
             }
-            else if(type == (int)eDeclareType.IsInteger)
+            else if (type == (int)eDeclareType.IsInteger)
             {
                 return arrayName;
             }
 
             return string.Empty;
-            
         }
 
         public string GetArcVariableOnlyOne(int page)
@@ -193,14 +187,19 @@ namespace NestedFlowchart.Rules
             {
                 case 0:
                     return "i";
+
                 case 1:
                     return "j";
+
                 case 2:
                     return "k";
+
                 case 3:
                     return "l";
+
                 case 4:
                     return "m";
+
                 default:
                     return string.Empty;
             }
@@ -208,11 +207,11 @@ namespace NestedFlowchart.Rules
 
         public string GetArcVariableAfterIncrement(string arrayName, string incVar)
         {
-            if(incVar != null)
+            if (incVar != null)
             {
                 return incVar switch
                 {
-                    var str when str.Contains("i2") => arrayName.Replace("i","i2"),
+                    var str when str.Contains("i2") => arrayName.Replace("i", "i2"),
                     var str when str.Contains("j2") => arrayName.Replace("j", "j2"),
                     var str when str.Contains("k2") => arrayName.Replace("k", "k2"),
                     var str when str.Contains("l2") => arrayName.Replace("l", "l2"),
@@ -224,6 +223,5 @@ namespace NestedFlowchart.Rules
 
             return arrayName;
         }
-
     }
 }
