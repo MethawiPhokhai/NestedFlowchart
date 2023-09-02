@@ -74,7 +74,7 @@ namespace NestedFlowchart.Functions
                     #region Arrow
                     if (arrows.Any())
                     {
-                        CreateArc(allTemplates, pages, previousNodes, isDeclaredI, arrayName, page1Position, page2Position, page3Position, page4Position, page5Position, arrows);
+                        CreateArc(allTemplates, pages, previousNodes, isDeclaredI, arrayName, page1Position, page2Position, page3Position, page4Position, page5Position, arrows, declareType);
 
                         // if initial marking เป็น type none, ให้เอาตัวแปรมาแทน x เช่น i แทน x ในหน้า main
                         if (previousNodes.LastOrDefault().InitialMarkingType == (int)eDeclareType.IsNone)
@@ -564,7 +564,7 @@ namespace NestedFlowchart.Functions
             }
 
             //Last Arc to End node
-            CreateArc(allTemplates, pages, previousNodes, isDeclaredI, arrayName, page1Position, page2Position, page3Position, page4Position, page5Position, arrows);
+            CreateArc(allTemplates, pages, previousNodes, isDeclaredI, arrayName, page1Position, page2Position, page3Position, page4Position, page5Position, arrows, declareType);
 
             #endregion AppleRules
 
@@ -583,7 +583,7 @@ namespace NestedFlowchart.Functions
             File.WriteAllText(ResultPath + @"\Result.cpn", firstCPN);
         }
 
-        private void CreateArc(string[] allTemplates, PageDeclare pages, List<PreviousNode> previousNodes, bool isDeclaredI, string arrayName, PositionManagements page1Position, PositionManagements page2Position, PositionManagements page3Position, PositionManagements page4Position, PositionManagements page5Position, List<TempArrow> arrows)
+        private void CreateArc(string[] allTemplates, PageDeclare pages, List<PreviousNode> previousNodes, bool isDeclaredI, string arrayName, PositionManagements page1Position, PositionManagements page2Position, PositionManagements page3Position, PositionManagements page4Position, PositionManagements page5Position, List<TempArrow> arrows, int type)
         {
             var currentPreviousNode = previousNodes.LastOrDefault();
 
@@ -645,7 +645,7 @@ namespace NestedFlowchart.Functions
 
 
             // Create arc with previous node
-            var (arc, arc2, pv, currentMain, currentSub) = CreateArcWithPreviousNode(arrows.LastOrDefault(), currentPreviousNode.Type, pagePosition, arrayName, previousNodes, isDeclaredI);
+            var (arc, arc2, pv, currentMain, currentSub) = CreateArcWithPreviousNode(arrows.LastOrDefault(), currentPreviousNode.Type, pagePosition, arrayName, previousNodes, isDeclaredI, type);
 
             // Create arc and page node
             var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], arc);

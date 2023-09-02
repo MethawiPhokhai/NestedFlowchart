@@ -10,11 +10,12 @@ namespace NestedFlowchart.Rules
     {
         public (ArcModel?, ArcModel?, PreviousNode, int, int) CreateArcWithPreviousNode(
             TempArrow arrow, 
-            string type,
+            string elementType,
             PositionManagements position, 
             string arrayName,
             List<PreviousNode> previousNodes, 
-            bool isDeclaredI)
+            bool isDeclaredI,
+            int type)
         {
             string arcVariable;
             string orientation;
@@ -42,7 +43,7 @@ namespace NestedFlowchart.Rules
 
 
                 //กรณีอยู่หน้าแรก และยังไม่ประกาศ i ให้ใช้ arc variable array เฉยๆ นอกจากนั้นไป get ตาม page
-                arcVariable = isDeclaredI ? DeclareArcVariable(arrayName, destinationNode.CurrentMainPage) : arrayName;
+                arcVariable = isDeclaredI ? GetArcVariableByPageAndType(arrayName, destinationNode.CurrentMainPage, type) : arrayName;
 
                 arcModel = new ArcModel
                 {
@@ -105,7 +106,7 @@ namespace NestedFlowchart.Rules
             //กรณีลากใส่ P5
             else if (arrow.Id.Contains("KSG-26"))
             {
-                type = "transition";
+                elementType = "transition";
                 arcVariable = "(i,j2,array)";
             }
             //Nestedif start to T1
@@ -122,16 +123,16 @@ namespace NestedFlowchart.Rules
                 arrow.Id.Contains("5a-79") || /*NestedLoop T13 to CN3*/
                 arrow.Id.Contains("5a-85") /*NestedLoop T14 to CN2*/)
             {
-                type = "transition";
+                elementType = "transition";
             }
 
             if (arrow.Id.Contains("Rj-71"))
             {
-                type = "place";
+                elementType = "place";
             }
 
             //ถ้าเป็น place ให้ใช้ PtoT, ถ้าเป็น transition ให้ใช้ TtoP
-            orientation = (type == "place") ? "PtoT" : "TtoP";
+            orientation = (elementType == "place") ? "PtoT" : "TtoP";
 
             arcModel = new ArcModel
             {
@@ -143,7 +144,7 @@ namespace NestedFlowchart.Rules
                 Type = arcVariable
             };
 
-            if (type == "place")
+            if (elementType == "place")
             {
                 arcModel.PlaceEnd = sourceNode?.currentPlaceModel?.Id1;
                 arcModel.TransEnd = destinationNode?.currentTransitionModel?.Id1;
