@@ -205,6 +205,7 @@ namespace NestedFlowchart.Functions
             }
             else if(declareType == (int)eDeclareType.IsInteger)
             {
+                //Todo : need dynamic amount of list
                 colorSetProduct1 = new ColorSetModel()
                 {
                     Id = IdManagements.GetlastestColorSetId(),
@@ -260,7 +261,7 @@ namespace NestedFlowchart.Functions
 
         public string CreateAllVariables(TransformationApproach approach, string[] allTemplates, string arrayName, int declareType)
         {
-            VarModel var1Model = null, var2Model = null;
+            VarModel var1Model = null, var2Model = null, var3Model = null;
             if (declareType == (int)eDeclareType.IsArray)
             {
                 var1Model = new VarModel()
@@ -279,15 +280,20 @@ namespace NestedFlowchart.Functions
                     Layout = $"var {arrayName}2 : INTs;"
                 };
             }
-            
-            VarModel var3Model = new VarModel()
+            else
             {
-                Id = IdManagements.GetlastestVarId(),
-                Type = "INT",
-                Name = "x,y",
-                Layout = "var x,y: INT;"
-            };
+                //Use x when nested loop
+                arrayName = (String.IsNullOrEmpty(arrayName)) ? "(x)" : arrayName;
 
+                var3Model = new VarModel()
+                {
+                    Id = IdManagements.GetlastestVarId(),
+                    Type = "INT",
+                    Name = arrayName.Substring(1, arrayName.Length - 2),
+                    Layout = $"var {arrayName.Substring(1, arrayName.Length - 2)}: INT;"
+                };
+            }
+            
             VarModel var4Model = new VarModel()
             {
                 Id = IdManagements.GetlastestVarId(),
