@@ -31,40 +31,7 @@ namespace NestedFlowchart.Rules
             //ถ้า CurrentMainPage ของ destination - source = 1 แสดงว่าออกจาก Subpage ให้ลากใส่ Output port place ด้วย
             if (sourceNode?.CurrentMainPage - destinationNode?.CurrentMainPage > 0)
             {
-                //Create arc for output port place
-                outputPortPlaceIdMainPage = previousNodes.FirstOrDefault(x => x.CurrentMainPage == sourceNode?.CurrentMainPage &&
-                                                  x.outputPortSubPagePlaceModel != null).outputPortMainPagePlaceModel.Id1;
-
-                //Create arc for output port place
-                outputPortPlaceIdSubPage = previousNodes.FirstOrDefault(x => x.CurrentMainPage == sourceNode?.CurrentMainPage &&
-                                                  x.outputPortSubPagePlaceModel != null).outputPortSubPagePlaceModel.Id1;
-
-                //กรณีอยู่หน้าแรก และยังไม่ประกาศ i ให้ใช้ arc variable array เฉยๆ นอกจากนั้นไป get ตาม page
-                arcVariable = isDeclaredI ? GetArcVariableByPageAndType(arrayName, destinationNode.CurrentMainPage, type) : arrayName;
-
-                arcModel = new ArcModel
-                {
-                    Id1 = IdManagements.GetlastestArcId(),
-                    Id2 = IdManagements.GetlastestArcId(),
-                    xPos = position.xArcPos,
-                    yPos = position.yArcPos == 84 ? position.yArcPos : position.GetLastestyArcPos(),
-                    TransEnd = destinationNode?.currentTransitionModel?.Id1,
-                    PlaceEnd = outputPortPlaceIdMainPage,
-                    Orientation = "PtoT",
-                    Type = arcVariable
-                };
-
-                arcModel2 = new ArcModel
-                {
-                    Id1 = IdManagements.GetlastestArcId(),
-                    Id2 = IdManagements.GetlastestArcId(),
-                    xPos = position.xArcPos,
-                    yPos = position.yArcPos == 84 ? position.yArcPos : position.GetLastestyArcPos(),
-                    TransEnd = sourceNode.currentFalseTransitionModel.Id1,
-                    PlaceEnd = outputPortPlaceIdSubPage,
-                    Orientation = "TtoP",
-                    Type = arcVariable
-                };
+                CreateArcToOutputPortPlace(position, arrayName, previousNodes, isDeclaredI, type, out arcVariable, out arcModel, out arcModel2, out outputPortPlaceIdSubPage, out outputPortPlaceIdMainPage, sourceNode, destinationNode);
 
                 var mainPage = destinationNode.CurrentMainPage;
                 var subPage = destinationNode.CurrentSubPage;
@@ -147,6 +114,7 @@ namespace NestedFlowchart.Rules
             return (arcModel, null, destinationNode, destinationNode.CurrentMainPage, destinationNode.CurrentSubPage);
         }
 
+
         public string GetArcVariableByPageAndType(string arrayName, int page, int type)
         {
             if (type == (int)eDeclareType.IsArray)
@@ -223,5 +191,44 @@ namespace NestedFlowchart.Rules
 
             return arrayName;
         }
+
+        private void CreateArcToOutputPortPlace(PositionManagements position, string arrayName, List<PreviousNode> previousNodes, bool isDeclaredI, int type, out string arcVariable, out ArcModel arcModel, out ArcModel arcModel2, out string outputPortPlaceIdSubPage, out string outputPortPlaceIdMainPage, PreviousNode? sourceNode, PreviousNode? destinationNode)
+        {
+            //Create arc for output port place
+            outputPortPlaceIdMainPage = previousNodes.FirstOrDefault(x => x.CurrentMainPage == sourceNode?.CurrentMainPage &&
+                                              x.outputPortSubPagePlaceModel != null).outputPortMainPagePlaceModel.Id1;
+
+            //Create arc for output port place
+            outputPortPlaceIdSubPage = previousNodes.FirstOrDefault(x => x.CurrentMainPage == sourceNode?.CurrentMainPage &&
+                                              x.outputPortSubPagePlaceModel != null).outputPortSubPagePlaceModel.Id1;
+
+            //กรณีอยู่หน้าแรก และยังไม่ประกาศ i ให้ใช้ arc variable array เฉยๆ นอกจากนั้นไป get ตาม page
+            arcVariable = isDeclaredI ? GetArcVariableByPageAndType(arrayName, destinationNode.CurrentMainPage, type) : arrayName;
+
+            arcModel = new ArcModel
+            {
+                Id1 = IdManagements.GetlastestArcId(),
+                Id2 = IdManagements.GetlastestArcId(),
+                xPos = position.xArcPos,
+                yPos = position.yArcPos == 84 ? position.yArcPos : position.GetLastestyArcPos(),
+                TransEnd = destinationNode?.currentTransitionModel?.Id1,
+                PlaceEnd = outputPortPlaceIdMainPage,
+                Orientation = "PtoT",
+                Type = arcVariable
+            };
+
+            arcModel2 = new ArcModel
+            {
+                Id1 = IdManagements.GetlastestArcId(),
+                Id2 = IdManagements.GetlastestArcId(),
+                xPos = position.xArcPos,
+                yPos = position.yArcPos == 84 ? position.yArcPos : position.GetLastestyArcPos(),
+                TransEnd = sourceNode.currentFalseTransitionModel.Id1,
+                PlaceEnd = outputPortPlaceIdSubPage,
+                Orientation = "TtoP",
+                Type = arcVariable
+            };
+        }
+
     }
 }
