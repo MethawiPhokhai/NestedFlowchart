@@ -44,43 +44,8 @@ namespace NestedFlowchart.Rules
 
             //When have increment, use another arc variable
             arcVariable = GetArcVariableAfterIncrement(arcVariable, sourceNode?.currentTransitionModel?.CodeSegment);
-
-            //กรณีลากใส่ CN2 (False)
-            if (arrow.Id.Contains("3K-55") || arrow.Id.Contains("Rj-61") ||
-            arrow.Id.Contains("Rj-58") || arrow.Id.Contains("Rj-52") ||
-            arrow.Id.Contains("Rj-46") || arrow.Id.Contains("Rj-35") ||
-            arrow.Id.Contains("5a-94") /* End NestedLoop */)
-            {
-                IsUsePreviousFalse = true;
-            }
-            //กรณีลากใส่ End
-            else if (arrow.Id.Contains("3K-39"))
-            {
-                IsUsePreviousFalse = true;
-                arcVariable = "array";
-            }
-            //Nestedif start to T1
-            else if (arrow.Id.Contains("SwmT-1"))
-            {
-                arcVariable = "i";
-            }
-
-            if (arrow.Id.Contains("KSG-26") || //Bubble sort into P5
-                arrow.Id.Contains("Rj-61") ||
-                arrow.Id.Contains("Rj-58") || arrow.Id.Contains("Rj-52") ||
-                arrow.Id.Contains("Rj-46") || arrow.Id.Contains("Rj-35") ||
-                arrow.Id.Contains("5a-39") || /*NestedLoop T11 to CN5*/
-                arrow.Id.Contains("5a-73") ||/*NestedLoop T12 to CN4*/
-                arrow.Id.Contains("5a-79") || /*NestedLoop T13 to CN3*/
-                arrow.Id.Contains("5a-85") /*NestedLoop T14 to CN2*/)
-            {
-                elementType = "transition";
-            }
-
-            if (arrow.Id.Contains("Rj-71"))
-            {
-                elementType = "place";
-            }
+            
+            LimitationCondition(arrow, ref elementType, ref arcVariable, ref IsUsePreviousFalse);
 
             //ถ้าเป็น place ให้ใช้ PtoT, ถ้าเป็น transition ให้ใช้ TtoP
             orientation = (elementType == "place") ? "PtoT" : "TtoP";
@@ -192,6 +157,7 @@ namespace NestedFlowchart.Rules
             return arrayName;
         }
 
+
         private void CreateArcToOutputPortPlace(PositionManagements position, string arrayName, List<PreviousNode> previousNodes, bool isDeclaredI, int type, out string arcVariable, out ArcModel arcModel, out ArcModel arcModel2, out string outputPortPlaceIdSubPage, out string outputPortPlaceIdMainPage, PreviousNode? sourceNode, PreviousNode? destinationNode)
         {
             //Create arc for output port place
@@ -228,6 +194,45 @@ namespace NestedFlowchart.Rules
                 Orientation = "TtoP",
                 Type = arcVariable
             };
+        }
+        private void LimitationCondition(TempArrow arrow, ref string elementType, ref string arcVariable, ref bool IsUsePreviousFalse)
+        {
+            //กรณีลากใส่ CN2 (False)
+            if (arrow.Id.Contains("3K-55") || arrow.Id.Contains("Rj-61") ||
+            arrow.Id.Contains("Rj-58") || arrow.Id.Contains("Rj-52") ||
+            arrow.Id.Contains("Rj-46") || arrow.Id.Contains("Rj-35") ||
+            arrow.Id.Contains("5a-94") /* End NestedLoop */)
+            {
+                IsUsePreviousFalse = true;
+            }
+            //กรณีลากใส่ End
+            else if (arrow.Id.Contains("3K-39"))
+            {
+                IsUsePreviousFalse = true;
+                arcVariable = "array";
+            }
+            //Nestedif start to T1
+            else if (arrow.Id.Contains("SwmT-1"))
+            {
+                arcVariable = "i";
+            }
+
+            if (arrow.Id.Contains("KSG-26") || //Bubble sort into P5
+                arrow.Id.Contains("Rj-61") ||
+                arrow.Id.Contains("Rj-58") || arrow.Id.Contains("Rj-52") ||
+                arrow.Id.Contains("Rj-46") || arrow.Id.Contains("Rj-35") ||
+                arrow.Id.Contains("5a-39") || /*NestedLoop T11 to CN5*/
+                arrow.Id.Contains("5a-73") ||/*NestedLoop T12 to CN4*/
+                arrow.Id.Contains("5a-79") || /*NestedLoop T13 to CN3*/
+                arrow.Id.Contains("5a-85") /*NestedLoop T14 to CN2*/)
+            {
+                elementType = "transition";
+            }
+
+            if (arrow.Id.Contains("Rj-71"))
+            {
+                elementType = "place";
+            }
         }
 
     }
