@@ -16,6 +16,7 @@ namespace NestedFlowchart.Rules
             bool isDeclaredI,
             int type)
         {
+            #region Variable
             string arcVariable;
             string orientation;
             ArcModel arcModel, arcModel2;
@@ -23,6 +24,7 @@ namespace NestedFlowchart.Rules
             bool IsUsePreviousFalse = false;
             string outputPortPlaceIdSubPage = string.Empty;
             string outputPortPlaceIdMainPage = string.Empty;
+            #endregion
 
             //หาตัวแรกที่ id ตรงกับ Destination เพื่อเอามาสร้าง Arc ต่อกัน
             var sourceNode = previousNodes.FirstOrDefault(x => x.elementId == arrow.Source);
@@ -44,7 +46,7 @@ namespace NestedFlowchart.Rules
 
             //When have increment, use another arc variable
             arcVariable = GetArcVariableAfterIncrement(arcVariable, sourceNode?.currentTransitionModel?.CodeSegment);
-            
+
             LimitationCondition(arrow, ref elementType, ref arcVariable, ref IsUsePreviousFalse);
 
             //ถ้าเป็น place ให้ใช้ PtoT, ถ้าเป็น transition ให้ใช้ TtoP
@@ -62,23 +64,23 @@ namespace NestedFlowchart.Rules
 
             if (elementType == "place")
             {
-                arcModel.PlaceEnd = sourceNode?.currentPlaceModel?.Id1;
-                arcModel.TransEnd = destinationNode?.currentTransitionModel?.Id1;
+                SetPlaceEndAndTransEnd(
+                    arcModel,
+                    sourceNode?.currentPlaceModel?.Id1,
+                    destinationNode?.currentTransitionModel?.Id1
+                );
             }
             else
             {
-                arcModel.TransEnd = IsUsePreviousFalse ?
-                    sourceNode.currentFalseTransitionModel.Id1 :
-                    sourceNode?.currentTransitionModel?.Id1;
-
-                arcModel.PlaceEnd = !string.IsNullOrEmpty(outputPortPlaceIdSubPage) ?
-                    outputPortPlaceIdSubPage :
-                    destinationNode?.currentPlaceModel?.Id1;
+                SetPlaceEndAndTransEnd(
+                    arcModel,
+                    !string.IsNullOrEmpty(outputPortPlaceIdSubPage) ? outputPortPlaceIdSubPage : destinationNode?.currentPlaceModel?.Id1,
+                    IsUsePreviousFalse ? sourceNode.currentFalseTransitionModel.Id1 : sourceNode?.currentTransitionModel?.Id1
+                );
             }
 
             return (arcModel, null, destinationNode, destinationNode.CurrentMainPage, destinationNode.CurrentSubPage);
         }
-
 
         public string GetArcVariableByPageAndType(string arrayName, int page, int type)
         {
@@ -157,7 +159,6 @@ namespace NestedFlowchart.Rules
             return arrayName;
         }
 
-
         private void CreateArcToOutputPortPlace(PositionManagements position, string arrayName, List<PreviousNode> previousNodes, bool isDeclaredI, int type, out string arcVariable, out ArcModel arcModel, out ArcModel arcModel2, out string outputPortPlaceIdSubPage, out string outputPortPlaceIdMainPage, PreviousNode? sourceNode, PreviousNode? destinationNode)
         {
             //Create arc for output port place
@@ -195,6 +196,7 @@ namespace NestedFlowchart.Rules
                 Type = arcVariable
             };
         }
+
         private void LimitationCondition(TempArrow arrow, ref string elementType, ref string arcVariable, ref bool IsUsePreviousFalse)
         {
             //กรณีลากใส่ CN2 (False)
@@ -235,5 +237,10 @@ namespace NestedFlowchart.Rules
             }
         }
 
+        private void SetPlaceEndAndTransEnd(ArcModel arcModel, string placeEndId, string transEndId)
+        {
+            arcModel.PlaceEnd = placeEndId;
+            arcModel.TransEnd = transEndId;
+        }
     }
 }
