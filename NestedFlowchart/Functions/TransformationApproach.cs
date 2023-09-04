@@ -29,7 +29,7 @@ namespace NestedFlowchart.Functions
             return string.Empty;
         }
 
-        public string CreateVar(string varTemplate, VarModel model)
+        public string CreateVar(string varTemplate, VarModel? model)
         {
             if(model != null)
             {
@@ -258,9 +258,9 @@ namespace NestedFlowchart.Functions
             return allColorSet;
         }
 
-        public string CreateAllVariables(TransformationApproach approach, string[] allTemplates, string arrayName, string arrayName2, int declareType)
+        public string CreateAllVariables(TransformationApproach approach, string[] allTemplates, string arrayName, int declareType)
         {
-            VarModel var1Model = null;
+            VarModel var1Model = null, var2Model = null;
             if (declareType == (int)eDeclareType.IsArray)
             {
                 var1Model = new VarModel()
@@ -270,16 +270,16 @@ namespace NestedFlowchart.Functions
                     Name = arrayName,
                     Layout = $"var {arrayName}: INTs;"
                 };
+
+                var2Model = new VarModel()
+                {
+                    Id = IdManagements.GetlastestVarId(),
+                    Type = "INTs",
+                    Name = arrayName + "2",
+                    Layout = $"var {arrayName}2 : INTs;"
+                };
             }
             
-			VarModel var2Model = new VarModel()
-			{
-				Id = IdManagements.GetlastestVarId(),
-				Type = "INTs",
-				Name = arrayName2,
-				Layout = $"var {arrayName2}: INTs;"
-			};
-
             VarModel var3Model = new VarModel()
             {
                 Id = IdManagements.GetlastestVarId(),

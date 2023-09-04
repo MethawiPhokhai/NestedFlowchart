@@ -46,7 +46,6 @@ namespace NestedFlowchart.Functions
             //Declare ArrayName for arc
             bool isDeclaredI = false;
             string arrayName = string.Empty;
-            string arrayName2 = "array2";
 
             //Declare page position
             PositionManagements page1Position = new PositionManagements();
@@ -582,7 +581,7 @@ namespace NestedFlowchart.Functions
 
             string allColorSet = _approach.CreateAllColorSets(_approach, allTemplates, declareType);
 
-            string allVar = _approach.CreateAllVariables(_approach, allTemplates, arrayName, arrayName2, declareType);
+            string allVar = _approach.CreateAllVariables(_approach, allTemplates, arrayName, declareType);
 
             string allPage = _approach.CreateAllPages(_approach, allTemplates, pages);
 
