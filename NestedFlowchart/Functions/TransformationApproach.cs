@@ -123,7 +123,7 @@ namespace NestedFlowchart.Functions
 
         #region Create All
 
-        public string CreateAllColorSets(TransformationApproach approach, string[] allTemplates, int declareType)
+        public string CreateAllColorSets(TransformationApproach approach, string[] allTemplates, int declareType, int variableCount)
         {
             ColorSetModel colorSetProduct1 = null;
             ColorSetModel colorSetProduct2 = null;
@@ -205,17 +205,20 @@ namespace NestedFlowchart.Functions
             }
             else if(declareType == (int)eDeclareType.IsInteger)
             {
-                //Todo : need dynamic amount of list
+                var typeList = new List<string>();
+                string textList = string.Empty;
+                for (int i = 0; i < variableCount; i++)
+                {
+                    typeList.Add("INT");
+                    textList += "INT*";
+                }
+
                 colorSetProduct1 = new ColorSetModel()
                 {
                     Id = IdManagements.GetlastestColorSetId(),
                     Name = "aa",
-                    Type = new List<string>()
-                    {
-                        "INT",
-                        "INT"
-                    },
-                    Text = "colset aa = product INT*INT;",
+                    Type = typeList,
+                    Text = $"colset aa = product {textList.Remove(textList.Length - 1)};",
                     ColsetType = "product"
                 };
             }

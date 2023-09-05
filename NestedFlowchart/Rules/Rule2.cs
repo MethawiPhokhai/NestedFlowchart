@@ -67,14 +67,14 @@ namespace NestedFlowchart.Rules
             return (pl, tr, a1);
         }
 
-        public (string, string, int) AssignInitialMarking(
+        public (string, string, int, int) AssignInitialMarking(
             List<XMLCellNode> sortedFlowcharts, 
             string arcVariable,
             PreviousNode previousNode, 
             int i)
         {
             string cSeg = string.Empty;
-            int declareType;
+            int declareType, variableCount = 0;
 
             if (sortedFlowcharts[i].ValueText.Contains('[')) //กรณีเป็น Array
             {
@@ -98,6 +98,8 @@ namespace NestedFlowchart.Rules
             {
                 string arrayValue = string.Empty;
                 var arrayValues = sortedFlowcharts[i].ValueText.Split("<br>");
+                variableCount = arrayValues.Length;
+
                 foreach ( var val in arrayValues )
                 {
                     arrayValue += SubstringBefore(val, '=').Trim();
@@ -121,7 +123,7 @@ namespace NestedFlowchart.Rules
                 declareType = (int)eDeclareType.IsInteger;
             }
 
-            return (arcVariable, cSeg, declareType);
+            return (arcVariable, cSeg, declareType, variableCount);
         }
 
         private string SubstringBefore(string str, char ch)

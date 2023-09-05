@@ -40,6 +40,7 @@ namespace NestedFlowchart.Functions
 
             int declareType = 0;
             int countSubPage = 0;
+            int variableCount = 0;
             PageDeclare pages = new PageDeclare();
             List<PreviousNode> previousNodes = new List<PreviousNode>();
 
@@ -112,7 +113,7 @@ namespace NestedFlowchart.Functions
                     if ((flowchartValue.ToLower().Trim().Contains("i =")))
                     {
                         //Set Initial Marking
-                        (var arcVar, _, declareType) = _rule2.AssignInitialMarking(sortedFlowcharts, arrayName, previousNodes.LastOrDefault(), i);
+                        (var arcVar, _, declareType, variableCount) = _rule2.AssignInitialMarking(sortedFlowcharts, arrayName, previousNodes.LastOrDefault(), i);
                         arrayName = arcVar;
 
                         //Create Start place
@@ -144,7 +145,7 @@ namespace NestedFlowchart.Functions
                     else
                     {
                         //Set Initial Marking
-                        (var arcVar, var cSeg, declareType) = _rule2.AssignInitialMarking(sortedFlowcharts, arrayName, previousNodes.LastOrDefault(), i);
+                        (var arcVar, var cSeg, declareType, variableCount) = _rule2.AssignInitialMarking(sortedFlowcharts, arrayName, previousNodes.LastOrDefault(), i);
                         arrayName = arcVar;
 
                         //Apply Rule
@@ -579,7 +580,7 @@ namespace NestedFlowchart.Functions
 
             #endregion AppleRules
 
-            string allColorSet = _approach.CreateAllColorSets(_approach, allTemplates, declareType);
+            string allColorSet = _approach.CreateAllColorSets(_approach, allTemplates, declareType, variableCount);
 
             string allVar = _approach.CreateAllVariables(_approach, allTemplates, arrayName, declareType);
 
