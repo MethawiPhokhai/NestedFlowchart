@@ -55,6 +55,13 @@ namespace NestedFlowchart.Rules
                 arcVariable = "z";
             }
 
+            //if destinationNode เป็น end และเป็น array ให้ใช้ arc variable เป็น array
+            if(destinationNode.currentPlaceModel?.Name.ToLower() == "end" && type == (int)eDeclareType.IsArray)
+            {
+                IsUsePreviousFalse = true;
+                arcVariable = "array";
+            }
+
             //ถ้าเป็น place ให้ใช้ PtoT, ถ้าเป็น transition ให้ใช้ TtoP
             orientation = (elementType == "place") ? "PtoT" : "TtoP";
 
@@ -212,12 +219,6 @@ namespace NestedFlowchart.Rules
             arrow.Id.Contains("5a-94") /* End NestedLoop */)
             {
                 IsUsePreviousFalse = true;
-            }
-            //กรณีลากใส่ End
-            else if (arrow.Id.Contains("3K-39"))
-            {
-                IsUsePreviousFalse = true;
-                arcVariable = "array";
             }
 
             if (arrow.Id.Contains("KSG-26") || //Bubble sort into P5
