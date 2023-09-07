@@ -562,6 +562,9 @@ namespace NestedFlowchart.Functions
                                         previousTypeReturn,
                                         previousNodes.LastOrDefault().CurrentMainPage,
                                         previousNodes.LastOrDefault().CurrentSubPage);
+
+                    //Invert outputTransition1 and outputTransition2
+                    pv.outputPreviousTransition = (outputRuleTransition1 == null) ? outputRuleTransition1 : outputRuleTransition2;
                     previousNodes.Add(pv);
 
                     var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], outputRuleArc1);

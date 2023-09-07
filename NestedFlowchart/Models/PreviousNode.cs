@@ -15,6 +15,9 @@ namespace NestedFlowchart.Models
         public PlaceModel outputPortMainPagePlaceModel { get; set; } = new PlaceModel();
         public PlaceModel outputPortSubPagePlaceModel  { get; set; } = new PlaceModel();
 
+        //Output previous transition
+        public TransitionModel outputPreviousTransition { get; set; } = new TransitionModel();
+
         //place, transition
         public string Type { get; set; }
 

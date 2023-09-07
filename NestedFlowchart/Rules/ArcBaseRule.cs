@@ -18,7 +18,6 @@ namespace NestedFlowchart.Rules
         {
             #region Variable
             string arcVariable;
-            string orientation;
             ArcModel arcModel, arcModel2;
 
             bool IsUsePreviousFalse = false;
@@ -63,7 +62,7 @@ namespace NestedFlowchart.Rules
             }
 
             //ถ้าเป็น place ให้ใช้ PtoT, ถ้าเป็น transition ให้ใช้ TtoP
-            orientation = (elementType == "place") ? "PtoT" : "TtoP";
+            var orientation = (elementType == "place") ? "PtoT" : "TtoP";
 
             arcModel = new ArcModel
             {
@@ -74,6 +73,10 @@ namespace NestedFlowchart.Rules
                 Orientation = orientation,
                 Type = arcVariable
             };
+
+            var currentSourceTransitionId = (sourceNode?.outputPreviousTransition?.Id1 != null) 
+                ? sourceNode?.outputPreviousTransition?.Id1
+                : sourceNode?.currentTransitionModel?.Id1;
 
             if (elementType == "place")
             {
@@ -88,7 +91,7 @@ namespace NestedFlowchart.Rules
                 SetPlaceEndAndTransEnd(
                     arcModel,
                     !string.IsNullOrEmpty(outputPortPlaceIdSubPage) ? outputPortPlaceIdSubPage : destinationNode?.currentPlaceModel?.Id1,
-                    IsUsePreviousFalse ? sourceNode.currentFalseTransitionModel.Id1 : sourceNode?.currentTransitionModel?.Id1
+                    IsUsePreviousFalse ? sourceNode.currentFalseTransitionModel.Id1 : currentSourceTransitionId
                 );
             }
 
