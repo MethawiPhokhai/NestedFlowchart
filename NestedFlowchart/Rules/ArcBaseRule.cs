@@ -232,6 +232,7 @@ namespace NestedFlowchart.Rules
                 elementType = "transition";
             }
 
+            //Nested-If P6 to T3
             if (arrow.Id.Contains("Rj-71"))
             {
                 elementType = "place";
