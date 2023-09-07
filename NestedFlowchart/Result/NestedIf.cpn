@@ -116,6 +116,13 @@
           <id>m2</id>
           <layout>var m,m2: INT;</layout>
         </var>
+        <var id="ID1413052380">
+          <type>
+            <id>INT</id>
+          </type>
+          <id>z</id>
+          <layout>var z: INT;</layout>
+        </var>
       </block>
     </globbox>
     <page id="ID6">
@@ -2112,7 +2119,7 @@ end</text>
         <transend idref="ID1412848772"/>
         <placeend idref="ID1412948772"/>
         <annot id="ID1412949815">
-          <posattr x="-9.500000"
+          <posattr x="-7.500000"
                    y="87.000000"/>
           <fillattr colour="White"
                     pattern="Solid"
@@ -2123,7 +2130,7 @@ end</text>
           <textattr colour="Black"
                     bold="false"/>
           <text tool="CPN Tools"
-                version="4.0.1">i</text>
+                version="4.0.1">z</text>
         </annot>
       </arc>
       <arc id="ID1412949816"
@@ -3721,10 +3728,8 @@ end</text>
           <IndexNode expanded="false"/>
         </IndexNode>
       </IndexNode>
-      <IndexNode expanded="false">
-        <IndexNode expanded="false"/>
-      </IndexNode>
-      <IndexNode expanded="false">
+      <IndexNode expanded="false"/>
+      <IndexNode expanded="true">
         <IndexNode expanded="false">
           <IndexNode expanded="true"/>
           <IndexNode expanded="true"/>
@@ -3745,7 +3750,8 @@ end</text>
           <IndexNode expanded="false"/>
           <IndexNode expanded="false"/>
           <IndexNode expanded="false"/>
-          <IndexNode expanded="false"/>
+          <IndexNode expanded="true"/>
+          <IndexNode expanded="true"/>
         </IndexNode>
       </IndexNode>
       <IndexNode expanded="false"/>

@@ -337,6 +337,14 @@ namespace NestedFlowchart.Functions
                 Layout = "var m,m2: INT;"
             };
 
+            VarModel var9Model = new VarModel()
+            {
+                Id = IdManagements.GetlastestVarId(),
+                Type = "INT",
+                Name = "z",
+                Layout = "var z: INT;"
+            };
+
             var var1 = approach.CreateVar(allTemplates[(int)TemplateEnum.VarTemplate], var1Model);
             var var2 = approach.CreateVar(allTemplates[(int)TemplateEnum.VarTemplate], var2Model);
 			var var3 = approach.CreateVar(allTemplates[(int)TemplateEnum.VarTemplate], var3Model);
@@ -345,7 +353,8 @@ namespace NestedFlowchart.Functions
             var var6 = approach.CreateVar(allTemplates[(int)TemplateEnum.VarTemplate], var6Model);
             var var7 = approach.CreateVar(allTemplates[(int)TemplateEnum.VarTemplate], var7Model);
             var var8 = approach.CreateVar(allTemplates[(int)TemplateEnum.VarTemplate], var8Model);
-            var allVar = var1 + var2 + var3 + var4 + var5 + var6 + var7 + var8;
+            var var9 = approach.CreateVar(allTemplates[(int)TemplateEnum.VarTemplate], var9Model);
+            var allVar = var1 + var2 + var3 + var4 + var5 + var6 + var7 + var8 + var9;
             return allVar;
         }
 

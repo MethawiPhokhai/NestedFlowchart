@@ -49,6 +49,12 @@ namespace NestedFlowchart.Rules
 
             LimitationCondition(arrow, ref elementType, ref arcVariable, ref IsUsePreviousFalse);
 
+            //if sourceNode เป็น start และไม่มี array ให้ใช้ arc variable เป็น z
+            if(sourceNode.currentPlaceModel?.Name.ToLower() == "start" && type != (int)eDeclareType.IsArray)
+            {
+                arcVariable = "z";
+            }
+
             //ถ้าเป็น place ให้ใช้ PtoT, ถ้าเป็น transition ให้ใช้ TtoP
             orientation = (elementType == "place") ? "PtoT" : "TtoP";
 
@@ -212,11 +218,6 @@ namespace NestedFlowchart.Rules
             {
                 IsUsePreviousFalse = true;
                 arcVariable = "array";
-            }
-            //Nestedif start to T1
-            else if (arrow.Id.Contains("SwmT-1"))
-            {
-                arcVariable = "i";
             }
 
             if (arrow.Id.Contains("KSG-26") || //Bubble sort into P5
