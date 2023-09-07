@@ -558,7 +558,7 @@ namespace NestedFlowchart.Functions
                                         i,
                                         "",
                                         outputRulePlace,
-                                        outputRuleTransition2,
+                                        (outputRuleTransition1 != null) ? outputRuleTransition1 : outputRuleTransition2,
                                         previousTypeReturn,
                                         previousNodes.LastOrDefault().CurrentMainPage,
                                         previousNodes.LastOrDefault().CurrentSubPage);
