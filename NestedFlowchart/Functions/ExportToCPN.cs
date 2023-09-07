@@ -549,7 +549,7 @@ namespace NestedFlowchart.Functions
 
                     PositionManagements pagePosition = GetPagePositionByCountSubPage(previousNodes.LastOrDefault().CurrentMainPage, page1Position, page2Position, page3Position, page4Position, page5Position);
                     //Apply Rule
-                    var (outputRulePlace, outputRuleTransition, outputRuleArc1) = _outputRule.ApplyRule(arrayName, pagePosition, previousNodes.LastOrDefault(), declareType);
+                    var (outputRuleTransition1, outputRuleArc1, outputRulePlace, outputRuleTransition2, outputRuleArc2, previousTypeReturn) = _outputRule.ApplyRule(arrayName, pagePosition, previousNodes.LastOrDefault(), declareType);
 
                     PreviousNode pv = AssignPreviousNode(
                                         sortedFlowcharts[i].ID,
@@ -558,16 +558,18 @@ namespace NestedFlowchart.Functions
                                         i,
                                         "",
                                         outputRulePlace,
-                                        outputRuleTransition,
-                                        "transition",
+                                        outputRuleTransition2,
+                                        previousTypeReturn,
                                         previousNodes.LastOrDefault().CurrentMainPage,
                                         previousNodes.LastOrDefault().CurrentSubPage);
                     previousNodes.Add(pv);
 
                     var arc1 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], outputRuleArc1);
-                    var transition = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], outputRuleTransition);
+                    var transition1 = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], outputRuleTransition1);
+                    var arc2 = _approach.CreateArc(allTemplates[(int)TemplateEnum.ArcTemplate], outputRuleArc2);
+                    var transition2 = _approach.CreateTransition(allTemplates[(int)TemplateEnum.TransitionTemplate], outputRuleTransition2);
                     var place = _approach.CreatePlace(allTemplates[(int)TemplateEnum.PlaceTemplate], outputRulePlace);
-                    var outputRuleString = place + transition + arc1;
+                    var outputRuleString = place + transition1 + arc1 + transition2 + arc2;
 
                     CreatePageNodeByCountSubPage(previousNodes.LastOrDefault().CurrentMainPage, pages, outputRuleString);
 
