@@ -54,11 +54,19 @@ namespace NestedFlowchart.Functions
                 XMLCellNode? lastElement = null;
                 #endregion
 
-                //เอา ID ไปหาใน Parent เพื่อเอา Value Text True/False ออกมา
-                foreach(var arrow in arrows)
+                try
                 {
-                    arrow.ValueText = allFlowChartElements.Find(x => x.Parent == arrow.ID).ValueText;
+                    //เอา ID ไปหาใน Parent เพื่อเอา Value Text True/False ออกมา
+                    foreach (var arrow in arrows)
+                    {
+                        arrow.ValueText = allFlowChartElements.Find(x => x.Parent == arrow.ID).ValueText;
+                    }
                 }
+                catch(Exception ex)
+                {
+                    throw new Exception("Cannot find true/false arrow, Please use arrow with label on draw.io, Exception : " + ex);
+                }
+
 
                 foreach (var arrow in arrows)
                 {
