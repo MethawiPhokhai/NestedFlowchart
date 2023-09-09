@@ -31,5 +31,6 @@ namespace NestedFlowchart.Models
         public bool IsCreateSubPage { get; set; }
         public bool IsPreviousNodeCondition { get; set; }
         public bool IsConnectedEnd { get; set; }
+        public bool IsUsePreviousFalse { get; set; }
     }
 }

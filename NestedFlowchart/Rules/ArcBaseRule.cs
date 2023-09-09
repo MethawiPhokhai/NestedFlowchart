@@ -65,6 +65,11 @@ namespace NestedFlowchart.Rules
             //ถ้าเป็น place ให้ใช้ PtoT, ถ้าเป็น transition ให้ใช้ TtoP
             var orientation = (elementType == "place") ? "PtoT" : "TtoP";
 
+            if (destinationNode.IsUsePreviousFalse)
+            {
+                IsUsePreviousFalse = true;
+            }
+
             arcModel = new ArcModel
             {
                 Id1 = IdManagements.GetlastestArcId(),

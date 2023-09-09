@@ -18,7 +18,8 @@ namespace NestedFlowchart.Rules
             string arrayName,
             PositionManagements position,
             PreviousNode pv,
-            int type)
+            int type,
+            bool isEndNext)
         {
             string previousTypeReturn = "transition";
             PlaceModel pl = null;
@@ -78,7 +79,7 @@ namespace NestedFlowchart.Rules
                 previousTypeReturn = "place";
             }
 
-            if (!pv.IsPreviousNodeCondition)
+            if (!pv.IsPreviousNodeCondition || isEndNext)
             {
                 TransitionModel tr = new TransitionModel()
                 {
