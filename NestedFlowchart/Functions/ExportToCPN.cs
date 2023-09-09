@@ -3,6 +3,7 @@ using NestedFlowchart.Models;
 using NestedFlowchart.Position;
 using NestedFlowchart.Rules;
 using NestedFlowchart.Templates;
+using System.Configuration;
 
 namespace NestedFlowchart.Functions
 {
@@ -35,6 +36,14 @@ namespace NestedFlowchart.Functions
         public void ExportFile(string? TemplatePath, string? ResultPath, List<XMLCellNode> sortedFlowcharts)
         {
             string[] allTemplates = ReadAllTemplate(TemplatePath);
+
+            #region Loop variables
+            var loop1 = ConfigurationManager.AppSettings["loop1"]?.ToString() ?? "loop1";
+            var loop2 = ConfigurationManager.AppSettings["loop2"]?.ToString() ?? "loop2";
+            var loop3 = ConfigurationManager.AppSettings["loop3"]?.ToString() ?? "loop3";
+            var loop4 = ConfigurationManager.AppSettings["loop4"]?.ToString() ?? "loop4";
+            var loop5 = ConfigurationManager.AppSettings["loop5"]?.ToString() ?? "loop5";
+            #endregion
 
             #region AppleRules
 
@@ -110,7 +119,7 @@ namespace NestedFlowchart.Functions
 
                     //ถ้าไม่มี Initialize process แล้ว element ต่อไปเป็น i
                     //Nested-Loop
-                    if ((flowchartValue.ToLower().Trim().Contains("i =")))
+                    if ((flowchartValue.ToLower().Trim().Contains($"{loop1} =")))
                     {
                         //Set Initial Marking
                         (var arcVar, _, declareType, variableCount) = _rule2.AssignInitialMarking(sortedFlowcharts, arrayName, previousNodes.LastOrDefault(), i);
@@ -171,7 +180,7 @@ namespace NestedFlowchart.Functions
                 else if (flowchartType == "process")
                 {
                     //Case Not Nested => Define i
-                    if (flowchartValueRemoveSpace.ToLower().Trim().Contains("i="))
+                    if (flowchartValueRemoveSpace.ToLower().Trim().Contains($"{loop1}="))
                     {
                         #region rule3_1
                         //In case declare more than 1 line
@@ -193,8 +202,8 @@ namespace NestedFlowchart.Functions
                         #endregion rule3_1
                     }
                     //Case Nested => Create Hierachy Tool
-                    else if (flowchartValueRemoveSpace.ToLower().Trim().Contains("j=") || flowchartValueRemoveSpace.ToLower().Trim().Contains("k=")
-                        || flowchartValueRemoveSpace.ToLower().Trim().Contains("l=") || flowchartValueRemoveSpace.ToLower().Trim().Contains("m="))
+                    else if (flowchartValueRemoveSpace.ToLower().Trim().Contains($"{loop2}=") || flowchartValueRemoveSpace.ToLower().Trim().Contains($"{loop3}=")
+                        || flowchartValueRemoveSpace.ToLower().Trim().Contains($"{loop4}=") || flowchartValueRemoveSpace.ToLower().Trim().Contains($"{loop5}="))
                     {
                         #region Rule3_2
 
@@ -311,7 +320,7 @@ namespace NestedFlowchart.Functions
                     }
                     else
                     {
-                        if (flowchartValueRemoveSpace.Contains("temp=array[j+1]"))
+                        if (flowchartValueRemoveSpace.Contains($"temp=array[{loop2}+1]"))
                         {
                             #region Rule4_1
 
@@ -343,8 +352,8 @@ namespace NestedFlowchart.Functions
 
                             #endregion Rule4_1
                         }
-                        else if (flowchartValueRemoveSpace.Contains("j++") || flowchartValueRemoveSpace.Contains("k++") ||
-                            flowchartValueRemoveSpace.Contains("l++") || flowchartValueRemoveSpace.Contains("m++"))
+                        else if (flowchartValueRemoveSpace.Contains($"{loop2}++") || flowchartValueRemoveSpace.Contains($"{loop3}++") ||
+                            flowchartValueRemoveSpace.Contains($"{loop4}++") || flowchartValueRemoveSpace.Contains($"{loop5}++"))
                         {
                             #region Rule4_2
 
@@ -383,7 +392,7 @@ namespace NestedFlowchart.Functions
 
                             #endregion Rule4_2
                         }
-                        else if (flowchartValueRemoveSpace.Contains("i++"))
+                        else if (flowchartValueRemoveSpace.Contains($"{loop1}++"))
                         {
                             #region Rule4_3
 
@@ -470,6 +479,9 @@ namespace NestedFlowchart.Functions
                     string beforeCondition = sortedFlowcharts[i].ValueText.Contains("%") ?
                         sortedFlowcharts[i].ValueText.Replace("%", "mod") :
                         sortedFlowcharts[i].ValueText;
+
+                    //Remove <br> from condition
+                    beforeCondition = beforeCondition.Replace("<br>", "");
 
                     string trueCondition = _rule6.CreateTrueCondition(beforeCondition, arrayName);
                     string falseCondition = _rule6.CreateFalseDecision(trueCondition);

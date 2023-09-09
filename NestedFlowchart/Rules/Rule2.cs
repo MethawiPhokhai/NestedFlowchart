@@ -2,6 +2,7 @@
 using NestedFlowchart.Functions;
 using NestedFlowchart.Models;
 using NestedFlowchart.Position;
+using System.Configuration;
 using System.Xml.Linq;
 
 namespace NestedFlowchart.Rules
@@ -73,6 +74,7 @@ namespace NestedFlowchart.Rules
             PreviousNode previousNode, 
             int i)
         {
+            var loop1 = ConfigurationManager.AppSettings["loop1"]?.ToString() ?? "loop1";
             string cSeg = string.Empty;
             int declareType, variableCount = 0;
 
@@ -86,7 +88,7 @@ namespace NestedFlowchart.Rules
 
                 declareType = (int)eDeclareType.IsArray;
             }
-            else if (sortedFlowcharts[i].ValueText.ToLower().Trim().Contains("i ="))
+            else if (sortedFlowcharts[i].ValueText.ToLower().Trim().Contains($"{loop1} ="))
             {
                 previousNode.currentPlaceModel.Type = "INT";
                 previousNode.currentPlaceModel.InitialMarking = "1";

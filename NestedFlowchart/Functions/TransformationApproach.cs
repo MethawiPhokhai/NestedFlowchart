@@ -1,6 +1,7 @@
 ﻿using NestedFlowchart.Declaration;
 using NestedFlowchart.Models;
 using NestedFlowchart.Templates;
+using System.Configuration;
 
 namespace NestedFlowchart.Functions
 {
@@ -296,45 +297,53 @@ namespace NestedFlowchart.Functions
                     Layout = $"var {arrayName.Substring(1, arrayName.Length - 2)}: INT;"
                 };
             }
-            
+
+            #region Loop variables
+            var loop1 = ConfigurationManager.AppSettings["loop1"]?.ToString() ?? "loop1";
+            var loop2 = ConfigurationManager.AppSettings["loop2"]?.ToString() ?? "loop2";
+            var loop3 = ConfigurationManager.AppSettings["loop3"]?.ToString() ?? "loop3";
+            var loop4 = ConfigurationManager.AppSettings["loop4"]?.ToString() ?? "loop4";
+            var loop5 = ConfigurationManager.AppSettings["loop5"]?.ToString() ?? "loop5";
+            #endregion
+
             VarModel var4Model = new VarModel()
             {
                 Id = IdManagements.GetlastestVarId(),
                 Type = "INT",
-                Name = "i,i2",
-                Layout = "var i,i2: INT;"
+                Name = $"{loop1},{loop1}2",
+                Layout = $"var {loop1},{loop1}2: INT;"
             };
 
             VarModel var5Model = new VarModel()
             {
                 Id = IdManagements.GetlastestVarId(),
                 Type = "INT",
-                Name = "j,j2",
-                Layout = "var j,j2: INT;"
+                Name = $"{loop2},{loop2}2",
+                Layout = $"var {loop2},{loop2}2: INT;"
             };
 
             VarModel var6Model = new VarModel()
             {
                 Id = IdManagements.GetlastestVarId(),
                 Type = "INT",
-                Name = "k,k2",
-                Layout = "var k,k2: INT;"
+                Name = $"{loop3},{loop3}2",
+                Layout = $"var {loop3},{loop3}2: INT;"
             };
 
             VarModel var7Model = new VarModel()
             {
                 Id = IdManagements.GetlastestVarId(),
                 Type = "INT",
-                Name = "l,l2",
-                Layout = "var l,l2: INT;"
+                Name = $"{loop4},{loop4}2",
+                Layout = $"var {loop4},{loop4}2: INT;"
             };
 
             VarModel var8Model = new VarModel()
             {
                 Id = IdManagements.GetlastestVarId(),
                 Type = "INT",
-                Name = "m,m2",
-                Layout = "var m,m2: INT;"
+                Name = $"{loop5},{loop5}2",
+                Layout = $"var {loop5},{loop5}2: INT;"
             };
 
             VarModel var9Model = new VarModel()

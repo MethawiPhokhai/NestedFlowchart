@@ -2,6 +2,7 @@
 using NestedFlowchart.Functions;
 using NestedFlowchart.Models;
 using NestedFlowchart.Position;
+using System.Configuration;
 
 namespace NestedFlowchart.Rules
 {
@@ -100,15 +101,23 @@ namespace NestedFlowchart.Rules
 
         public string GetArcVariableByPageAndType(string arrayName, int page, int type)
         {
+            #region Loop variables
+            var loop1 = ConfigurationManager.AppSettings["loop1"]?.ToString() ?? "loop1";
+            var loop2 = ConfigurationManager.AppSettings["loop2"]?.ToString() ?? "loop2";
+            var loop3 = ConfigurationManager.AppSettings["loop3"]?.ToString() ?? "loop3";
+            var loop4 = ConfigurationManager.AppSettings["loop4"]?.ToString() ?? "loop4";
+            var loop5 = ConfigurationManager.AppSettings["loop5"]?.ToString() ?? "loop5";
+            #endregion
+
             if (type == (int)eDeclareType.IsArray)
             {
                 return page switch
                 {
-                    0 => $"(i,{arrayName})",
-                    1 => $"(i,j,{arrayName})",
-                    2 => "(i,j,k,{arrayName})",
-                    3 => "(i,j,k,l,{arrayName})",
-                    4 => "(i,j,k,l,m,{arrayName})",
+                    0 => $"({loop1},{arrayName})",
+                    1 => $"({loop1},{loop2},{arrayName})",
+                    2 => $"({loop1},{loop2},{loop3},{arrayName})",
+                    3 => $"({loop1},{loop2},{loop3},{loop4},{arrayName})",
+                    4 => $"({loop1},{loop2},{loop3},{loop4},{loop5},{arrayName})",
                     _ => string.Empty
                 };
             }
@@ -116,11 +125,11 @@ namespace NestedFlowchart.Rules
             {
                 return page switch
                 {
-                    0 => "i",
-                    1 => "(i,j)",
-                    2 => "(i,j,k)",
-                    3 => "(i,j,k,l)",
-                    4 => "(i,j,k,l,m)",
+                    0 => $"{loop1}",
+                    1 => $"({loop1},{loop2})",
+                    2 => $"({loop1},{loop2},{loop3})",
+                    3 => $"({loop1},{loop2},{loop3},{loop4})",
+                    4 => $"({loop1},{loop2},{loop3},{loop4},{loop5})",
                     _ => string.Empty
                 };
             }
@@ -137,19 +146,19 @@ namespace NestedFlowchart.Rules
             switch (page)
             {
                 case 0:
-                    return "i";
+                    return ConfigurationManager.AppSettings["loop1"]?.ToString() ?? "loop1";
 
                 case 1:
-                    return "j";
+                    return ConfigurationManager.AppSettings["loop2"]?.ToString() ?? "loop2";
 
                 case 2:
-                    return "k";
+                    return ConfigurationManager.AppSettings["loop3"]?.ToString() ?? "loop3";
 
                 case 3:
-                    return "l";
+                    return ConfigurationManager.AppSettings["loop4"]?.ToString() ?? "loop4";
 
                 case 4:
-                    return "m";
+                    return ConfigurationManager.AppSettings["loop5"]?.ToString() ?? "loop5";
 
                 default:
                     return string.Empty;
@@ -158,15 +167,23 @@ namespace NestedFlowchart.Rules
 
         public string GetArcVariableAfterIncrement(string arrayName, string incVar)
         {
+            #region Loop variables
+            var loop1 = ConfigurationManager.AppSettings["loop1"]?.ToString() ?? "loop1";
+            var loop2 = ConfigurationManager.AppSettings["loop2"]?.ToString() ?? "loop2";
+            var loop3 = ConfigurationManager.AppSettings["loop3"]?.ToString() ?? "loop3";
+            var loop4 = ConfigurationManager.AppSettings["loop4"]?.ToString() ?? "loop4";
+            var loop5 = ConfigurationManager.AppSettings["loop5"]?.ToString() ?? "loop5";
+            #endregion
+
             if (incVar != null)
             {
                 return incVar switch
                 {
-                    var str when str.Contains("i2") => arrayName.Replace("i", "i2"),
-                    var str when str.Contains("j2") => arrayName.Replace("j", "j2"),
-                    var str when str.Contains("k2") => arrayName.Replace("k", "k2"),
-                    var str when str.Contains("l2") => arrayName.Replace("l", "l2"),
-                    var str when str.Contains("m2") => arrayName.Replace("m", "m2"),
+                    var str when str.Contains($"{loop1}2") => arrayName.Replace(loop1, $"{loop1}2"),
+                    var str when str.Contains($"{loop2}2") => arrayName.Replace(loop2, $"{loop2}2"),
+                    var str when str.Contains($"{loop3}2") => arrayName.Replace(loop3, $"{loop3}2"),
+                    var str when str.Contains($"{loop4}2") => arrayName.Replace(loop4, $"{loop4}2"),
+                    var str when str.Contains($"{loop5}2") => arrayName.Replace(loop5, $"{loop5}2"),
                     var str when str.Contains("array2") => arrayName.Replace("array", "array2"),
                     _ => arrayName,
                 };

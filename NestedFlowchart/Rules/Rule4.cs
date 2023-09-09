@@ -1,6 +1,7 @@
 ﻿using NestedFlowchart.Functions;
 using NestedFlowchart.Models;
 using NestedFlowchart.Position;
+using System.Configuration;
 
 namespace NestedFlowchart.Rules
 {
@@ -97,6 +98,7 @@ namespace NestedFlowchart.Rules
             PositionManagements position,
             int type)
         {
+            var loop2 = ConfigurationManager.AppSettings["loop2"]?.ToString() ?? "loop2";
             int currentMainPage = previousNode.CurrentMainPage;
 
             //PS4
@@ -117,16 +119,16 @@ namespace NestedFlowchart.Rules
                 Type = _typeBaseRule.GetTypeByPageOnly(currentMainPage)
             };
 
-            var codeSeg = "input (array,j);\r\n" +
+            var codeSeg = $"input (array,{loop2});\r\n" +
                 "output (array2);\r\n" +
                 "action\r\n" +
                 "let\r\n" +
-                " (* get j to temp*)\r\n " +
-                "val temp = List.nth(array,j)\r\n " +
-                "(* get j+1 to temp2 *)\r\n " +
-                "val temp2 = List.nth(array,j+1)\r\n " +
-                "(* return first j element of array *)\r\n " +
-                "val array2 = List.take(array,j)\r\n " +
+                $" (* get {loop2} to temp*)\r\n " +
+                $"val temp = List.nth(array,{loop2})\r\n " +
+                $"(* get {loop2}+1 to temp2 *)\r\n " +
+                $"val temp2 = List.nth(array,{loop2}+1)\r\n " +
+                $"(* return first {loop2} element of array *)\r\n " +
+                $"val array2 = List.take(array,{loop2})\r\n " +
                 "(* insert element temp2 after array2 *)\r\n " +
                 "val array2 = ins array2 temp2\r\n " +
                 "(* insert element temp after array2 *)\r\n " +
