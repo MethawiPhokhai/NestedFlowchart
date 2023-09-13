@@ -41,16 +41,18 @@ namespace NestedFlowchart.Rules.Tests
             Rule3 rule3 = new Rule3();
             var (rule3InputPlace, rule3OutputPlace, rule3InputPlace2, rule3OutputPlace2, rule3PS2,
                             rule3Transition, rule3Transition2,
-                            rule3Arc1, rule3Arc2, rule3Arc3, rule3Arc4, rule3Arc5) = rule3.ApplyRuleWithHierarchy(
+                            rule3Arc1, rule3Arc2, rule3Arc3, rule3Arc4, rule3Arc5,
+                            rule3Transition3, rule3Arc6) = rule3.ApplyRuleWithHierarchy(
                             "Hierarchy_SubPageTransition.txt",
                             "Hierarchy_Port.txt",
                             "ID1412950867",
+                            "New Subpage1",
                             "j = 0",
                             arrayName,
                             previousNodes.LastOrDefault(),
                             page1Position,
-                            page2Position
-                            );
+                            page2Position,
+                            0);
 
             // Assert
             //Main page

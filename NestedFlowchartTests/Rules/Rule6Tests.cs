@@ -54,7 +54,8 @@ namespace NestedFlowchart.Rules.Tests
                 trueCondition,
                 falseCondition,
                 arrayName,
-                page1Position);
+                page1Position,
+                0);
 
             // Assert
             Assert.IsNotNull(rule6FalseTransition);

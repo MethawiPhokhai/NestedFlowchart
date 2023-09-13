@@ -11,6 +11,11 @@ namespace NestedFlowchart.Rules
 {
     public class Rule6 : ArcBaseRule
     {
+        private readonly ITypeBaseRule _typeBaseRule;
+        public Rule6()
+        {
+            _typeBaseRule = new TypeBaseRule();
+        }
         /// <summary>
         /// Transform dicision into place and transition connected by arc
         /// </summary>
@@ -26,10 +31,10 @@ namespace NestedFlowchart.Rules
             string trueCondition, 
             string falseCondition,
             string arrayName,
-            PositionManagements position)
+            PositionManagements position,
+            int type)
         {
-
-            string arcVariable = DeclareArcVariable(arrayName, previousNode.CurrentMainPage);
+            int currentMainPage = previousNode.CurrentMainPage;
 
             var xPos1 = position.xPos1;
             var yPos1 = position.GetLastestyPos1();
@@ -55,7 +60,7 @@ namespace NestedFlowchart.Rules
                     xPos2 = position.GetLastestxPos2(),
                     yPos2 = position.GetLastestyPos2() + 190,
 
-                    Type = "loopj"
+                    Type = _typeBaseRule.GetTypeByPageOnly(currentMainPage)
                 };
 
                 // Adjust yPos values because a new place was added above
@@ -120,7 +125,7 @@ namespace NestedFlowchart.Rules
                     yPos = yPosArc,
 
                     Orientation = "PtoT", //Place to Transition
-                    Type = arcVariable
+                    Type = GetArcVariableByPageAndType(arrayName, currentMainPage, type)
                 };
 
                 //Arc from CN1 to GF1
@@ -136,7 +141,7 @@ namespace NestedFlowchart.Rules
                     yPos = yPosArc,
 
                     Orientation = "PtoT", //Place to Transition
-                    Type = arcVariable
+                    Type = GetArcVariableByPageAndType(arrayName, currentMainPage, type)
                 };
             }
             else
@@ -154,7 +159,7 @@ namespace NestedFlowchart.Rules
                     yPos = yPosArc,
 
                     Orientation = "PtoT", //Place to Transition
-                    Type = arcVariable
+                    Type = GetArcVariableByPageAndType(arrayName, currentMainPage, type)
                 };
             }
 
@@ -179,7 +184,15 @@ namespace NestedFlowchart.Rules
 
         public string CreateFalseDecision(string condition)
         {
-            if (condition.Contains("&gt;"))
+            if (condition.Contains("&gt;="))
+            {
+                return condition.Replace("&gt;=", "&lt;");
+            }
+            else if (condition.Contains("&lt;="))
+            {
+                return condition.Replace("&lt;=", "&gt;");
+            }
+            else if (condition.Contains("&gt;"))
             {
                 return condition.Replace("&gt;", "&lt;=");
             }

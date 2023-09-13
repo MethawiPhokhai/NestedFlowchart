@@ -1,6 +1,8 @@
-﻿using NestedFlowchart.Functions;
+﻿using NestedFlowchart.Declaration;
+using NestedFlowchart.Functions;
 using NestedFlowchart.Models;
 using NestedFlowchart.Position;
+using System.Configuration;
 using System.Xml.Linq;
 
 namespace NestedFlowchart.Rules
@@ -66,26 +68,40 @@ namespace NestedFlowchart.Rules
             return (pl, tr, a1);
         }
 
-        public (string, string) AssignInitialMarking(
+        public (string, string, int, int) AssignInitialMarking(
             List<XMLCellNode> sortedFlowcharts, 
             string arcVariable,
             PreviousNode previousNode, 
             int i)
         {
+            var loop1 = ConfigurationManager.AppSettings["loop1"]?.ToString() ?? "loop1";
             string cSeg = string.Empty;
+            int declareType, variableCount = 0;
 
-            if (sortedFlowcharts[i].ValueText.Contains('['))
+            if (sortedFlowcharts[i].ValueText.Contains('[')) //กรณีเป็น Array
             {
                 arcVariable = SubstringBefore(sortedFlowcharts[i].ValueText.Trim(), '=').Trim();
                 var arrayValue = SubstringAfter(sortedFlowcharts[i].ValueText.Trim(), '=');
 
                 previousNode.currentPlaceModel.Type = "INTs";
                 previousNode.currentPlaceModel.InitialMarking = arrayValue;
+
+                declareType = (int)eDeclareType.IsArray;
             }
-            else
+            else if (sortedFlowcharts[i].ValueText.ToLower().Trim().Contains($"{loop1} ="))
+            {
+                previousNode.currentPlaceModel.Type = "INT";
+                previousNode.currentPlaceModel.InitialMarking = "1";
+                arcVariable = "x"; //สร้างเป็นตัวแปร INT
+
+                declareType = (int)eDeclareType.IsNone;
+            }
+            else //กรณีตัวแปรปกตื
             {
                 string arrayValue = string.Empty;
                 var arrayValues = sortedFlowcharts[i].ValueText.Split("<br>");
+                variableCount = arrayValues.Length;
+
                 foreach ( var val in arrayValues )
                 {
                     arrayValue += SubstringBefore(val, '=').Trim();
@@ -105,9 +121,11 @@ namespace NestedFlowchart.Rules
                     "in \r\n" +
                     "{2} \r\n" +
                     "end", "val " + sortedFlowcharts[i].ValueText.Replace("<br>", "\r\nval "), arcVar, arcVar);
+
+                declareType = (int)eDeclareType.IsInteger;
             }
 
-            return (arcVariable, cSeg);
+            return (arcVariable, cSeg, declareType, variableCount);
         }
 
         private string SubstringBefore(string str, char ch)

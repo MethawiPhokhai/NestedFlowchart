@@ -6,13 +6,43 @@ namespace NestedFlowchart.Rules
 {
     public class OutputRule : ArcBaseRule
     {
-        public (PlaceModel, TransitionModel, ArcModel)
+        private readonly ITypeBaseRule _typeBaseRule;
+
+        public OutputRule()
+        {
+            _typeBaseRule = new TypeBaseRule(); ;
+        }
+
+        public (TransitionModel, ArcModel, PlaceModel, TransitionModel, ArcModel, string)
             ApplyRule(
             string arrayName,
             PositionManagements position,
-            PreviousNode pv)
+            PreviousNode pv,
+            int type,
+            bool isEndNext)
         {
-            PlaceModel pl = new PlaceModel()
+            string previousTypeReturn = "transition";
+            PlaceModel pl = null;
+            TransitionModel tr1 = null;
+            ArcModel a1 = null;
+            if (!pv.IsPreviousNodeCondition && pv.Type == "place")
+            {
+                tr1 = new TransitionModel()
+                {
+                    Id1 = IdManagements.GetlastestTransitionId(),
+                    Id2 = IdManagements.GetlastestTransitionId(),
+                    Id3 = IdManagements.GetlastestTransitionId(),
+                    Id4 = IdManagements.GetlastestTransitionId(),
+                    Id5 = IdManagements.GetlastestTransitionId(),
+
+                    Name = IdManagements.GetlastestTransitionName(),
+
+                    xPos1 = position.xPos1,
+                    yPos1 = position.GetLastestyPos1()
+                };
+            }
+
+            pl = new PlaceModel()
             {
                 Id1 = IdManagements.GetlastestPlaceId(),
                 Id2 = IdManagements.GetlastestPlaceId(),
@@ -26,10 +56,30 @@ namespace NestedFlowchart.Rules
                 xPos2 = position.GetLastestxPos2(),
                 yPos2 = position.GetLastestyPos2(),
 
-                Type = (arrayName == "array") ? "INTs" : "aa"
+                Type = _typeBaseRule.GetTypeByInitialMarkingType(type, pv.CurrentMainPage)
             };
 
-            if (!pv.IsPreviousNodeCondition)
+            if (!pv.IsPreviousNodeCondition && pv.Type == "place")
+            {
+                a1 = new ArcModel()
+                {
+                    Id1 = IdManagements.GetlastestArcId(),
+                    Id2 = IdManagements.GetlastestArcId(),
+
+                    TransEnd = tr1.Id1,
+                    PlaceEnd = pl.Id1,
+
+                    xPos = position.GetLastestxArcPos(),
+                    yPos = position.GetLastestyArcPos(),
+
+                    Orientation = "TtoP",
+                    Type = arrayName
+                };
+
+                previousTypeReturn = "place";
+            }
+
+            if (!pv.IsPreviousNodeCondition || isEndNext)
             {
                 TransitionModel tr = new TransitionModel()
                 {
@@ -45,7 +95,7 @@ namespace NestedFlowchart.Rules
                     yPos1 = position.GetLastestyPos1()
                 };
 
-                ArcModel a1 = new ArcModel()
+                ArcModel a2 = new ArcModel()
                 {
                     Id1 = IdManagements.GetlastestArcId(),
                     Id2 = IdManagements.GetlastestArcId(),
@@ -60,11 +110,10 @@ namespace NestedFlowchart.Rules
                     Type = arrayName
                 };
 
-                return (pl, tr, a1);
+                return (tr1, a1, pl, tr, a2, previousTypeReturn);
             }
 
-            return (pl, null, null);
-
+            return (tr1, a1, pl, null, null, previousTypeReturn);
         }
     }
 }
