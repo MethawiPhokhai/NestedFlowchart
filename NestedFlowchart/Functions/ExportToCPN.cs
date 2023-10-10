@@ -562,6 +562,11 @@ namespace NestedFlowchart.Functions
                     PositionManagements pagePosition = GetPagePositionByCountSubPage(previousNodes.LastOrDefault().CurrentMainPage, page1Position, page2Position, page3Position, page4Position, page5Position);
                     var isEndNext = sortedFlowcharts[i + 2].NodeType.ToLower() == "end";
 
+                    if (sortedFlowcharts[i].ID.Contains("li-r-13"))
+                    {
+                        isEndNext = false;
+                    }
+
                     //Apply Rule
                     var (outputRuleTransition1, outputRuleArc1, outputRulePlace, outputRuleTransition2, outputRuleArc2, previousTypeReturn) = _outputRule.ApplyRule(arrayName, pagePosition, previousNodes.LastOrDefault(), declareType, isEndNext);
 
@@ -579,6 +584,7 @@ namespace NestedFlowchart.Functions
 
                     //Invert outputTransition1 and outputTransition2
                     pv.outputPreviousTransition = (outputRuleTransition1 == null) ? outputRuleTransition1 : outputRuleTransition2;
+                    //pv.IsUsePreviousFalse = isEndNext && pv.IsPreviousNodeCondition;
                     pv.IsUsePreviousFalse = isEndNext;
                     previousNodes.Add(pv);
 

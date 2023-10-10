@@ -80,6 +80,7 @@ namespace NestedFlowchart.Rules
             }
 
             if (!pv.IsPreviousNodeCondition || isEndNext)
+            //if ((!pv.IsPreviousNodeCondition == true) && (isEndNext == false))
             {
                 TransitionModel tr = new TransitionModel()
                 {
